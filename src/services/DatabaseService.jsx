@@ -2,6 +2,7 @@ import { db } from "../lib/firebase";
 import {
   doc,
   setDoc,
+  getDoc,
   addDoc,
   updateDoc,
   collection,
@@ -18,7 +19,7 @@ class DatabaseService {
   get = async (id) => {
     const docRef = doc(db, this.collection, id);
     return await getDoc(docRef);
-  }
+  };
 
   // save a new document in the database
   create = async (data, id) => {

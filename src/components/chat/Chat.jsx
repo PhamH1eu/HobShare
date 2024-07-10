@@ -1,16 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import EmojiPicker from "emoji-picker-react";
 import "./chat.css";
-import {
-  arrayUnion,
-  doc,
-  getDoc,
-  onSnapshot,
-  updateDoc,
-} from "firebase/firestore";
+import { arrayUnion, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "../../lib/firebase";
 import { useUserStore } from "../../store/userStore";
 import { useChatStore } from "../../store/chatStore";
+import UpdateChat from "src/services/UpdateChat";
+import SendMessage from "src/services/SendMessage";
 import upload from "../../shared/helper/upload";
 import { format } from "date-fns";
 
@@ -30,8 +26,8 @@ export const Chat = () => {
   const { currentUser } = useUserStore();
   const { chatId, user, isCurrentUserBlocked, isReceiverBlocked } =
     useChatStore();
-  
-  //khi chatID thay đổi(bằng cách bấm chat với ng khác) => lấy dữ liệu chat từ db
+
+  //khi chatID thay đổi(bằng cách bấm chat với ng khác) => lấy dữ liệu chat từ db && lắng nghe sự thay đổi
   useEffect(() => {
     const unSub = onSnapshot(doc(db, "chats", chatId), (res) => {
       setChat(res.data());
@@ -56,56 +52,15 @@ export const Chat = () => {
   };
 
   const handleSend = async () => {
-    if (text === "" && img.file == null) return;
-
-    let imgUrl = null;
-
-    try {
-      if (img.file) {
-        imgUrl = await upload(img.file);
-      }
-
-      await updateDoc(doc(db, "chats", chatId), {
-        messages: arrayUnion({
-          senderId: currentUser.id,
-          text,
-          createdAt: new Date(),
-          ...(imgUrl && { img: imgUrl }),
-        }),
-      });
-      const userIDs = [currentUser.id, user.id];
-
-      userIDs.forEach(async (id) => {
-        const userChatsRef = doc(db, "userchats", id);
-        const userChatsSnapshot = await getDoc(userChatsRef);
-
-        if (userChatsSnapshot.exists()) {
-          const userChatsData = userChatsSnapshot.data();
-          //get chat from a list of chats of a user
-          const chatIndex = userChatsData.chats.findIndex(
-            (c) => c.chatId === chatId
-          );
-
-          userChatsData.chats[chatIndex].lastMessage =
-            text == "" ? "has sent an images" : text;
-          userChatsData.chats[chatIndex].isSeen =
-            id === currentUser.id ? true : false;
-          userChatsData.chats[chatIndex].updatedAt = Date.now();
-
-          await updateDoc(userChatsRef, {
-            chats: userChatsData.chats,
-          });
-        }
-      });
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setImg({
-        file: null,
-        url: "",
-      });
-      setText("");
-    }
+    await Promise.all([
+      SendMessage(currentUser, chatId, text, img),
+      UpdateChat(currentUser, user.id, chatId, text),
+    ]);
+    setImg({
+      file: null,
+      url: "",
+    });
+    setText("");
   };
 
   return (
@@ -148,7 +103,7 @@ export const Chat = () => {
             </div>
           </div>
         )}
-        
+
         <div ref={endRef}></div>
       </div>
       <div className="bottom">

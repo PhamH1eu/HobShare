@@ -12,6 +12,7 @@ const App = () => {
   const { currentUser, isLoading } = useUserStore();
   const chatId = useChatStore((state) => state.chatId);
 
+  //listen to auth change
   useListenAuth();
 
   if (isLoading) return <div className="loading">Loading...</div>;

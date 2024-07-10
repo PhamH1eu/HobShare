@@ -3,24 +3,26 @@ import AddUser from "./addUser/AddUser";
 import { useUserStore } from "../../../store/userStore";
 import { useChatStore } from "../../../store/chatStore";
 import { db } from "../../../lib/firebase";
-import { onSnapshot, doc, getDoc, updateDoc } from "firebase/firestore";
+import { onSnapshot, doc } from "firebase/firestore";
+import { ChatService, UserService } from "src/services/DatabaseService";
 import "./chatList.css";
+
 export const ChatList = () => {
   const [addMode, setAddMode] = useState(false);
   const [chats, setChats] = useState([]);
   const { currentUser } = useUserStore();
   const changeChat = useChatStore((state) => state.changeChat);
 
+  //TODO: listen to message changes [NEED TO UNDERSTAND]
   useEffect(() => {
     const unsub = onSnapshot(
       doc(db, "userchats", currentUser.id),
       async (res) => {
+        //chats of current user
         const items = res.data().chats;
-
+        //get user info of each chat, assign last message info to
         const promises = items.map(async (item) => {
-          const userDocRef = doc(db, "users", item.receiverId);
-          const userDoc = await getDoc(userDocRef);
-
+          const userDoc = await UserService.get(item.receiverId);
           const user = userDoc.data();
 
           return {
@@ -28,6 +30,7 @@ export const ChatList = () => {
             user,
           };
         });
+        //query all user info
         const chatData = await Promise.all(promises);
         setChats(chatData.sort((a, b) => b.updatedAt - a.updatedAt));
       }
@@ -37,27 +40,26 @@ export const ChatList = () => {
   }, [currentUser]);
 
   const handleSelect = async (chat) => {
+    //get {chat id, lastMessage, isSeen} from chat list
     const userChats = chats.map((item) => {
       const { user, ...rest } = item;
       return rest;
     });
 
+    //get index of selected chat in list
     const chatIndex = userChats.findIndex(
       (item) => item.chatId === chat.chatId
     );
 
+    //seen message
     userChats[chatIndex].isSeen = true;
 
-    const userChatsRef = doc(db, "userchats", currentUser.id);
-
-    try {
-      await updateDoc(userChatsRef, {
-        chats: userChats,
-      });
-      changeChat(chat.chatId, chat.user);
-    } catch (err) {
-      console.log(err);
-    }
+    //update with seen status
+    ChatService.update(currentUser.id, {
+      chats: userChats,
+    });
+    //pop up chat in screen
+    changeChat(chat.chatId, chat.user);
   };
 
   return (

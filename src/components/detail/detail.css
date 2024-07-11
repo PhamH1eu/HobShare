@@ -100,3 +100,15 @@
       }
     }
   }
+
+  .MuiAccordion-root {
+    background-color: transparent !important;
+    box-shadow: none !important;
+    border: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .MuiSvgIcon-root {
+    color: white;
+  }

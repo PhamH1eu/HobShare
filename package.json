@@ -12,8 +12,9 @@
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
+    "@mui/icons-material": "^5.16.1",
     "@mui/lab": "^5.0.0-alpha.171",
-    "@mui/material": "^5.16.0",
+    "@mui/material": "^5.16.1",
     "@react-query-firebase/auth": "^1.0.0-dev.2",
     "@react-query-firebase/firestore": "^1.0.0-dev.7",
     "class-variance-authority": "^0.7.0",

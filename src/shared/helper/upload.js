@@ -1,10 +1,29 @@
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import Resizer from "react-image-file-resizer";
 
 import { storage } from "../../lib/firebase";
+
+// const resizeFile = (file) =>
+//   new Promise((resolve) => {
+//     Resizer.imageFileResizer(
+//       file,
+//       300,
+//       300,
+//       "JPEG",
+//       0.9,
+//       0,
+//       (uri) => {
+//         resolve(uri);
+//       },
+//       "file"
+//     );
+//   });
 
 const upload = async (file) => {
   const date = new Date();
   const storageRef = ref(storage, `images/${date}-${file.name}`);
+
+  // const fileResized = await resizeFile(file)
 
   const uploadTask = uploadBytesResumable(storageRef, file);
 

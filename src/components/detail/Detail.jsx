@@ -59,7 +59,7 @@ export const Detail = () => {
                 <span>Privacy & Help</span>
               </div>
             </AccordionSummary>
-            <AccordionDetails>123</AccordionDetails>
+            <AccordionDetails><div style={{color: 'white'}}>123</div></AccordionDetails>
           </Accordion>
         </div>
         <div className="option">

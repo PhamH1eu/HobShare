@@ -27,6 +27,7 @@ export default async function SendMessage(currentUser, chatId, text, imgList) {
   // }
   
   //ko cho phép bấm send khi ko có gì
+  //check video more
   if (text === "" && imgList.length == 0) return;
 
   try {
@@ -41,6 +42,7 @@ export default async function SendMessage(currentUser, chatId, text, imgList) {
         text,
         createdAt: new Date(),
         ...(imgUrl && { img: imgUrl }),
+        //add a video url here
       }),
     });
   } catch (err) {

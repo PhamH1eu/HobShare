@@ -14,6 +14,7 @@ export const Chat = () => {
   const [text, setText] = useState("");
   const [chat, setChat] = useState();
   const [imgList, setImgList] = useState([]);
+  const [videoList, setVideoList] = useState([]);
   const endRef = useRef(null);
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -30,7 +31,11 @@ export const Chat = () => {
     setText(text + e.emoji);
     setOpen(false);
   };
+
+  //add video more
   const handleImg = (e) => {
+    //handle video type?
+
     if (e.target.files[0]) {
       setImgList([
         ...imgList,
@@ -44,6 +49,7 @@ export const Chat = () => {
   };
 
   function deleteImg(location) {
+    //handle video
     setImgList((imgList) =>
       imgList.filter((item, index) => index !== location)
     );
@@ -51,6 +57,7 @@ export const Chat = () => {
 
   const handleSend = async () => {
     await Promise.all([
+      //pass video list
       SendMessage(currentUser, chatId, text, imgList),
       UpdateChat(currentUser, user.id, chatId, text),
     ]);

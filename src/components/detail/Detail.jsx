@@ -1,6 +1,9 @@
+import { useState } from "react";
+import { useListenChat } from "src/hooks/useListenChat";
 import { auth } from "../../lib/firebase";
 import { useChatStore } from "../../store/chatStore";
 import { useUserStore } from "../../store/userStore";
+import { useInfoShowStore } from "src/store/infoShowStore";
 import BlockUser from "src/services/BlockUser";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -11,12 +14,17 @@ import "./detail.css";
 export const Detail = () => {
   const {
     user,
+    chatId,
     isCurrentUserBlocked,
     isReceiverBlocked,
     changeBlock,
     resetChat,
   } = useChatStore();
+  const [chat, setChat] = useState();
+  useListenChat(chatId, setChat);
+
   const { currentUser } = useUserStore();
+  const isShow = useInfoShowStore((state) => state.isShow);
 
   const handleBlock = async () => {
     BlockUser(user, isReceiverBlocked, currentUser);
@@ -28,7 +36,28 @@ export const Detail = () => {
     resetChat();
   };
 
-  return (
+  function extractMediaUrls(data) {
+    const urls = [];
+
+    data.messages.forEach((message) => {
+      if (message.img && Array.isArray(message.img)) {
+        message.img.forEach((imgUrl) => {
+          urls.push({ url: imgUrl, type: "img" });
+        });
+      }
+      if (message.video && Array.isArray(message.video)) {
+        message.video.forEach((videoUrl) => {
+          urls.push({ url: videoUrl, type: "video" });
+        });
+      }
+    });
+
+    return urls;
+  }
+
+  if (!chat) return <div>Loading...</div>
+
+  return isShow ? (
     <div className="detail">
       <div className="user">
         <img src={user?.avatar || "./avatar.png"} alt="" />
@@ -37,20 +66,7 @@ export const Detail = () => {
       </div>
       <div className="info">
         <div className="option">
-          <Accordion>
-            <AccordionSummary
-              style={{ padding: "0", color: "white" }}
-              expandIcon={<KeyboardArrowDownIcon />}
-            >
-              <div className="title">
-                <span>Chat Settings</span>
-              </div>
-            </AccordionSummary>
-            <AccordionDetails>123</AccordionDetails>
-          </Accordion>
-        </div>
-        <div className="option">
-          <Accordion>
+          <Accordion defaultExpanded>
             <AccordionSummary
               style={{ padding: "0", color: "white" }}
               expandIcon={<KeyboardArrowDownIcon />}
@@ -59,11 +75,19 @@ export const Detail = () => {
                 <span>Privacy & Help</span>
               </div>
             </AccordionSummary>
-            <AccordionDetails><div style={{color: 'white'}}>123</div></AccordionDetails>
+            <AccordionDetails>
+              <button onClick={handleBlock}>
+                {isCurrentUserBlocked
+                  ? "You are blocked"
+                  : isReceiverBlocked
+                  ? "User blocked"
+                  : "Block User"}
+              </button>
+            </AccordionDetails>
           </Accordion>
         </div>
         <div className="option">
-          <Accordion>
+          <Accordion defaultExpanded>
             <AccordionSummary
               style={{ padding: "0", color: "white" }}
               expandIcon={<KeyboardArrowDownIcon />}
@@ -74,31 +98,29 @@ export const Detail = () => {
             </AccordionSummary>
             <AccordionDetails>
               <div className="photos">
-                <div className="photoItem">
-                  <div className="photoDetail">
-                    <img
-                      src="https://images.pexels.com/photos/7381200/pexels-photo-7381200.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load"
-                      alt=""
-                    />
-                    <span>photo_2024_2.png</span>
-                  </div>
-                  <img src="./download.png" alt="" className="icon" />
-                </div>
+                {extractMediaUrls(chat).map((media, index) => {
+                  return (
+                    <div className="photoItem" key={index}>
+                      <div className="photoDetail">
+                        {media.type === "img" ? (
+                          <img src={media.url} alt="" />
+                        ) : (
+                          <video controls>
+                            <source src={media.url} type="video/mp4" />
+                          </video>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </AccordionDetails>
           </Accordion>
         </div>
-        <button onClick={handleBlock}>
-          {isCurrentUserBlocked
-            ? "You are blocked"
-            : isReceiverBlocked
-            ? "User blocked"
-            : "Block User"}
-        </button>
         <button className="logout" onClick={logout}>
           Logout
         </button>
       </div>
     </div>
-  );
+  ) : null;
 };

@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { format } from "date-fns";
 import EmojiPicker from "emoji-picker-react";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useUserStore } from "../../store/userStore";
 import { useChatStore } from "../../store/chatStore";
+import { useInfoShowStore } from "src/store/infoShowStore";
 import { useListenChat } from "src/hooks/useListenChat";
 import UpdateChat from "src/services/UpdateChat";
 import SendMessage from "src/services/SendMessage";
@@ -20,6 +21,7 @@ export const Chat = () => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   });
 
+  const showInfo = useInfoShowStore((state) => state.showInfo);
   const { currentUser } = useUserStore();
   const { chatId, user, isCurrentUserBlocked, isReceiverBlocked } =
     useChatStore();
@@ -34,22 +36,27 @@ export const Chat = () => {
 
   //add video more
   const handleImg = (e) => {
-    //handle video type?
-
-    if (e.target.files[0]) {
-      setImgList([
-        ...imgList,
-        {
-          file: e.target.files[0],
-          url: URL.createObjectURL(e.target.files[0]),
-        },
-      ]);
-      e.target.value = null;
+    const file = {
+      file: e.target.files[0],
+      url: URL.createObjectURL(e.target.files[0]),
+    };
+    //check if file is image or video
+    if (e.target.files[0].type.includes("image")) {
+      setImgList([...imgList, file]);
+    } else {
+      setVideoList([...videoList, file]);
     }
+    e.target.value = null;
   };
 
-  function deleteImg(location) {
+  function deleteImg(location, type) {
     //handle video
+    if (type === "video") {
+      setVideoList((videoList) =>
+        videoList.filter((item, index) => index !== location)
+      );
+      return;
+    }
     setImgList((imgList) =>
       imgList.filter((item, index) => index !== location)
     );
@@ -58,10 +65,11 @@ export const Chat = () => {
   const handleSend = async () => {
     await Promise.all([
       //pass video list
-      SendMessage(currentUser, chatId, text, imgList),
+      SendMessage(currentUser, chatId, text, imgList, videoList),
       UpdateChat(currentUser, user.id, chatId, text),
     ]);
     setImgList([]);
+    setVideoList([]);
     setText("");
   };
 
@@ -78,11 +86,13 @@ export const Chat = () => {
         <div className="icons">
           <img src="./phone.png" alt="" />
           <img src="./video.png" alt="" />
-          <img src="./info.png" alt="" />
+          <button onClick={showInfo}>
+            <img src="./info.png" alt="" />
+          </button>
         </div>
       </div>
       <div className="center">
-        {chat?.messages?.map((message) => (
+        {chat?.messages?.map((message, index) => (
           <div
             className={
               message.senderId === currentUser?.id ? "message own" : "message"
@@ -90,14 +100,24 @@ export const Chat = () => {
             key={message?.createdAt}
           >
             <div className="texts">
-              {/* {message.img && <img src={message.img} alt="" />} */}
               {message.img &&
                 message.img.map((image, index) => {
-                  <img src={image} key={index} alt="" />;
+                  return <img src={image} key={index} alt="" />;
+                })}
+
+              {message.video &&
+                message.video.map((video, index) => {
+                  return (
+                    <video controls key={index}>
+                      <source src={video} type="video/mp4" />
+                    </video>
+                  );
                 })}
 
               {message.text != "" && <p>{message.text}</p>}
-              <span>{format(message.createdAt.toDate(), "dd MMM")}</span>
+              {index == chat.messages.length - 1 && (
+                <span>{format(message.createdAt.toDate(), "dd MMM")}</span>
+              )}
             </div>
           </div>
         ))}
@@ -117,15 +137,21 @@ export const Chat = () => {
               </div>
             );
           })}
-          <div className="video-wrapper">
-            <video
-              src="https://ik.imagekit.io/ikmedia/example_video.mp4"
-              controls
-            />
-            <div className="delete">
-              <CancelIcon />
-            </div>
-          </div>
+          {videoList.map(function (video, index) {
+            return (
+              <div className="video-wrapper" key={index}>
+                <video controls>
+                  <source src={video.url} type="video/mp4" />
+                </video>
+                <div
+                  className="delete"
+                  onClick={() => deleteImg(index, "video")}
+                >
+                  <CancelIcon />
+                </div>
+              </div>
+            );
+          })}
         </div>
 
         <div className="bottom">
@@ -139,8 +165,6 @@ export const Chat = () => {
               style={{ display: "none" }}
               onChange={handleImg}
             />
-            <img src="./camera.png" alt="" />
-            <img src="./mic.png" alt="" />
           </div>
           <input
             type="text"

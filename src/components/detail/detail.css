@@ -22,67 +22,32 @@
     padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 25px;
 
     .option {
       .title {
         display: flex;
         align-items: center;
         justify-content: space-between;
-
-        img {
-          width: 30px;
-          height: 30px;
-          background-color: rgba(17, 25, 40, 0.3);
-          padding: 10px;
-          border-radius: 50%;
-          cursor: pointer;
-        }
       }
 
       .photos {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        margin-top: 20px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
 
         .photoItem {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-
-          .photoDetail {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-
-            img {
-              width: 40px;
-              height: 40px;
-              border-radius: 5px;
-              object-fit: cover;
-            }
-
-            span {
-              font-size: 14px;
-              color: lightgray;
-              font-weight: 300;
-            }
-          }
-
-          .icon {
-            width: 30px;
-            height: 30px;
-            background-color: rgba(17, 25, 40, 0.3);
-            padding: 10px;
-            border-radius: 50%;
-            cursor: pointer;
+          width: min-content;
+          img, video {
+            width: 70px;
+            height: 70px;
+            border-radius: 5px;
+            object-fit: cover;
           }
         }
       }
     }
 
     button {
+      margin-top: 10px;
       padding: 15px;
       background-color: rgba(230, 74, 105, 0.553);
       color: white;
@@ -110,6 +75,12 @@
   padding: 0;
 }
 
-.MuiSvgIcon-root, .MuiAccordionDetails-root {
+.MuiSvgIcon-root,
+.MuiAccordionDetails-root {
   color: white;
+  padding: 0 !important;
+
+  button {
+    width: 100%;
+  }
 }

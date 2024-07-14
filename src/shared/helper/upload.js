@@ -21,7 +21,7 @@ import { storage } from "../../lib/firebase";
 
 const upload = async (file) => {
   const date = new Date();
-  const storageRef = ref(storage, `images/${date}-${file.name}`);
+  const storageRef = ref(storage, `images/${file.name}`);
 
   // const fileResized = await resizeFile(file)
 

@@ -47,6 +47,13 @@
       display: flex;
       gap: 20px;
 
+      button {
+        background-color: transparent;
+        border: none;
+        outline: none;
+        cursor: pointer;
+      }
+
       img {
         width: 20px;
         height: 20px;
@@ -63,7 +70,7 @@
     gap: 20px;
 
     .message {
-      max-width: 70%;
+      max-width: 350px;
       display: flex;
       gap: 20px;
 
@@ -97,6 +104,12 @@
           object-fit: cover;
         }
 
+        video {
+          margin-top: 10px;
+          width: 100%;
+          border-radius: 8px;
+        }
+
         p {
           padding: 20px;
           background-color: rgba(17, 25, 40, 0.3);
@@ -115,7 +128,7 @@
       position: absolute;
       display: flex;
       flex-wrap: wrap;
-      max-width: 800px;
+      max-width: 600px;
       gap: 10px;
       bottom: 90px;
       padding: 16px;
@@ -144,12 +157,13 @@
 
       .video-wrapper {
         position: relative;
-        max-width: 250px;
-        max-height: 250px;
         border-radius: 8px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
 
         video {
-          width: 100%;
+          width: 150px;
           border-radius: 8px;
         }
 

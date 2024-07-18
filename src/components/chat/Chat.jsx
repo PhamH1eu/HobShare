@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { format } from "date-fns";
 import EmojiPicker from "emoji-picker-react";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -75,7 +75,7 @@ export const Chat = () => {
 
   return (
     <div className="chat">
-      <div className="top">
+      {/* <div className="top">
         <div className="user">
           <img src={user?.avatar || "./avatar.png"} alt="" />
           <div className="texts">
@@ -97,7 +97,7 @@ export const Chat = () => {
             className={
               message.senderId === currentUser?.id ? "message own" : "message"
             }
-            key={message?.createdAt}
+            key={message?.sendAt}
           >
             <div className="texts">
               {message.img &&
@@ -116,14 +116,14 @@ export const Chat = () => {
 
               {message.text != "" && <p>{message.text}</p>}
               {index == chat.messages.length - 1 && (
-                <span>{format(message.createdAt.toDate(), "dd MMM")}</span>
+                <span>{format(message.sendAt.toDate(), "dd MMM")}</span>
               )}
             </div>
           </div>
         ))}
 
         <div ref={endRef}></div>
-      </div>
+      </div> */}
 
       <div className="bottom-wrapper">
         <div className="preview">
@@ -189,7 +189,7 @@ export const Chat = () => {
           <div className="emoji">
             <img src="./emoji.png" alt="" onClick={() => setOpen(!open)} />
             <div className="picker">
-              <EmojiPicker open={open} onEmojiClick={handleEmoji} />
+              <EmojiPicker open={open} onEmojiClick={handleEmoji} style={{zIndex: 2}}/>
             </div>
           </div>
           <button

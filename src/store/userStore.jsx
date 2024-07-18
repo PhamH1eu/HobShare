@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { UserService } from "src/services/DatabaseService";
 import { db } from "src/lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
 

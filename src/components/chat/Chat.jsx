@@ -75,7 +75,7 @@ export const Chat = () => {
 
   return (
     <div className="chat">
-      {/* <div className="top">
+      <div className="top">
         <div className="user">
           <img src={user?.avatar || "./avatar.png"} alt="" />
           <div className="texts">
@@ -92,7 +92,7 @@ export const Chat = () => {
         </div>
       </div>
       <div className="center">
-        {chat?.messages?.map((message, index) => (
+        {chat?.map((message, index) => (
           <div
             className={
               message.senderId === currentUser?.id ? "message own" : "message"
@@ -115,15 +115,17 @@ export const Chat = () => {
                 })}
 
               {message.text != "" && <p>{message.text}</p>}
-              {index == chat.messages.length - 1 && (
-                <span>{format(message.sendAt.toDate(), "dd MMM")}</span>
+              {index == chat.length - 1 && (
+                <span>
+                  {format(message.sendAt?.toDate() ?? new Date(), "dd MMM")}
+                </span>
               )}
             </div>
           </div>
         ))}
 
         <div ref={endRef}></div>
-      </div> */}
+      </div>
 
       <div className="bottom-wrapper">
         <div className="preview">
@@ -189,7 +191,11 @@ export const Chat = () => {
           <div className="emoji">
             <img src="./emoji.png" alt="" onClick={() => setOpen(!open)} />
             <div className="picker">
-              <EmojiPicker open={open} onEmojiClick={handleEmoji} style={{zIndex: 2}}/>
+              <EmojiPicker
+                open={open}
+                onEmojiClick={handleEmoji}
+                style={{ zIndex: 2 }}
+              />
             </div>
           </div>
           <button

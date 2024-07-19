@@ -7,6 +7,7 @@ import Notification from "./components/notification/Notification";
 import { useUserStore } from "./store/userStore";
 import { useListenAuth } from "./hooks/useListenAuth";
 import { useChatStore } from "./store/chatStore";
+import CircularLoading from "./shared/components/Loading";
 
 const App = () => {
   const { currentUser, isLoading } = useUserStore();
@@ -15,7 +16,7 @@ const App = () => {
   //listen to auth change
   useListenAuth();
 
-  if (isLoading) return <div className="loading">Loading...</div>;
+  if (isLoading) return <CircularLoading/>;
 
   return (
     <div className="container">

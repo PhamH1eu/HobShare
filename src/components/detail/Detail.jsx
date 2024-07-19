@@ -9,6 +9,7 @@ import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import CircularLoading from "src/shared/components/Loading";
 import "./detail.css";
 
 export const Detail = () => {
@@ -39,7 +40,7 @@ export const Detail = () => {
   function extractMediaUrls(data) {
     const urls = [];
 
-    data.messages.forEach((message) => {
+    data.forEach((message) => {
       if (message.img && Array.isArray(message.img)) {
         message.img.forEach((imgUrl) => {
           urls.push({ url: imgUrl, type: "img" });
@@ -55,7 +56,7 @@ export const Detail = () => {
     return urls;
   }
 
-  if (!chat) return <div>Loading...</div>
+  if (!chat && isShow) return <div style={{flex: 1}}><CircularLoading/></div>
 
   return isShow ? (
     <div className="detail">

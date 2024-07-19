@@ -20,9 +20,8 @@ export const Detail = () => {
     isReceiverBlocked,
     changeBlock,
     resetChat,
+    message,
   } = useChatStore();
-  const [chat, setChat] = useState();
-  useListenChat(chatId, setChat);
 
   const { currentUser } = useUserStore();
   const isShow = useInfoShowStore((state) => state.isShow);
@@ -56,7 +55,12 @@ export const Detail = () => {
     return urls;
   }
 
-  if (!chat && isShow) return <div style={{flex: 1}}><CircularLoading/></div>
+  if (!message && isShow)
+    return (
+      <div style={{ flex: 1 }}>
+        <CircularLoading />
+      </div>
+    );
 
   return isShow ? (
     <div className="detail">
@@ -99,7 +103,7 @@ export const Detail = () => {
             </AccordionSummary>
             <AccordionDetails>
               <div className="photos">
-                {extractMediaUrls(chat).map((media, index) => {
+                {extractMediaUrls(message).map((media, index) => {
                   return (
                     <div className="photoItem" key={index}>
                       <div className="photoDetail">

@@ -4,6 +4,7 @@ import { useUserStore } from "./userStore";
 export const useChatStore = create((set) => ({
   chatId: null,
   user: null,
+  message: [],
   isCurrentUserBlocked: false,
   isReceiverBlocked: false,
   changeChat: (chatId, user) => {
@@ -29,6 +30,7 @@ export const useChatStore = create((set) => ({
       });
     } else {
       return set({
+        message: [],
         chatId,
         user,
         isCurrentUserBlocked: false,
@@ -47,5 +49,8 @@ export const useChatStore = create((set) => ({
       isCurrentUserBlocked: false,
       isReceiverBlocked: false,
     });
+  },
+  setMessage: (newMess) => {
+    set((state) => ({ ...state, message: [...newMess, ...state.message] }));
   },
 }));

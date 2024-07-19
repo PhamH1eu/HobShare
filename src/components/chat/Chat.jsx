@@ -1,19 +1,27 @@
 import { useEffect, useRef, useState } from "react";
 import { format } from "date-fns";
 import EmojiPicker from "emoji-picker-react";
+import InfiniteScroll from "react-infinite-scroller";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useUserStore } from "../../store/userStore";
 import { useChatStore } from "../../store/chatStore";
 import { useInfoShowStore } from "src/store/infoShowStore";
 import { useListenChat } from "src/hooks/useListenChat";
+import nextchat from "src/hooks/useListenChat";
 import UpdateChat from "src/services/UpdateChat";
 import SendMessage from "src/services/SendMessage";
+import CircularLoading from "src/shared/components/Loading";
 import "./chat.css";
+
+const posts = [];
+for (var i = 0; i < 100; i++) {
+  posts.push({ id: i });
+}
 
 export const Chat = () => {
   const [open, setOpen] = useState(false);
   const [text, setText] = useState("");
-  const [chat, setChat] = useState();
+  const [lastDoc, setLastDoc] = useState();
   const [imgList, setImgList] = useState([]);
   const [videoList, setVideoList] = useState([]);
   const endRef = useRef(null);
@@ -23,11 +31,11 @@ export const Chat = () => {
 
   const showInfo = useInfoShowStore((state) => state.showInfo);
   const { currentUser } = useUserStore();
-  const { chatId, user, isCurrentUserBlocked, isReceiverBlocked } =
+  const { chatId, user, isCurrentUserBlocked, isReceiverBlocked, message, setMessage } =
     useChatStore();
 
   //khi chatID thay đổi(bằng cách bấm chat với ng khác) => lấy dữ liệu chat từ db && lắng nghe sự thay đổi
-  useListenChat(chatId, setChat);
+  useListenChat(chatId, setMessage);
 
   const handleEmoji = (e) => {
     setText(text + e.emoji);
@@ -73,6 +81,9 @@ export const Chat = () => {
     setText("");
   };
 
+  //flag
+  const [hasMoreItems, sethasMoreItems] = useState(true);
+
   return (
     <div className="chat">
       <div className="top">
@@ -92,12 +103,19 @@ export const Chat = () => {
         </div>
       </div>
       <div className="center">
-        {chat?.map((message, index) => (
+        {/* <InfiniteScroll
+          loadMore={nextchat(lastDoc, chatId, setChat, chat)}
+          hasMore={hasMoreItems}
+          isReverse={true}
+          loader={<CircularLoading/>}
+          useWindow={false}
+        > */}
+          {message?.map((message, index) => (
           <div
             className={
               message.senderId === currentUser?.id ? "message own" : "message"
             }
-            key={message?.sendAt}
+            key={index}
           >
             <div className="texts">
               {message.img &&
@@ -115,7 +133,7 @@ export const Chat = () => {
                 })}
 
               {message.text != "" && <p>{message.text}</p>}
-              {index == chat.length - 1 && (
+              {index == message.length - 1 && (
                 <span>
                   {format(message.sendAt?.toDate() ?? new Date(), "dd MMM")}
                 </span>
@@ -125,6 +143,7 @@ export const Chat = () => {
         ))}
 
         <div ref={endRef}></div>
+        {/* </InfiniteScroll> */}
       </div>
 
       <div className="bottom-wrapper">

@@ -1,18 +1,46 @@
 import { useEffect } from "react";
-import { query, collection, onSnapshot, orderBy } from "firebase/firestore";
+import {
+  query,
+  collection,
+  onSnapshot,
+  orderBy,
+  limit,
+  startAfter,
+  getDocs,
+} from "firebase/firestore";
 import { db } from "src/lib/firebase";
 
-export const useListenChat = (chatId, setChat) => {
+export const useListenChat = async (chatId, setMessage) => {
   useEffect(() => {
-    const q = query(collection(db, `chats/${chatId}/messages`), orderBy("sendAt", "asc"));
-    const unSub = onSnapshot(q, (querySnapshot) => {
+    const q = query(
+      collection(db, `chats/${chatId}/messages`),
+      orderBy("sendAt", "desc"),
+      limit("5")
+    );
+    const unSub = onSnapshot(q, async (querySnapshot) => {
       const chats = [];
-      querySnapshot.docs.forEach((doc) => chats.push(doc.data()));
-      setChat(chats);
+      querySnapshot.docs.reverse().forEach((doc) => {
+        chats.push(doc.data());
+      });
+      setMessage(chats);
     });
 
     return () => {
       unSub();
     };
-  }, [chatId, setChat]);
+  }, [chatId, setMessage]);
 };
+
+export default async function nextchat(doc, chatId, setMessage) {
+  const nex = query(
+    collection(db, `chats/${chatId}/messages`),
+    orderBy("sendAt", "desc"),
+    startAfter(doc),
+    limit("5")
+  );
+  
+  const result = await getDocs(nex);
+  const oldMessage = [];
+  result.forEach((item) => oldMessage.push(item.data()));
+  setMessage(oldMessage);
+}

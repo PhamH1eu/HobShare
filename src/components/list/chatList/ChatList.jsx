@@ -43,6 +43,8 @@ export const ChatList = () => {
     //get {chat id, lastMessage, isSeen} from chat list
     const userChats = chats.map((item) => {
       const { user, ...rest } = item;
+      //TODO: try this
+      // delete item.user;
       return rest;
     });
 

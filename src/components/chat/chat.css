@@ -68,6 +68,8 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+    height: 620px;
+    overflow-y: auto;
 
     .message {
       max-width: 350px;

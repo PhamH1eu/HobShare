@@ -1,6 +1,11 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import {
+  getFirestore,
+  persistentMultipleTabManager,
+  initializeFirestore,
+  persistentLocalCache
+} from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
@@ -13,6 +18,11 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+initializeFirestore(app, {
+  localCache: persistentLocalCache(
+    /*settings*/ { tabManager: persistentMultipleTabManager() }
+  ),
+});
 
 export const auth = getAuth(app);
 export const db = getFirestore(app);

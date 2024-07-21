@@ -12,6 +12,7 @@ export const ChatList = () => {
   const [chats, setChats] = useState([]);
   const { currentUser } = useUserStore();
   const changeChat = useChatStore((state) => state.changeChat);
+  const chatId = useChatStore((state) => state.chatId);
 
   //TODO: listen to message changes [NEED TO UNDERSTAND]
   useEffect(() => {
@@ -61,6 +62,7 @@ export const ChatList = () => {
       chats: userChats,
     });
     //pop up chat in screen
+    if (chatId === chat.chatId) return;
     changeChat(chat.chatId, chat.user);
   };
 

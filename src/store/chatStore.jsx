@@ -14,6 +14,7 @@ export const useChatStore = create((set) => ({
     if (user.blocked.includes(currentUser.id)) {
       return set({
         chatId,
+        message: [],
         user: null,
         isCurrentUserBlocked: true,
         isReceiverBlocked: false,
@@ -24,6 +25,7 @@ export const useChatStore = create((set) => ({
     else if (currentUser.blocked.includes(user.id)) {
       return set({
         chatId,
+        message: [],
         user: user,
         isCurrentUserBlocked: false,
         isReceiverBlocked: true,
@@ -46,11 +48,12 @@ export const useChatStore = create((set) => ({
     set({
       chatId: null,
       user: null,
+      message: [],
       isCurrentUserBlocked: false,
       isReceiverBlocked: false,
     });
   },
   setMessage: (newMess) => {
-    set((state) => ({ ...state, message: [...newMess, ...state.message] }));
+    set(() => ({ message: [...newMess] }));
   },
 }));

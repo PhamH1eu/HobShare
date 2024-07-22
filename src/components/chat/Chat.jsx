@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import EmojiPicker from "emoji-picker-react";
 import InfiniteScroll from "react-infinite-scroller";
+import ScrollableFeed from "react-scrollable-feed";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useUserStore } from "../../store/userStore";
 import { useChatStore } from "../../store/chatStore";
@@ -35,10 +36,11 @@ export const Chat = () => {
     isReceiverBlocked,
     message,
     setMessage,
+    setNewMessage,
   } = useChatStore();
 
   //khi chatID thay đổi(bằng cách bấm chat với ng khác) => lấy dữ liệu chat từ db && lắng nghe sự thay đổi
-  useListenChat(chatId, setMessage, setLastMessageTimestamp);
+  useListenChat(chatId, setNewMessage, setMessage, setLastMessageTimestamp);
   useEffect(() => {
     setHasMore(true);
     setLastMessageTimestamp(null);
@@ -134,37 +136,41 @@ export const Chat = () => {
           loader={<CircularLoading key={0} />}
           useWindow={false}
         >
-          {message?.map((message, index) => (
-            <div
-              className={
-                message.senderId === currentUser?.id ? "message own" : "message"
-              }
-              key={index}
-            >
-              <div className="texts">
-                {message.img &&
-                  message.img.map((image, index) => {
-                    return <img src={image} key={index} alt="" />;
-                  })}
+          {/* <ScrollableFeed> */}
+            {message?.map((message, index) => (
+              <div
+                className={
+                  message.senderId === currentUser?.id
+                    ? "message own"
+                    : "message"
+                }
+                key={index}
+              >
+                <div className="texts">
+                  {message.img &&
+                    message.img.map((image, index) => {
+                      return <img src={image} key={index} alt="" />;
+                    })}
 
-                {message.video &&
-                  message.video.map((video, index) => {
-                    return (
-                      <video controls key={index}>
-                        <source src={video} type="video/mp4" />
-                      </video>
-                    );
-                  })}
+                  {message.video &&
+                    message.video.map((video, index) => {
+                      return (
+                        <video controls key={index}>
+                          <source src={video} type="video/mp4" />
+                        </video>
+                      );
+                    })}
 
-                {message.text != "" && <p>{message.text}</p>}
-                {index == message.length - 1 && (
-                  <span>
-                    {format(message.sendAt?.toDate() ?? new Date(), "dd MMM")}
-                  </span>
-                )}
+                  {message.text != "" && <p>{message.text}</p>}
+                  {index == message.length - 1 && (
+                    <span>
+                      {format(message.sendAt?.toDate() ?? new Date(), "dd MMM")}
+                    </span>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          {/* </ScrollableFeed> */}
         </InfiniteScroll>
       </div>
 

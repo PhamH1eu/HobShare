@@ -56,4 +56,7 @@ export const useChatStore = create((set) => ({
   setMessage: (newMess) => {
     set(() => ({ message: [...newMess] }));
   },
+  setNewMessage: (newMess) => {
+    set((state) => ({ message: [...state.message, newMess] }));
+  },
 }));

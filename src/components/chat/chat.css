@@ -66,6 +66,13 @@
     flex: 1;
     overflow: auto;
     height: 500px;
+    max-height: 640px;
+
+    button {
+      position: sticky;
+      bottom: 5px;
+      background-color: #5183fe;
+    }
   }
 
   .center > div {

@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { format } from "date-fns";
 import EmojiPicker from "emoji-picker-react";
 import InfiniteScroll from "react-infinite-scroller";
-import ScrollableFeed from "react-scrollable-feed";
+import IconButton from "@mui/material/IconButton";
+import KeyboardDoubleArrowDownIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
+import { useInView } from "react-intersection-observer";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useUserStore } from "../../store/userStore";
 import { useChatStore } from "../../store/chatStore";
@@ -16,6 +18,11 @@ import "./chat.css";
 
 export const Chat = () => {
   //local states
+  const { ref, inView, entry } = useInView();
+  const scrollDown = useCallback(() => {
+    entry.target.scrollIntoView({ behavior: "smooth" });
+  }, [entry]);
+
   const [open, setOpen] = useState(false);
   const [text, setText] = useState("");
   const [imgList, setImgList] = useState([]);
@@ -38,6 +45,9 @@ export const Chat = () => {
     setMessage,
     setNewMessage,
   } = useChatStore();
+  useEffect(() => {
+    if (inView) scrollDown();
+  }, [message, inView, scrollDown]);
 
   //khi chatID thay đổi(bằng cách bấm chat với ng khác) => lấy dữ liệu chat từ db && lắng nghe sự thay đổi
   useListenChat(chatId, setNewMessage, setMessage, setLastMessageTimestamp);
@@ -136,42 +146,51 @@ export const Chat = () => {
           loader={<CircularLoading key={0} />}
           useWindow={false}
         >
-          {/* <ScrollableFeed> */}
-            {message?.map((message, index) => (
+          {message?.map((mess, index) => {
+            return (
               <div
                 className={
-                  message.senderId === currentUser?.id
-                    ? "message own"
-                    : "message"
+                  mess.senderId === currentUser?.id ? "message own" : "message"
                 }
                 key={index}
               >
                 <div className="texts">
-                  {message.img &&
-                    message.img.map((image, index) => {
+                  {mess.img &&
+                    mess.img.map((image, index) => {
                       return <img src={image} key={index} alt="" />;
                     })}
-
-                  {message.video &&
-                    message.video.map((video, index) => {
+  
+                  {mess.video &&
+                    mess.video.map((video, index) => {
                       return (
                         <video controls key={index}>
                           <source src={video} type="video/mp4" />
                         </video>
                       );
                     })}
-
-                  {message.text != "" && <p>{message.text}</p>}
+  
+                  {mess.text != "" && <p>{mess.text}</p>}
                   {index == message.length - 1 && (
                     <span>
-                      {format(message.sendAt?.toDate() ?? new Date(), "dd MMM")}
+                      {format(mess.sendAt?.toDate() ?? new Date(), "dd MMM")}
                     </span>
                   )}
                 </div>
               </div>
-            ))}
-          {/* </ScrollableFeed> */}
+            )
+          })}
         </InfiniteScroll>
+        <div ref={ref}></div>
+        {!inView && (
+          <IconButton
+            color="info"
+            size="large"
+            onClick={() => scrollDown()}
+            aria-label="hs"
+          >
+            <KeyboardDoubleArrowDownIcon fontSize="inherit" />
+          </IconButton>
+        )}
       </div>
 
       <div className="bottom-wrapper">

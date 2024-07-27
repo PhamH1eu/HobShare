@@ -55,7 +55,7 @@
       object-fit: cover;
     }
 
-    .texts {
+    .text {
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -67,6 +67,9 @@
       p {
         font-size: 0.875rem;
         font-weight: 300;
+        max-width: 200px;
+        overflow: hidden;
+        height: 35px;
       }
     }
   }

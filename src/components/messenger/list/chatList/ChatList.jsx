@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import AddUser from "./addUser/AddUser";
-import { useUserStore } from "../../../store/userStore";
-import { useChatStore } from "../../../store/chatStore";
-import { db } from "../../../lib/firebase";
+import { useUserStore } from "src/store/userStore";
+import { useChatStore } from "src/store/chatStore";
+import { db } from "src/lib/firebase";
 import { onSnapshot, doc } from "firebase/firestore";
 import { ChatService, UserService } from "src/services/DatabaseService";
 import "./chatList.css";

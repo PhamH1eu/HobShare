@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useListenChat } from "src/hooks/useListenChat";
-import { auth } from "../../lib/firebase";
-import { useChatStore } from "../../store/chatStore";
-import { useUserStore } from "../../store/userStore";
+import { auth } from "src/lib/firebase";
+import { useChatStore } from "src/store/chatStore";
+import { useUserStore } from "src/store/userStore";
 import { useInfoShowStore } from "src/store/infoShowStore";
 import BlockUser from "src/services/BlockUser";
 import Accordion from "@mui/material/Accordion";

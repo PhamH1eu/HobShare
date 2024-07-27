@@ -1,37 +1,18 @@
-import { Chat } from "./components/chat/Chat";
-import { Detail } from "./components/detail/Detail";
-import { List } from "./components/list/List";
-import { Landing } from "./components/auth/Landing";
-import Notification from "./components/notification/Notification";
+import Router from "./Router";
+import { Landing } from "src/components/auth/Landing";
 
-import { useUserStore } from "./store/userStore";
-import { useListenAuth } from "./hooks/useListenAuth";
-import { useChatStore } from "./store/chatStore";
-import CircularLoading from "./shared/components/Loading";
+import { useUserStore } from "src/store/userStore";
+import { useListenAuth } from "src/hooks/useListenAuth";
+import CircularLoading from "src/shared/components/Loading";
 
 const App = () => {
   const { currentUser, isLoading } = useUserStore();
-  const chatId = useChatStore((state) => state.chatId);
 
-  //listen to auth change
   useListenAuth();
 
-  if (isLoading) return <CircularLoading/>;
+  if (isLoading) return <CircularLoading />;
 
-  return (
-    <div className="container">
-      {currentUser ? (
-        <>
-          <List />
-          {chatId && <Chat />}
-          {chatId && <Detail />}
-        </>
-      ) : (
-        <Landing />
-      )}
-      <Notification />
-    </div>
-  );
+  return <div className="container">{currentUser ? <Router /> : <Landing />}</div>;
 };
 
 export default App;

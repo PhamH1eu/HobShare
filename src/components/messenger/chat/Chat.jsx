@@ -6,15 +6,15 @@ import IconButton from "@mui/material/IconButton";
 import KeyboardDoubleArrowDownIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
 import { useInView } from "react-intersection-observer";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { useUserStore } from "../../store/userStore";
-import { useChatStore } from "../../store/chatStore";
+import { useUserStore } from "src/store/userStore";
+import { useChatStore } from "src/store/chatStore";
 import { useInfoShowStore } from "src/store/infoShowStore";
 import { useListenChat } from "src/hooks/useListenChat";
 import { loadMoreMessages } from "src/hooks/useListenChat";
 import UpdateChat from "src/services/UpdateChat";
 import SendMessage from "src/services/SendMessage";
 import CircularLoading from "src/shared/components/Loading";
-import "./chat.css";
+import './chat.css';
 
 export const Chat = () => {
   //local states

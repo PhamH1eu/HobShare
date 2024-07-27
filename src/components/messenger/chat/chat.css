@@ -64,7 +64,8 @@
   .center {
     padding: 20px;
     flex: 1;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     height: 500px;
     max-height: 640px;
 
@@ -89,6 +90,7 @@
 
         .texts {
           p {
+            max-width: 350px;
             background-color: #5183fe;
           }
         }
@@ -122,6 +124,7 @@
 
         p {
           padding: 20px;
+          max-width: 350px;
           background-color: rgba(17, 25, 40, 0.3);
           border-radius: 10px;
         }

@@ -1,6 +1,6 @@
 import "./addUser.css";
 import { useState } from "react";
-import { useUserStore } from "../../../../store/userStore";
+import { useUserStore } from "src/store/userStore";
 import SearchUser from "src/services/SearchUser";
 import AddUserToChat from "src/services/AddUserToChat";
 

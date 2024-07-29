@@ -14,7 +14,7 @@ import { loadMoreMessages } from "src/hooks/useListenChat";
 import UpdateChat from "src/services/UpdateChat";
 import SendMessage from "src/services/SendMessage";
 import CircularLoading from "src/shared/components/Loading";
-import './chat.css';
+import "./chat.css";
 
 export const Chat = () => {
   //local states
@@ -159,7 +159,7 @@ export const Chat = () => {
                     mess.img.map((image, index) => {
                       return <img src={image} key={index} alt="" />;
                     })}
-  
+
                   {mess.video &&
                     mess.video.map((video, index) => {
                       return (
@@ -168,7 +168,7 @@ export const Chat = () => {
                         </video>
                       );
                     })}
-  
+
                   {mess.text != "" && <p>{mess.text}</p>}
                   {index == message.length - 1 && (
                     <span>
@@ -177,7 +177,7 @@ export const Chat = () => {
                   )}
                 </div>
               </div>
-            )
+            );
           })}
         </InfiniteScroll>
         <div ref={ref}></div>

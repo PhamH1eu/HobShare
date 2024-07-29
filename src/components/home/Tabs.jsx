@@ -15,7 +15,8 @@ const SidebarWrapper = styled.div`
   gap: 5px;
   flex-direction: column;
   position: sticky;
-  top: 0;
+  top: 74px;
+  height: calc(100vh - 79px);
 `;
 
 const Profile = styled.div`
@@ -56,7 +57,6 @@ const MenuItem = styled.div`
 
 const Tabs = () => {
   const { currentUser } = useUserStore();
-  console.log(currentUser);
   return (
     <SidebarWrapper>
       <Profile>

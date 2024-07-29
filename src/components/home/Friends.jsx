@@ -103,13 +103,30 @@ const groupChats = [
 
 const ContactList = styled.div`
   position: sticky;
-  top: 0;
+  top: 64px;
+  height: calc(100vh - 64px);
+  margin-left: 10px;
+  margin-top: 5px
   width: 350px;
   color: white;
-  margin-left: 10px;
   padding-right: 10px;
   overflow-y: auto;
   font-family: Arial, sans-serif;
+
+  &::-webkit-scrollbar {
+    background-color: transparent;
+    width: 10px;
+  }
+
+  &:hover {
+    &::-webkit-scrollbar {
+      background-color: white;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: #ccc;
+      border-radius: 10px;
+    }
+  }
 
   h2 {
     margin-top: 20px;

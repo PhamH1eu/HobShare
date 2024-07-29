@@ -4,6 +4,7 @@ import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import AddReactionIcon from "@mui/icons-material/AddReaction";
 import styled from "styled-components";
 import { useUserStore } from "src/store/userStore";
+import Divider from "@mui/material/Divider";
 
 const ChatInput = styled.div`
   display: flex;
@@ -82,6 +83,7 @@ const NewPostInput = () => {
           placeholder={`${currentUser.username} ơi, bạn đang nghĩ gì thế?`}
         />
       </MessageInput>
+      <Divider flexItem variant="middle" color="#bdbdbd" />
       <Actions>
         <IconButton>
           <VideoCameraBackIcon color="error" />

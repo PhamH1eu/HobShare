@@ -70,13 +70,15 @@ const IconButton = styled.button`
   span {
     text-align: start;
     font-size: 0.9rem;
-    font-weight: 400;
+    font-weight: 500;
+    color: rgba(101,103,107,255);
     margin-left: 10px;
   }
 `;
 
 const NewPostInput = () => {
   const { currentUser } = useUserStore();
+  console.log("🚀 ~ NewPostInput ~ currentUser:", currentUser.avatar)
 
   return (
     <ChatInput>

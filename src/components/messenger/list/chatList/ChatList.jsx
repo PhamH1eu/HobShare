@@ -5,6 +5,8 @@ import { useChatStore } from "src/store/chatStore";
 import { db } from "src/lib/firebase";
 import { onSnapshot, doc } from "firebase/firestore";
 import { ChatService, UserService } from "src/services/DatabaseService";
+
+import SearchIcon from "@mui/icons-material/Search";
 import "./chatList.css";
 
 export const ChatList = () => {
@@ -70,8 +72,8 @@ export const ChatList = () => {
     <div className="chatList">
       <div className="search">
         <div className="searchBar">
-          <img src="./search.png" alt="search" />
-          <input type="text" placeholder="Search" />
+          <SearchIcon color="greyIcon" />
+          <input type="text" placeholder="Tìm kiếm bạn bè..." />
         </div>
         <img
           src={addMode ? "./minus.png" : "./plus.png"}
@@ -86,14 +88,30 @@ export const ChatList = () => {
           key={chat.chatId}
           onClick={() => handleSelect(chat)}
           style={{
-            backgroundColor: chat?.isSeen ? "transparent" : "#5183fe",
+            backgroundColor:
+              chat?.chatId === chatId ? "rgba(235,245,255,255)" : "transparent",
           }}
         >
           <img src={chat.user.avatar || "./avatar.png"} alt="avatar" />
           <div className="text">
             <span>{chat.user.username}</span>
-            <p>{chat.lastMessage}</p>
+            <p style={{ fontWeight: chat?.isSeen ? "normal" : "bold" }}>
+              {chat.lastMessage}
+            </p>
           </div>
+          <div
+            style={
+              chat?.isSeen
+                ? {}
+                : {
+                    backgroundColor: "rgba(5,81,233,255)",
+                    width: "8px",
+                    height: "8px",
+                    borderRadius: "50%",
+                    marginLeft: "auto",
+                  }
+            }
+          ></div>
         </div>
       ))}
       {addMode && <AddUser />}

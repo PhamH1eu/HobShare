@@ -3,14 +3,22 @@ import { format } from "date-fns";
 import EmojiPicker from "emoji-picker-react";
 import InfiniteScroll from "react-infinite-scroller";
 import IconButton from "@mui/material/IconButton";
-import KeyboardDoubleArrowDownIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
 import { useInView } from "react-intersection-observer";
+
+import KeyboardDoubleArrowDownIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
 import CancelIcon from "@mui/icons-material/Cancel";
+import CallIcon from "@mui/icons-material/Call";
+import InfoIcon from "@mui/icons-material/Info";
+import VideocamIcon from "@mui/icons-material/Videocam";
+import ImageIcon from "@mui/icons-material/Image";
+import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
+
 import { useUserStore } from "src/store/userStore";
 import { useChatStore } from "src/store/chatStore";
 import { useInfoShowStore } from "src/store/infoShowStore";
 import { useListenChat } from "src/hooks/useListenChat";
 import { loadMoreMessages } from "src/hooks/useListenChat";
+
 import UpdateChat from "src/services/UpdateChat";
 import SendMessage from "src/services/SendMessage";
 import CircularLoading from "src/shared/components/Loading";
@@ -127,14 +135,17 @@ export const Chat = () => {
           <img src={user?.avatar || "./avatar.png"} alt="" />
           <div className="texts">
             <span>{user?.username}</span>
-            <p>Lorem ipsum dolor, sit amet.</p>
           </div>
         </div>
         <div className="icons">
-          <img src="./phone.png" alt="" />
-          <img src="./video.png" alt="" />
+          <button>
+            <CallIcon color="blue" />
+          </button>
+          <button>
+            <VideocamIcon color="blue" />
+          </button>
           <button onClick={showInfo}>
-            <img src="./info.png" alt="" />
+            <InfoIcon color="blue" />
           </button>
         </div>
       </div>
@@ -188,7 +199,7 @@ export const Chat = () => {
             onClick={() => scrollDown()}
             aria-label="hs"
           >
-            <KeyboardDoubleArrowDownIcon fontSize="inherit" />
+            <KeyboardDoubleArrowDownIcon fontSize="inherit" color="white"/>
           </IconButton>
         )}
       </div>
@@ -225,7 +236,7 @@ export const Chat = () => {
         <div className="bottom">
           <div className="icons">
             <label htmlFor="file">
-              <img src="./img.png" alt="" />
+              <ImageIcon color="blue"/>
             </label>
             <input
               type="file"
@@ -256,7 +267,7 @@ export const Chat = () => {
             disabled={isCurrentUserBlocked || isReceiverBlocked}
           />
           <div className="emoji">
-            <img src="./emoji.png" alt="" onClick={() => setOpen(!open)} />
+            <SentimentSatisfiedAltIcon onClick={() => setOpen(!open)} color="blue"/>
             <div className="picker">
               <EmojiPicker
                 open={open}

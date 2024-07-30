@@ -17,8 +17,11 @@ const theme = createTheme({
       main: "rgba(0, 0, 0, 1)",
     },
     greyIcon: {
-      main: "rgba(101,103,107,255)"
-    }
+      main: "rgba(101,103,107,255)",
+    },
+    blue: {
+      main: "rgba(5,81,233,255)",
+    },
   },
 });
 //search cord.com

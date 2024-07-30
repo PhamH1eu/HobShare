@@ -67,13 +67,12 @@ export const Detail = () => {
       <div className="user">
         <img src={user?.avatar || "./avatar.png"} alt="" />
         <h2>{user?.username}</h2>
-        <p>Lorem ipsum dolor sit amet.</p>
       </div>
       <div className="info">
         <div className="option">
           <Accordion defaultExpanded>
             <AccordionSummary
-              style={{ padding: "0", color: "white" }}
+              style={{ padding: "0", fontWeight: "500"}}
               expandIcon={<KeyboardArrowDownIcon />}
             >
               <div className="title">
@@ -94,7 +93,7 @@ export const Detail = () => {
         <div className="option">
           <Accordion defaultExpanded>
             <AccordionSummary
-              style={{ padding: "0", color: "white" }}
+              style={{ padding: "0", fontWeight: "500" }}
               expandIcon={<KeyboardArrowDownIcon />}
             >
               <div className="title">

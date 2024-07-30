@@ -1,5 +1,5 @@
-import React from "react";
 import styled from "styled-components";
+import { useState } from "react";
 import {
   IoMdThumbsUp,
   IoIosShareAlt,
@@ -10,7 +10,7 @@ import Divider from "@mui/material/Divider";
 
 const PostWrapper = styled.div`
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: white;
   border-radius: 5px;
   margin: 25px 0;
 `;
@@ -39,10 +39,11 @@ const PostAuthor = styled.span`
 
 const PostTime = styled.span`
   color: #999;
+  font-size: 14px;
+  font-weight: 500;
 `;
 
-const PostContent = styled.div`
-`;
+const PostContent = styled.div``;
 
 const PostImage = styled.img`
   width: 100%;
@@ -73,21 +74,26 @@ const PostAction = styled.button`
   background: none;
   border: none;
   cursor: pointer;
-  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 5px;
   padding: 10px;
   gap: 4px;
-  font-size: 1rem;
+  font-size: 1.05rem;
+  font-weight: 500;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(228, 230, 233, 255);
   }
 `;
 
 const Post = ({ post }) => {
+  const [like, setLike] = useState(false);
+  const handleLike = () => {
+    setLike(!like);
+  };
+
   return (
     <PostWrapper>
       <PostHeader>
@@ -101,27 +107,37 @@ const Post = ({ post }) => {
         <p style={{ padding: "10px" }}>{post.postContent}</p>
         {post.postImage && <PostImage src={post.postImage} />}
         {post.postVideo && (
-          <video controls>
+          <video controls style={{ width: "100%" }}>
             <source src={post.postVideo} type="video/mp4" />
           </video>
         )}
       </PostContent>
       <PostFooter>
         <PostReactions>
-          <IoMdThumbsUp color="cornflowerblue" />
-          <IoMdHappy color="yellow" />
+          <IoMdThumbsUp
+            style={{ fontSize: "1.25rem" }}
+            color="cornflowerblue"
+          />
+          <IoMdHappy style={{ fontSize: "1.25rem" }} color="#F5C33B" />
           {post.reactions}
         </PostReactions>
         <Divider flexItem variant="middle" color="#bdbdbd" />
         <PostActions>
-          <PostAction>
+          <PostAction
+            style={{
+              color: like ? "rgba(5,97,242,255)" : "rgba(91, 98, 106, 255)",
+            }}
+            onClick={handleLike}
+          >
             <IoMdThumbsUp /> Thích
           </PostAction>
           <PostAction>
-            <IoIosChatbubbles /> Bình luận
+            <IoIosChatbubbles style={{ color: "rgba(91, 98, 106, 255)" }} />{" "}
+            Bình luận
           </PostAction>
           <PostAction>
-            <IoIosShareAlt /> Chia sẻ
+            <IoIosShareAlt style={{ color: "rgba(91, 98, 106, 255)" }} /> Chia
+            sẻ
           </PostAction>
         </PostActions>
       </PostFooter>

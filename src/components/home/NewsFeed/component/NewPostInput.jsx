@@ -1,4 +1,3 @@
-import React from "react";
 import VideoCameraBackIcon from "@mui/icons-material/VideoCameraBack";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import AddReactionIcon from "@mui/icons-material/AddReaction";
@@ -14,7 +13,7 @@ const ChatInput = styled.div`
   margin-top: 20px;
   border-radius: 5px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: white;
 `;
 
 const MessageInput = styled.div`
@@ -39,6 +38,12 @@ const MessageInput = styled.div`
     outline: none;
     font-size: 1rem;
     width: 100%;
+    background-color: rgba(240, 242, 245, 255);
+
+    &:hover {
+      cursor: pointer;
+      background-color: rgba(228, 230, 233, 255);
+    }
   }
 `;
 
@@ -59,13 +64,12 @@ const IconButton = styled.button`
   border-radius: 5px;
   padding: 10px;
   &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(240, 242, 245, 255);
   }
 
   span {
     text-align: start;
     font-size: 0.9rem;
-    color: white;
     font-weight: 400;
     margin-left: 10px;
   }

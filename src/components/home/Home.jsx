@@ -1,9 +1,7 @@
-import React from "react";
-
-import NavBar from "./Navbar";
-import Tabs from "./Tabs";
-import Friends from "./Friends";
-import NewsFeed from "./NewsFeed";
+import NavBar from "./Navbar/Navbar";
+import Tabs from "./Sidebar/Tabs";
+import Friends from "./Friends/Friends";
+import NewsFeed from "./NewsFeed/NewsFeed";
 import styled from "styled-components";
 
 const HomePage = styled.div`

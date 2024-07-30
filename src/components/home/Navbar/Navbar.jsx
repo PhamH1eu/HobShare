@@ -1,10 +1,9 @@
 import * as React from "react";
-import { styled, alpha } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
 import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
@@ -14,14 +13,14 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import SmsIcon from "@mui/icons-material/Sms";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
+import Avatar from "@mui/material/Avatar";
+
+import { useUserStore } from "src/store/userStore";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
+  borderRadius: "20px",
+  backgroundColor: "rgba(240,242,245,255)",
   marginRight: theme.spacing(2),
   marginLeft: 0,
   width: "100%",
@@ -85,7 +84,7 @@ const NavBar = () => {
     <Menu
       anchorEl={anchorEl}
       anchorOrigin={{
-        vertical: "top",
+        vertical: "bottom",
         horizontal: "right",
       }}
       id={menuId}
@@ -154,45 +153,50 @@ const NavBar = () => {
     </Menu>
   );
 
+  const { currentUser } = useUserStore();
+
   return (
     <Box>
-      <AppBar position="fixed" color="primary">
+      <AppBar
+        position="fixed"
+        color="white"
+        style={{
+          boxShadow:
+            "0px 2px 4px -1px rgba(0,0,0,0.2),0px 1px 10px 0px rgba(0,0,0,0.12)",
+        }}
+      >
         <Toolbar>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: "none", sm: "block" } }}
-          >
-            HB
-          </Typography>
+          <Avatar
+            style={{ width: "48px", height: "48px" }}
+            src="https://cdn-icons-png.freepik.com/256/2853/2853408.png?semt=ais_hybrid"
+          />
           <Search>
             <SearchIconWrapper>
-              <SearchIcon />
+              <SearchIcon color="greyIcon" />
             </SearchIconWrapper>
             <StyledInputBase
-              placeholder="Search…"
+              placeholder="Tìm kiếm..."
               inputProps={{ "aria-label": "search" }}
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: "none", md: "flex" } }}>
+          <Box sx={{ display: { xs: "none", md: "flex" }, gap: "16px" }}>
             <IconButton
               size="large"
               aria-label="show 4 new mails"
-              color="inherit"
+              style={{ backgroundColor: "rgba(228,230,235,255)" }}
             >
-              <Badge badgeContent={4} color="error">
-                <SmsIcon />
+              <Badge badgeContent={''} color="error">
+                <SmsIcon color="black" />
               </Badge>
             </IconButton>
             <IconButton
               size="large"
               aria-label="show 17 new notifications"
-              color="inherit"
+              style={{ backgroundColor: "rgba(228,230,235,255)" }}
             >
               <Badge badgeContent={17} color="error">
-                <NotificationsIcon />
+                <NotificationsIcon color="black" />
               </Badge>
             </IconButton>
             <IconButton
@@ -202,9 +206,12 @@ const NavBar = () => {
               aria-controls={menuId}
               aria-haspopup="true"
               onClick={handleProfileMenuOpen}
-              color="inherit"
+              style={{ padding: 0, margin: 0 }}
             >
-              <AccountCircle />
+              <Avatar
+                style={{ width: "48px", height: "48px" }}
+                src={currentUser.avatar}
+              />
             </IconButton>
           </Box>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>

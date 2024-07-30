@@ -8,7 +8,6 @@ import { useUserStore } from "src/store/userStore";
 
 const SidebarWrapper = styled.div`
   width: 300px;
-  color: white;
   margin: 5px;
   padding: 10px;
   display: flex;
@@ -22,14 +21,13 @@ const SidebarWrapper = styled.div`
 const Profile = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 15px;
   padding: 8px;
 
   border-radius: 5px;
   cursor: pointer;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(228,230,233,255);
 `;
 
 const ProfilePicture = styled.img`
@@ -52,8 +50,15 @@ const MenuItem = styled.div`
   border-radius: 5px;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-  `;
+    background-color: rgba(228, 230, 233, 255);
+  }
+
+  span {
+    font-size: 15px;
+    color: #050505;
+    font-weight: 500;
+  }
+`;
 
 const Tabs = () => {
   const { currentUser } = useUserStore();
@@ -64,23 +69,23 @@ const Tabs = () => {
         <ProfileName>{currentUser.username}</ProfileName>
       </Profile>
       <MenuItem>
-        <PeopleIcon />
+        <PeopleIcon color="black" />
         <span>Bạn bè</span>
       </MenuItem>
       <MenuItem>
-        <WatchLaterIcon />
+        <WatchLaterIcon color="black" />
         <span>Kỷ niệm</span>
       </MenuItem>
       <MenuItem>
-        <BookmarkIcon />
+        <BookmarkIcon color="black" />
         <span>Đã lưu</span>
       </MenuItem>
       <MenuItem>
-        <GroupIcon />
+        <GroupIcon color="black" />
         <span>Nhóm</span>
       </MenuItem>
       <MenuItem>
-        <ArrowDropDownCircleIcon />
+        <ArrowDropDownCircleIcon color="black" />
         <span>Xem thêm</span>
       </MenuItem>
     </SidebarWrapper>

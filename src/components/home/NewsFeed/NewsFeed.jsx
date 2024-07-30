@@ -1,5 +1,3 @@
-import React from "react";
-
 import NewPostInput from "./component/NewPostInput";
 import Post from "./component/Post";
 import styled from "styled-components";

@@ -1,4 +1,3 @@
-import React from "react";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import styled from "styled-components";
@@ -108,10 +107,8 @@ const ContactList = styled.div`
   margin-left: 10px;
   margin-top: 5px
   width: 350px;
-  color: white;
   padding-right: 10px;
   overflow-y: auto;
-  font-family: Arial, sans-serif;
 
   &::-webkit-scrollbar {
     background-color: transparent;
@@ -133,6 +130,7 @@ const ContactList = styled.div`
     margin-bottom: 10px;
     font-size: 16px;
     font-weight: bold;
+    color: rgba(101, 103, 107, 255);
   }
 `;
 
@@ -147,10 +145,14 @@ const SearchBar = styled.div`
     border: none;
   }
 
+  h2 {
+    color: rgba(101, 103, 107, 255);
+  }
+
   button {
     background-color: transparent;
     margin-left: auto;
-    margin-right: 10px;
+    margin-top: 10px;
     border-radius: 50%;
   }
 `;
@@ -163,7 +165,7 @@ const ContactItem = styled.div`
   cursor: pointer;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(228, 230, 233, 255);
   }
 `;
 
@@ -176,6 +178,9 @@ const Avatar = styled.img`
 
 const ContactName = styled.span`
   flex-grow: 1;
+  font-size: 15px;
+  color: #050505;
+  font-weight: 500;
 `;
 
 const Status = styled.span`
@@ -197,8 +202,8 @@ const Friends = () => {
     <ContactList>
       <SearchBar>
         <h2>Người liên hệ</h2>
-        <IconButton>
-          <SearchIcon />
+        <IconButton style={{ width: "40px", height: "40px" }}>
+          <SearchIcon color="greyIcon" />
         </IconButton>
       </SearchBar>
       {contacts.map((contact, index) => (

@@ -2,29 +2,26 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", "Helvetica",
+    "Arial", sans-serif;
 }
 
 body {
-  background-image: url("/bg.jpg");
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100vh;
-  color: white;
 }
 
 .container {
   width: 100vw;
   height: 100vh;
-  background-color: rgba(17, 25, 40, 0.75);
-  backdrop-filter: blur(19px) saturate(180%);
+  background-color: #f0f2f5;
   border: 1px solid rgba(255, 255, 255, 0.125);
   display: flex;
 }
 
-.loading{
+.loading {
   padding: 50px;
   font-size: 36px;
   border-radius: 10px;

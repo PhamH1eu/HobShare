@@ -1,14 +1,15 @@
 .chat {
   flex: 2;
+  margin-top: 64px;
   border-left: 1px solid #e5e5e5;
   border-right: 1px solid #e5e5e5;
   background-color: white;
-  height: 100%;
+  height: auto;
   display: flex;
   flex-direction: column;
 
   .top {
-    padding: 20px;
+    padding: 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -18,11 +19,11 @@
     .user {
       display: flex;
       align-items: center;
-      gap: 20px;
+      gap: 15px;
 
       img {
-        width: 60px;
-        height: 60px;
+        width: 50px;
+        height: 50px;
         border-radius: 50%;
         object-fit: cover;
       }
@@ -41,7 +42,7 @@
 
     .icons {
       display: flex;
-      gap: 20px;
+      gap: 10px;
 
       button {
         background-color: transparent;

@@ -14,7 +14,7 @@ const SidebarWrapper = styled.div`
   gap: 5px;
   flex-direction: column;
   position: sticky;
-  top: 74px;
+  top: 0;
   height: calc(100vh - 79px);
 `;
 

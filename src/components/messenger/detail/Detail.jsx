@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { useListenChat } from "src/hooks/useListenChat";
 import { auth } from "src/lib/firebase";
 import { useChatStore } from "src/store/chatStore";
 import { useUserStore } from "src/store/userStore";
@@ -15,7 +13,6 @@ import "./detail.css";
 export const Detail = () => {
   const {
     user,
-    chatId,
     isCurrentUserBlocked,
     isReceiverBlocked,
     changeBlock,
@@ -29,11 +26,6 @@ export const Detail = () => {
   const handleBlock = async () => {
     BlockUser(user, isReceiverBlocked, currentUser);
     changeBlock();
-  };
-
-  const logout = () => {
-    auth.signOut();
-    resetChat();
   };
 
   function extractMediaUrls(data) {
@@ -72,7 +64,7 @@ export const Detail = () => {
         <div className="option">
           <Accordion defaultExpanded>
             <AccordionSummary
-              style={{ padding: "0", fontWeight: "500"}}
+              style={{ padding: "0", fontWeight: "500" }}
               expandIcon={<KeyboardArrowDownIcon />}
             >
               <div className="title">
@@ -121,9 +113,6 @@ export const Detail = () => {
             </AccordionDetails>
           </Accordion>
         </div>
-        <button className="logout" onClick={logout}>
-          Logout
-        </button>
       </div>
     </div>
   ) : null;

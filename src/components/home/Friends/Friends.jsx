@@ -102,7 +102,7 @@ const groupChats = [
 
 const ContactList = styled.div`
   position: sticky;
-  top: 64px;
+  top: 0;
   height: calc(100vh - 64px);
   margin-left: 10px;
   margin-top: 5px

@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Link } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -15,6 +16,8 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import Avatar from "@mui/material/Avatar";
 
+import { auth } from "src/lib/firebase";
+import { useChatStore } from "src/store/chatStore";
 import { useUserStore } from "src/store/userStore";
 
 const Search = styled("div")(({ theme }) => ({
@@ -75,6 +78,12 @@ const NavBar = () => {
     handleMobileMenuClose();
   };
 
+  const resetChat = useChatStore((state) => state.resetChat);
+  const logout = () => {
+    auth.signOut();
+    resetChat();
+  };
+
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
@@ -97,7 +106,7 @@ const NavBar = () => {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={logout}>Log out</MenuItem>
     </Menu>
   );
 
@@ -166,10 +175,13 @@ const NavBar = () => {
         }}
       >
         <Toolbar>
-          <Avatar
-            style={{ width: "48px", height: "48px" }}
-            src="https://cdn-icons-png.freepik.com/256/2853/2853408.png?semt=ais_hybrid"
-          />
+          <Link to="/">
+            <Avatar
+              style={{ width: "48px", height: "48px" }}
+              src="https://cdn-icons-png.freepik.com/256/2853/2853408.png?semt=ais_hybrid"
+              onClick={() => redirect("/")}
+            />
+          </Link>
           <Search>
             <SearchIconWrapper>
               <SearchIcon color="greyIcon" />
@@ -181,15 +193,17 @@ const NavBar = () => {
           </Search>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" }, gap: "16px" }}>
-            <IconButton
-              size="large"
-              aria-label="show 4 new mails"
-              style={{ backgroundColor: "rgba(228,230,235,255)" }}
-            >
-              <Badge badgeContent={''} color="error">
-                <SmsIcon color="black" />
-              </Badge>
-            </IconButton>
+            <Link to="messenger">
+              <IconButton
+                size="large"
+                aria-label="show 4 new mails"
+                style={{ backgroundColor: "rgba(228,230,235,255)" }}
+              >
+                <Badge badgeContent={""} color="error">
+                  <SmsIcon color="black" />
+                </Badge>
+              </IconButton>
+            </Link>
             <IconButton
               size="large"
               aria-label="show 17 new notifications"

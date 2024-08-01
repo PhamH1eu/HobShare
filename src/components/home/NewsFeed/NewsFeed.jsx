@@ -1,5 +1,6 @@
 import NewPostInput from "./component/NewPostInput";
 import Post from "./component/Post";
+import FriendsRecommend from "./component/FriendsRecommend";
 import styled from "styled-components";
 
 const NewFeed = styled.div`
@@ -43,8 +44,6 @@ const NewsFeed = () => {
       time: "14 giờ",
       postContent:
         "Nghịch lý Uzbekistan: Xăng A95 25.000 vnđ/lít, A92 20500 đ/lít, diesel 22.000đ/lít. Giá taxi (yandex go): 6-7000 đ/km Buýt intercity 50 km: 12.000 đ Tàu điện ngầm: 3400 đ (vé thẻ) hay 4000 đ (vé giấy)...",
-      postImage:
-        "https://scontent.fhan2-5.fna.fbcdn.net/v/t39.30808-6/453085177_1021074410020002_5201186084923834649_n.jpg?stp=dst-jpg_p180x540&_nc_cat=107&ccb=1-7&_nc_sid=833d8c&_nc_ohc=9KsdV_kTft0Q7kNvgG0pnQW&_nc_ht=scontent.fhan2-5.fna&gid=Aum5o8cGum5_xLSlVfGXhSF&oh=00_AYD4Ddim3SPPyScqo5Td8bQVQGPq9M-WfadMQqz3I3lPww&oe=66AB8D91",
       reaction: 627,
     },
     {
@@ -149,6 +148,7 @@ const NewsFeed = () => {
   ];
   return (
     <NewFeed>
+      <FriendsRecommend />
       <NewPostInput />
       <div>
         {posts.map((post, index) => (

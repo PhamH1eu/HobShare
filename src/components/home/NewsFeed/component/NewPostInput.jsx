@@ -41,7 +41,6 @@ const MessageInput = styled.div`
     background-color: rgba(240, 242, 245, 255);
 
     &:hover {
-      cursor: pointer;
       background-color: rgba(228, 230, 233, 255);
     }
   }

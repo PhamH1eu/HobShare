@@ -7,15 +7,14 @@ import ArrowDropDownCircleIcon from "@mui/icons-material/ArrowDropDownCircle";
 import { useUserStore } from "src/store/userStore";
 
 const SidebarWrapper = styled.div`
-  width: 300px;
-  margin: 5px;
+  width: 280px;
+  margin: 20px;
   padding: 10px;
   display: flex;
   gap: 5px;
   flex-direction: column;
-  position: sticky;
-  top: 0;
-  height: calc(100vh - 79px);
+  background-color: #ffffff;
+  border-radius: 10px;
 `;
 
 const Profile = styled.div`

@@ -6,12 +6,15 @@ import {
   IoIosChatbubbles,
   IoMdHappy,
 } from "react-icons/io";
+import { IconButton } from "@mui/material";
+import BookmarksIcon from "@mui/icons-material/Bookmarks";
 import Divider from "@mui/material/Divider";
+import { useUserStore } from "src/store/userStore";
 
 const PostWrapper = styled.div`
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
   background-color: white;
-  border-radius: 5px;
+  border-radius: 10px;
   margin: 25px 0;
 `;
 
@@ -66,7 +69,8 @@ const PostReactions = styled.div`
 const PostActions = styled.div`
   display: flex;
   gap: 10px;
-  margin: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
 `;
 
 const PostAction = styled.button`
@@ -78,7 +82,8 @@ const PostAction = styled.button`
   align-items: center;
   justify-content: center;
   border-radius: 5px;
-  padding: 10px;
+  padding: 5px;
+  margin: 3px;
   gap: 4px;
   font-size: 1.05rem;
   font-weight: 500;
@@ -88,11 +93,58 @@ const PostAction = styled.button`
   }
 `;
 
+const Marked = styled.div`
+  margin-left: auto;
+  margin-right: 5px;
+  margin-bottom: 5px;
+`;
+
+const MessageInput = styled.div`
+  display: inline-flex;
+  align-items: center;
+  flex-grow: 1;
+  margin: 10px;
+  width: 100%;
+
+  img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 20px;
+  }
+
+  input {
+    border-radius: 20px;
+    height: 40px;
+    padding-left: 15px;
+    margin-right: 40px;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    width: 100%;
+    background-color: rgba(240, 242, 245, 255);
+
+    &:hover {
+      background-color: rgba(228, 230, 233, 255);
+    }
+  }
+`;
+
+const PostComment = styled.div``;
+
 const Post = ({ post }) => {
+  const { currentUser } = useUserStore();
   const [like, setLike] = useState(false);
   const handleLike = () => {
     setLike(!like);
   };
+
+  const [marked, setMarked] = useState(false);
+  const handleMarked = () => {
+    setMarked(!marked);
+  };
+
+  const [showComment, setShowComment] = useState(false);
 
   return (
     <PostWrapper>
@@ -102,9 +154,14 @@ const Post = ({ post }) => {
           <PostAuthor>{post.authorName}</PostAuthor>
           <PostTime>{post.time}</PostTime>
         </PostInfo>
+        <Marked>
+          <IconButton onClick={handleMarked}>
+            <BookmarksIcon color={marked ? "blue" : "greyIcon"} />
+          </IconButton>
+        </Marked>
       </PostHeader>
       <PostContent>
-        <p style={{ padding: "10px" }}>{post.postContent}</p>
+        <p style={{ padding: "10px", marginLeft: "5px" }}>{post.postContent}</p>
         {post.postImage && <PostImage src={post.postImage} />}
         {post.postVideo && (
           <video controls style={{ width: "100%" }}>
@@ -131,16 +188,28 @@ const Post = ({ post }) => {
           >
             <IoMdThumbsUp /> Thích
           </PostAction>
-          <PostAction>
-            <IoIosChatbubbles style={{ color: "rgba(91, 98, 106, 255)" }} />{" "}
+          <PostAction
+            onClick={() => setShowComment(true)}
+            style={{ color: "rgba(91, 98, 106, 255)" }}
+          >
+            <IoIosChatbubbles />
             Bình luận
           </PostAction>
-          <PostAction>
-            <IoIosShareAlt style={{ color: "rgba(91, 98, 106, 255)" }} /> Chia
-            sẻ
+          <PostAction style={{ color: "rgba(91, 98, 106, 255)" }}>
+            <IoIosShareAlt />
+            Chia sẻ
           </PostAction>
         </PostActions>
       </PostFooter>
+      <Divider flexItem variant="middle" color="#bdbdbd" />
+      {showComment && (
+        <PostComment>
+          <MessageInput>
+            <img src={currentUser.avatar} alt="User Avatar" />
+            <input type="text" placeholder="Viết câu trả lời" />
+          </MessageInput>
+        </PostComment>
+      )}
     </PostWrapper>
   );
 };

@@ -1,82 +1,106 @@
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
+import { Badge } from "@mui/material";
+import { styled as muiStyled } from "@mui/material/styles";
 import styled from "styled-components";
+
+const StyledBadge = muiStyled(Badge)(() => ({
+  "& .MuiBadge-badge": {
+    right: 16,
+    top: 35,
+  },
+}));
 
 const contacts = [
   {
     name: "Thu Hieu",
-    avatar: "https://i1.sndcdn.com/artworks-000480656619-zm6td3-t500x500.jpg",
-    status: "online",
+    avatar:
+      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
+    online: true,
   },
   {
     name: "Nguyễn Đăng Hải",
-    avatar: "https://i1.sndcdn.com/artworks-000480656619-zm6td3-t500x500.jpg",
-    status: "offline",
+    avatar:
+      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
+    online: false,
   },
   {
     name: "Tuấn Anh-nichan",
-    avatar: "https://i1.sndcdn.com/artworks-000480656619-zm6td3-t500x500.jpg",
-    status: "online",
+    avatar:
+      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
+    online: true,
   },
   {
     name: "Trí Nhân",
-    avatar: "https://i1.sndcdn.com/artworks-000480656619-zm6td3-t500x500.jpg",
-    status: "offline",
+    avatar:
+      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
+    online: false,
   },
   {
     name: "Trí Nhân",
-    avatar: "https://i1.sndcdn.com/artworks-000480656619-zm6td3-t500x500.jpg",
-    status: "offline",
+    avatar:
+      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
+    online: false,
   },
   {
     name: "Trí Nhân",
-    avatar: "https://i1.sndcdn.com/artworks-000480656619-zm6td3-t500x500.jpg",
-    status: "offline",
+    avatar:
+      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
+    online: false,
   },
   {
     name: "Trí Nhân",
-    avatar: "https://i1.sndcdn.com/artworks-000480656619-zm6td3-t500x500.jpg",
-    status: "offline",
+    avatar:
+      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
+    online: false,
   },
   {
     name: "Trí Nhân",
-    avatar: "https://i1.sndcdn.com/artworks-000480656619-zm6td3-t500x500.jpg",
-    status: "offline",
+    avatar:
+      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
+    online: false,
   },
   {
     name: "Trí Nhân",
-    avatar: "https://i1.sndcdn.com/artworks-000480656619-zm6td3-t500x500.jpg",
-    status: "offline",
+    avatar:
+      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
+    online: false,
   },
   {
     name: "Trí Nhân",
-    avatar: "https://i1.sndcdn.com/artworks-000480656619-zm6td3-t500x500.jpg",
-    status: "offline",
+    avatar:
+      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
+    online: false,
   },
   {
     name: "Trí Nhân",
-    avatar: "https://i1.sndcdn.com/artworks-000480656619-zm6td3-t500x500.jpg",
-    status: "offline",
+    avatar:
+      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
+    online: false,
   },
   {
     name: "Trí Nhân",
-    avatar: "https://i1.sndcdn.com/artworks-000480656619-zm6td3-t500x500.jpg",
-    status: "offline",
+    avatar:
+      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
+    online: false,
   },
   {
     name: "Trí Nhân",
-    avatar: "https://i1.sndcdn.com/artworks-000480656619-zm6td3-t500x500.jpg",
-    status: "offline",
+    avatar:
+      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
+    online: false,
   },
   {
     name: "Trí Nhân",
-    avatar: "https://i1.sndcdn.com/artworks-000480656619-zm6td3-t500x500.jpg",
-    status: "offline",
+    avatar:
+      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
+    online: false,
   },
   {
     name: "Trí Nhân",
-    avatar: "https://i1.sndcdn.com/artworks-000480656619-zm6td3-t500x500.jpg",
-    status: "offline",
+    avatar:
+      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
+    online: false,
   },
   // Add more contacts here
 ];
@@ -84,18 +108,21 @@ const contacts = [
 const groupChats = [
   {
     name: "Anh Bạn Học Không Thân Thiết",
-    avatar: "https://i1.sndcdn.com/artworks-000480656619-zm6td3-t500x500.jpg",
-    status: "online",
+    avatar:
+      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
+    online: true,
   },
   {
     name: "K66-CN1B | QH-2021-I/CQ-C-B",
-    avatar: "https://i1.sndcdn.com/artworks-000480656619-zm6td3-t500x500.jpg",
-    status: "offline",
+    avatar:
+      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
+    online: false,
   },
   {
     name: "Phòng trọ không hề bất ổn",
-    avatar: "https://i1.sndcdn.com/artworks-000480656619-zm6td3-t500x500.jpg",
-    status: "online",
+    avatar:
+      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
+    online: true,
   },
   // Add more group chats here
 ];
@@ -108,7 +135,9 @@ const ContactList = styled.div`
   margin-top: 5px
   width: 350px;
   padding-right: 10px;
+  padding-left: 10px;
   overflow-y: auto;
+  background-color: white;
 
   &::-webkit-scrollbar {
     background-color: transparent;
@@ -178,7 +207,7 @@ const Avatar = styled.img`
 
 const ContactName = styled.span`
   flex-grow: 1;
-  font-size: 15px;
+  font-size: 14px;
   color: #050505;
   font-weight: 500;
 `;
@@ -208,9 +237,14 @@ const Friends = () => {
       </SearchBar>
       {contacts.map((contact, index) => (
         <ContactItem key={index}>
-          <Avatar src={contact.avatar} alt={contact.name} />
+          <StyledBadge
+            badgeContent={4}
+            color={contact.online ? "success" : "error"}
+            variant="dot"
+          >
+            <Avatar src={contact.avatar} alt={contact.name} />
+          </StyledBadge>
           <ContactName>{contact.name}</ContactName>
-          <Status className={`status ${contact.status}`}></Status>
         </ContactItem>
       ))}
       <h2>Cuộc trò chuyện nhóm</h2>

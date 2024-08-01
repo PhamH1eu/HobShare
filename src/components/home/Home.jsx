@@ -1,4 +1,4 @@
-import Tabs from "./Sidebar/Tabs";
+import Sidebar from "./Sidebar/Sidebar";
 import Friends from "./Friends/Friends";
 import NewsFeed from "./NewsFeed/NewsFeed";
 import styled from "styled-components";
@@ -15,7 +15,7 @@ const HomePage = styled.div`
 const Home = () => {
   return (
     <HomePage>
-      <Tabs></Tabs>
+      <Sidebar></Sidebar>
       <NewsFeed />
       <Friends />
     </HomePage>

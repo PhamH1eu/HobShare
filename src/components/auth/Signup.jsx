@@ -6,9 +6,68 @@ import { auth } from "../../lib/firebase";
 import { useUserStore } from "../../store/userStore";
 import { UserService, ChatService } from "../../services/DatabaseService";
 import upload from "../../shared/helper/upload";
-import "./login.css";
 
-export const Signup = () => {
+import styled from "styled-components";
+
+const Form = styled.form`
+  color: #1b1b1b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 0 4rem;
+
+  /* z-index: 100; */
+`;
+
+const Input = styled.input`
+  background-color: #fff;
+  border: none;
+  border-bottom: 2px solid #053271;
+
+  padding: 1rem 2rem;
+  margin: 0.5rem 0;
+  width: 100%;
+
+  &:focus {
+    outline: none;
+    border: none;
+    border: 2px solid #053271;
+  }
+`;
+
+const Title = styled.h1`
+  font-size: 3rem;
+  margin-bottom: 2rem;
+`;
+
+const Link = styled.a`
+  text-decoration: none;
+  color: #333;
+  font-size: 1.4rem;
+  margin: 1rem 0;
+`;
+
+const Label = styled.label`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  cursor: pointer;
+  text-decoration: underline;
+
+  img {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    object-fit: cover;
+    opacity: 0.6;
+  }
+`;
+
+const Signup = () => {
   const [avatar, setAvatar] = useState({
     file: null,
     url: "",
@@ -79,31 +138,42 @@ export const Signup = () => {
     }
   };
   return (
-    <div className="item">
-      <h2>Create an Account</h2>
-      <form onSubmit={handleRegister}>
-        <label htmlFor="file">
-          <img src={avatar.url || "./avatar.png"} alt="avatar" />
-          Upload an image
-        </label>
-        <input
-          type="file"
-          id="file"
-          style={{ display: "none" }}
-          onChange={handleAvatar}
-        />
-        <input type="text" placeholder="Username" name="username" />
-        <input type="text" placeholder="Email" name="email" />
-        <input type="password" placeholder="Password" name="password" />
-        <LoadingButton
-          type="submit"
-          loading={mutationSignUp.isLoading}
-          loadingPosition="start"
-          variant="outlined"
-        >
-          Sign Up
-        </LoadingButton>
-      </form>
-    </div>
+    <Form className="signup" onSubmit={handleRegister}>
+      <Title>Sign Up</Title>
+      <Label htmlFor="file">
+        <img src={avatar.url || "./avatar.png"} alt="avatar" />
+        Upload an image
+      </Label>
+      <input
+        type="file"
+        id="file"
+        style={{ display: "none" }}
+        onChange={handleAvatar}
+      />
+      <Input
+        type="text"
+        name="username"
+        id="usernameId"
+        placeholder="Username"
+      />
+
+      <Input type="email" name="email" id="emailId" placeholder="Email" />
+      <Input
+        type="password"
+        name="password"
+        id="passwordId"
+        placeholder="Password"
+      />
+      <Link href="#">Already have an Account?</Link>
+      <LoadingButton
+        type="submit"
+        loading={mutationSignUp.isLoading}
+        variant="outlined"
+      >
+        Sign Up
+      </LoadingButton>
+    </Form>
   );
 };
+
+export default Signup;

@@ -3,10 +3,11 @@ import "react-toastify/dist/ReactToastify.css";
 
 const Notification = () => {
   return (
-    <div className=''>
-      <ToastContainer position="bottom-right"/>
-    </div>
-  )
-}
+      <ToastContainer
+        position="bottom-right"
+        style={{ fontSize: "14px", zIndex: 10000 }}
+      />
+  );
+};
 
-export default Notification
+export default Notification;

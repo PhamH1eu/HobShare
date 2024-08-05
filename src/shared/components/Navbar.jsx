@@ -179,7 +179,6 @@ const NavBar = () => {
             <Avatar
               style={{ width: "48px", height: "48px" }}
               src="https://cdn-icons-png.freepik.com/256/2853/2853408.png?semt=ais_hybrid"
-              onClick={() => redirect("/")}
             />
           </Link>
           <Search>

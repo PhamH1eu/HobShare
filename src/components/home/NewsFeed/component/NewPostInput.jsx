@@ -77,7 +77,6 @@ const IconButton = styled.button`
 
 const NewPostInput = () => {
   const { currentUser } = useUserStore();
-  console.log("🚀 ~ NewPostInput ~ currentUser:", currentUser.avatar)
 
   return (
     <ChatInput>

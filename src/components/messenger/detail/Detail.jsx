@@ -1,4 +1,3 @@
-import { auth } from "src/lib/firebase";
 import { useChatStore } from "src/store/chatStore";
 import { useUserStore } from "src/store/userStore";
 import { useInfoShowStore } from "src/store/infoShowStore";
@@ -16,7 +15,6 @@ export const Detail = () => {
     isCurrentUserBlocked,
     isReceiverBlocked,
     changeBlock,
-    resetChat,
     message,
   } = useChatStore();
 

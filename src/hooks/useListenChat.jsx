@@ -54,7 +54,7 @@ export const useListenChat = (
     return () => {
       unSub();
     };
-  }, [chatId, setMessage]);
+  }, [chatId, setMessage, setNewMessage, setLastMessageTimestamp]);
 };
 
 export const loadMoreMessages = async (

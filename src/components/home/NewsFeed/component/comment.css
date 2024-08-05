@@ -1,0 +1,29 @@
+.overlay {
+    padding: 0;
+    flex-direction: column-reverse;
+
+    .userInfo {
+        align-items: start !important;
+        padding-top: 5px;
+    }
+
+    .userActions {
+        position: relative;
+    }
+
+    form {
+        background-color: transparent;
+        padding-top: 0;
+    }
+
+    .replysection {
+        form {
+            padding: 10px !important;
+            margin-left: 10px !important;
+        }
+    }
+
+    .replyBtn {
+        position: relative;
+    }
+}

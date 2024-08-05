@@ -9,9 +9,7 @@ import {
 import { IconButton } from "@mui/material";
 import BookmarksIcon from "@mui/icons-material/Bookmarks";
 import Divider from "@mui/material/Divider";
-import { useUserStore } from "src/store/userStore";
-import { CommentSection } from "react-comments-section";
-import "react-comments-section/dist/index.css";
+import Comments from "./Comments";
 
 const PostWrapper = styled.div`
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
@@ -102,41 +100,21 @@ const Marked = styled.div`
   margin-bottom: 5px;
 `;
 
-const MessageInput = styled.div`
-  display: inline-flex;
-  align-items: center;
-  flex-grow: 1;
-  margin: 10px;
-  width: 100%;
+const LoadComments = styled.div`
+  cursor: pointer;
+  color: rgba(91, 98, 106, 255);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px;
+  padding-bottom: 0;
 
-  img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 20px;
-  }
-
-  input {
-    border-radius: 20px;
-    height: 40px;
-    padding-left: 15px;
-    margin-right: 40px;
-    border: none;
-    outline: none;
-    font-size: 1rem;
-    width: 100%;
-    background-color: rgba(240, 242, 245, 255);
-
-    &:hover {
-      background-color: rgba(228, 230, 233, 255);
-    }
+  &:hover {
+    text-decoration: underline;
+    color: rgba(5, 97, 242, 255);
   }
 `;
 
-const PostComment = styled.div``;
-
 const Post = ({ post }) => {
-  const { currentUser } = useUserStore();
   const [like, setLike] = useState(false);
   const handleLike = () => {
     setLike(!like);
@@ -148,17 +126,6 @@ const Post = ({ post }) => {
   };
 
   const [showComment, setShowComment] = useState(false);
-  const data = [
-    {
-      userId: "02b",
-      comId: "017",
-      fullName: "Lily",
-      userProfile: "https://www.linkedin.com/in/riya-negi-8879631a9/",
-      text: "I think you have a point🤔",
-      avatarUrl: "https://ui-avatars.com/api/name=Lily&background=random",
-      replies: [],
-    },
-  ];
 
   return (
     <PostWrapper>
@@ -217,26 +184,12 @@ const Post = ({ post }) => {
       </PostFooter>
       <Divider flexItem variant="middle" color="#bdbdbd" />
       {showComment && (
-        // <PostComment>
-          <CommentSection
-            currentUser={{
-              currentUserId: "01a",
-              currentUserImg: currentUser.avatar,
-              currentUserProfile:
-                "https://www.linkedin.com/in/riya-negi-8879631a9/",
-              currentUserFullName: currentUser.username,
-            }}
-            commentData={data}
-            onSubmitAction={(data) => console.log("check submit, ", data)}
-            currentData={(data) => {
-              console.log("curent data", data);
-            }}
-          />
-        //   <MessageInput>
-        //     <img src={currentUser.avatar} alt="User Avatar" />
-        //     <input type="text" placeholder="Viết câu trả lời" />
-        //   </MessageInput>
-        // </PostComment>
+        <>
+          <LoadComments onClick={() => console.log("load them di")}>
+            Xem thêm bình luận
+          </LoadComments>
+          <Comments />
+        </>
       )}
     </PostWrapper>
   );

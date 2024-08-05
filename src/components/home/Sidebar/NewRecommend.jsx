@@ -48,15 +48,7 @@ const tag = [
   {
     tag: "#react",
     count: 4,
-  },
-  {
-    tag: "#javascript",
-    count: 5,
-  },
-  {
-    tag: "#python",
-    count: 6,
-  },
+  }
 ];
 
 const NewRecommend = () => {

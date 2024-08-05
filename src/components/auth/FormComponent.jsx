@@ -18,7 +18,7 @@ const move = keyframes`
 const BackgroundBox = styled.div`
   background-color: #beeefb;
   height: 50vh;
-  width: 50%;
+  width: 60%;
 
   display: flex;
   justify-content: center;

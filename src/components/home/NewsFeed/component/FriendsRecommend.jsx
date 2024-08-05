@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import UserCard from "./Card";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
 
 const Wrapper = styled.div`
   margin-top: 20px;
@@ -12,13 +14,6 @@ const Wrapper = styled.div`
     font-weight: 600;
     font-size: 1.2rem;
   }
-`;
-
-const Friends = styled.div`
-  display: flex;
-  gap: 20px;
-  margin-top: 10px;
-  justify-content: space-between;
 `;
 
 const friends = [
@@ -58,11 +53,17 @@ const FriendsRecommend = () => {
   return (
     <Wrapper>
       <span>Những người bạn có thể biết</span>
-      <Friends>
+      <Swiper
+        spaceBetween={30}
+        slidesPerView={4}
+        style={{maxWidth: '43vw', padding: '20px'}}
+      >
         {friends.map((friend, index) => (
-          <UserCard key={index} user={friend} />
+          <SwiperSlide key={index}>
+            <UserCard user={friend} />
+          </SwiperSlide>
         ))}
-      </Friends>
+      </Swiper>
     </Wrapper>
   );
 };

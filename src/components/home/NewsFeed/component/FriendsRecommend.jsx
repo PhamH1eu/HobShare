@@ -4,7 +4,8 @@ import UserCard from "./Card";
 const Wrapper = styled.div`
   margin-top: 20px;
   background-color: white;
-  border-radius: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
   padding: 20px;
 
   span {
@@ -17,6 +18,7 @@ const Friends = styled.div`
   display: flex;
   gap: 20px;
   margin-top: 10px;
+  justify-content: space-between;
 `;
 
 const friends = [

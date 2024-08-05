@@ -10,6 +10,8 @@ import { IconButton } from "@mui/material";
 import BookmarksIcon from "@mui/icons-material/Bookmarks";
 import Divider from "@mui/material/Divider";
 import { useUserStore } from "src/store/userStore";
+import { CommentSection } from "react-comments-section";
+import "react-comments-section/dist/index.css";
 
 const PostWrapper = styled.div`
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
@@ -51,6 +53,7 @@ const PostContent = styled.div``;
 const PostImage = styled.img`
   width: 100%;
   height: auto;
+  max-height: 400px;
 `;
 
 const PostFooter = styled.div`
@@ -145,6 +148,17 @@ const Post = ({ post }) => {
   };
 
   const [showComment, setShowComment] = useState(false);
+  const data = [
+    {
+      userId: "02b",
+      comId: "017",
+      fullName: "Lily",
+      userProfile: "https://www.linkedin.com/in/riya-negi-8879631a9/",
+      text: "I think you have a point🤔",
+      avatarUrl: "https://ui-avatars.com/api/name=Lily&background=random",
+      replies: [],
+    },
+  ];
 
   return (
     <PostWrapper>
@@ -203,12 +217,26 @@ const Post = ({ post }) => {
       </PostFooter>
       <Divider flexItem variant="middle" color="#bdbdbd" />
       {showComment && (
-        <PostComment>
-          <MessageInput>
-            <img src={currentUser.avatar} alt="User Avatar" />
-            <input type="text" placeholder="Viết câu trả lời" />
-          </MessageInput>
-        </PostComment>
+        // <PostComment>
+          <CommentSection
+            currentUser={{
+              currentUserId: "01a",
+              currentUserImg: currentUser.avatar,
+              currentUserProfile:
+                "https://www.linkedin.com/in/riya-negi-8879631a9/",
+              currentUserFullName: currentUser.username,
+            }}
+            commentData={data}
+            onSubmitAction={(data) => console.log("check submit, ", data)}
+            currentData={(data) => {
+              console.log("curent data", data);
+            }}
+          />
+        //   <MessageInput>
+        //     <img src={currentUser.avatar} alt="User Avatar" />
+        //     <input type="text" placeholder="Viết câu trả lời" />
+        //   </MessageInput>
+        // </PostComment>
       )}
     </PostWrapper>
   );

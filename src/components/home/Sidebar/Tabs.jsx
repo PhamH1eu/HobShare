@@ -1,10 +1,15 @@
 import styled from "styled-components";
 import PeopleIcon from "@mui/icons-material/People";
-import WatchLaterIcon from "@mui/icons-material/WatchLater";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
-import GroupIcon from "@mui/icons-material/Group";
+import Diversity2Icon from '@mui/icons-material/Diversity2';
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
 import ArrowDropDownCircleIcon from "@mui/icons-material/ArrowDropDownCircle";
+import WatchLaterOutlinedIcon from '@mui/icons-material/WatchLaterOutlined';
+import PinDropIcon from '@mui/icons-material/PinDrop';
 import { useUserStore } from "src/store/userStore";
+import "./tab.css";
 
 const SidebarWrapper = styled.div`
   width: 280px;
@@ -68,25 +73,37 @@ const Tabs = () => {
         <ProfileName>{currentUser.username}</ProfileName>
       </Profile>
       <MenuItem>
-        <PeopleIcon color="black" />
+        <PeopleIcon className="people"/>
         <span>Bạn bè</span>
       </MenuItem>
       <MenuItem>
-        <WatchLaterIcon color="black" />
-        <span>Kỷ niệm</span>
+        <PinDropIcon className="location" />
+        <span>Sở thích gần bạn</span>
       </MenuItem>
       <MenuItem>
-        <BookmarkIcon color="black" />
-        <span>Đã lưu</span>
-      </MenuItem>
-      <MenuItem>
-        <GroupIcon color="black" />
+        <Diversity2Icon className="group" />
         <span>Nhóm</span>
       </MenuItem>
       <MenuItem>
-        <ArrowDropDownCircleIcon color="black" />
-        <span>Xem thêm</span>
+        <BookmarkIcon className="saved" />
+        <span>Đã lưu</span>
       </MenuItem>
+      <Accordion style={{ marginTop: 0 }}>
+        <AccordionSummary
+          expandIcon={<ArrowDropDownCircleIcon color="warning" />}
+          style={{ flexDirection: "row-reverse" }}
+        >
+          <MenuItem>
+            <span>Xem Thêm</span>
+          </MenuItem>
+        </AccordionSummary>
+        <AccordionDetails>
+          <MenuItem>
+            <WatchLaterOutlinedIcon className="memories" />
+            <span>Kỉ niệm</span>
+          </MenuItem>
+        </AccordionDetails>
+      </Accordion>
     </SidebarWrapper>
   );
 };

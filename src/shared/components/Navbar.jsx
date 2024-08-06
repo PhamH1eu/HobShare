@@ -59,6 +59,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const NavBar = () => {
+  const { currentUser } = useUserStore();
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -105,8 +107,8 @@ const NavBar = () => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={logout}>Log out</MenuItem>
+      <MenuItem onClick={handleMenuClose}>{currentUser.username}</MenuItem>
+      <MenuItem onClick={logout}>Đăng xuất</MenuItem>
     </Menu>
   );
 
@@ -161,8 +163,6 @@ const NavBar = () => {
       </MenuItem>
     </Menu>
   );
-
-  const { currentUser } = useUserStore();
 
   return (
     <Box>

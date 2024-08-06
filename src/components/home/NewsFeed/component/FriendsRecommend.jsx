@@ -54,9 +54,9 @@ const FriendsRecommend = () => {
     <Wrapper>
       <span>Những người bạn có thể biết</span>
       <Swiper
-        spaceBetween={30}
+        spaceBetween={20}
         slidesPerView={4}
-        style={{maxWidth: '43vw', padding: '20px'}}
+        style={{maxWidth: '43vw', padding: '18px'}}
       >
         {friends.map((friend, index) => (
           <SwiperSlide key={index}>

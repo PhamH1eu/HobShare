@@ -6,6 +6,7 @@ const SidebarWrapper = styled.div`
   position: sticky;
   top: 0;
   overflow-y: auto;
+  overflow-x: hidden;
 
   &::-webkit-scrollbar {
     background-color: transparent;

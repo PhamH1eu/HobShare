@@ -1,0 +1,32 @@
+.MuiAccordionSummary-content {
+    margin: 0 !important;
+}
+
+div.MuiButtonBase-root {
+    border-radius: 5px !important;
+    margin-top: 5px !important;
+}
+
+.MuiButtonBase-root:hover {
+    background-color: rgba(228, 230, 233, 255);
+}
+
+.people {
+    color: #51d5c3 !important;
+}
+
+.location {
+    color: #dd0031 !important;
+}
+
+.saved {
+    color: #d733a5 !important;
+}
+
+.group {
+    color: #24b2fd !important;
+}
+
+.memories {
+    color: #228de6 !important;
+}

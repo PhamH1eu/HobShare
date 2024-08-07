@@ -1,15 +1,19 @@
 import styled from "styled-components";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   IoMdThumbsUp,
   IoIosShareAlt,
   IoIosChatbubbles,
   IoMdHappy,
 } from "react-icons/io";
+
+import Comments from "./Comments";
+
+import Modal from "@mui/material/Modal";
 import { IconButton } from "@mui/material";
 import BookmarksIcon from "@mui/icons-material/Bookmarks";
 import Divider from "@mui/material/Divider";
-import Comments from "./Comments";
+import Share from "./Share";
 
 const PostWrapper = styled.div`
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
@@ -126,6 +130,9 @@ const Post = ({ post }) => {
   };
 
   const [showComment, setShowComment] = useState(false);
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   return (
     <PostWrapper>
@@ -176,7 +183,10 @@ const Post = ({ post }) => {
             <IoIosChatbubbles />
             Bình luận
           </PostAction>
-          <PostAction style={{ color: "rgba(91, 98, 106, 255)" }}>
+          <PostAction
+            onClick={handleOpen}
+            style={{ color: "rgba(91, 98, 106, 255)" }}
+          >
             <IoIosShareAlt />
             Chia sẻ
           </PostAction>
@@ -191,6 +201,14 @@ const Post = ({ post }) => {
           <Comments />
         </>
       )}
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Share post={post} />
+      </Modal>
     </PostWrapper>
   );
 };

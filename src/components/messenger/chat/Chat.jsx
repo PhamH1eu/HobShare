@@ -58,7 +58,7 @@ export const Chat = () => {
   }, [message, inView, scrollDown]);
 
   //khi chatID thay đổi(bằng cách bấm chat với ng khác) => lấy dữ liệu chat từ db && lắng nghe sự thay đổi
-  useListenChat(chatId, setNewMessage, setMessage, setLastMessageTimestamp);
+  useListenChat(chatId, setNewMessage, setMessage, setLastMessageTimestamp, setHasMore);
   useEffect(() => {
     setHasMore(true);
     setLastMessageTimestamp(null);

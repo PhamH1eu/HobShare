@@ -13,10 +13,20 @@ const Comments = () => {
       userProfile: "https://www.linkedin.com/in/riya-negi-8879631a9/",
       text: "I think you have a point🤔",
       avatarUrl: "https://ui-avatars.com/api/name=Lily&background=random",
-      replies: [],
+      replies: [
+        {
+          userId: "02c",
+          comId: "2",
+          fullName: "Lily",
+          userProfile: "https://www.linkedin.com/in/riya-negi-8879631a9/",
+          text: "I think you have a point🤔",
+          avatarUrl: "https://ui-avatars.com/api/name=Lily&background=random",
+          replies: [],
+        },
+      ],
     },
     {
-      userId: "02b",
+      userId: "02d",
       comId: "4",
       fullName: "Lily",
       userProfile: "https://www.linkedin.com/in/riya-negi-8879631a9/",

@@ -87,6 +87,7 @@ const Signup = () => {
   });
 
   const fetchUserInfo = useUserStore((state) => state.fetchUserInfo);
+  const setSignedUp = useUserStore((state) => state.setSignedUp);
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -131,6 +132,7 @@ const Signup = () => {
 
       toast.success("User created successfully");
       fetchUserInfo(res.user.uid);
+      setSignedUp(true);
     } catch (error) {
       toast.error(error.message);
     }

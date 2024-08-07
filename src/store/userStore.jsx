@@ -5,6 +5,7 @@ import { doc, getDoc } from "firebase/firestore";
 export const useUserStore = create((set) => ({
   currentUser: null,
   isLoading: true,
+  isSignedUp: true,
   fetchUserInfo: async (uid) => {
     if (!uid) return set({ currentUser: null, isLoading: false });
     try {
@@ -19,5 +20,8 @@ export const useUserStore = create((set) => ({
     } catch (err) {
       return set({ currentUser: null, isLoading: false });
     }
+  },
+  setSignedUp: (flag) => {
+    set((state) => ({ ...state, isSignedUp: flag }));
   },
 }));

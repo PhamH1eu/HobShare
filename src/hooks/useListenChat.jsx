@@ -14,7 +14,8 @@ export const useListenChat = (
   chatId,
   setNewMessage,
   setMessage,
-  setLastMessageTimestamp
+  setLastMessageTimestamp,
+  setHasMore
 ) => {
   //register a listener and detach it when component unmounts
   useEffect(() => {
@@ -26,6 +27,11 @@ export const useListenChat = (
     );
     const unSub = onSnapshot(q, (querySnapshot) => {
       let flag = false;
+      if (querySnapshot.docs.length === 0) {
+        setHasMore(false);
+        return;
+      }
+
       //check new message -- co the nham lan voi lan dau initial fetch
       // Lần đàu vẫn là add
       querySnapshot.docChanges().forEach((change) => {
@@ -54,7 +60,7 @@ export const useListenChat = (
     return () => {
       unSub();
     };
-  }, [chatId, setMessage, setNewMessage, setLastMessageTimestamp]);
+  }, [chatId, setMessage, setNewMessage, setLastMessageTimestamp, setHasMore]);
 };
 
 export const loadMoreMessages = async (

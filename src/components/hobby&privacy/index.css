@@ -84,5 +84,13 @@
 }
 
 .privacy {
-    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+
+    .privacy-content {
+        max-width: 40vw;
+        border: 2px solid;
+    }
 }

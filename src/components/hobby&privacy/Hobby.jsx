@@ -58,7 +58,25 @@ const HobbyChoosingPage = () => {
 
   return showPrivacy ? (
     <div className="privacy">
-        <div>aaa</div>
+      <div className="privacy-content">
+        <h2>Chính sách bảo mật</h2>
+        <p>
+          Để cung cấp cho bạn trải nghiệm tốt nhất, chúng tôi sẽ thu thập và sử
+          dụng thông tin của bạn. Bằng cách nhấn vào nút Tiếp tục dưới đây, bạn
+          đồng ý với điều này và chính sách bảo mật của chúng tôi.
+        </p>
+        <button className="button" onClick={writeHobby}>
+          Tiếp tục
+        </button>
+        <button
+          className="button"
+          onClick={() => {
+            setSignedUp(false);
+          }}
+        >
+          Không chấp nhận
+        </button>
+      </div>
     </div>
   ) : (
     <div className="hobby">

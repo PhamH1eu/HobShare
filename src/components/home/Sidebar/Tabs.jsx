@@ -1,13 +1,13 @@
 import styled from "styled-components";
 import PeopleIcon from "@mui/icons-material/People";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
-import Diversity2Icon from '@mui/icons-material/Diversity2';
+import Diversity2Icon from "@mui/icons-material/Diversity2";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import ArrowDropDownCircleIcon from "@mui/icons-material/ArrowDropDownCircle";
-import WatchLaterOutlinedIcon from '@mui/icons-material/WatchLaterOutlined';
-import PinDropIcon from '@mui/icons-material/PinDrop';
+import WatchLaterOutlinedIcon from "@mui/icons-material/WatchLaterOutlined";
+import PinDropIcon from "@mui/icons-material/PinDrop";
 import { useUserStore } from "src/store/userStore";
 import "./tab.css";
 
@@ -73,10 +73,13 @@ const Tabs = () => {
         <ProfileName>{currentUser.username}</ProfileName>
       </Profile>
       <MenuItem>
-        <PeopleIcon className="people"/>
+        <PeopleIcon className="people" />
         <span>Bạn bè</span>
       </MenuItem>
-      <MenuItem>
+      <MenuItem
+        className={`${currentUser.denyExposingLocation ? "disabled" : ""}`}
+        onClick={() => console.log("Location")}
+      >
         <PinDropIcon className="location" />
         <span>Sở thích gần bạn</span>
       </MenuItem>

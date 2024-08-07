@@ -22,7 +22,7 @@
             margin-right: 25px;
             border: none;
             cursor: pointer;
-            background-color: rgb(46, 139, 214) !important;
+            background-color: #3a78e7 !important;
             color: white !important;
         }
     }
@@ -51,8 +51,12 @@
         right: 10px;
         top: 10px;
         z-index: 1;
-        background-color: cornflowerblue;
+        background-color: rgb(205, 64, 87);
         padding: 6px;
+
+        svg {
+            color: white !important;
+        }
     }
 
     .image {
@@ -83,14 +87,39 @@
     }
 }
 
-.privacy {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
+.privacy-content {
+    border-radius: 10px;
+    background-color: white;
 
-    .privacy-content {
-        max-width: 40vw;
-        border: 2px solid;
+    h2 {
+        background-color: #3a78e7;
+        color: white;
+        text-align: center;
+        padding: 10px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    p {
+        padding: 10px;
+        text-align: center;
+    }
+
+    .action {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        padding: 20px;
+
+        button {
+            border: none;
+            cursor: pointer;
+            /* background-color: #3a78e7; */
+            color: white !important;
+        }
+    }
+
+    .note {
+        font-size: 14px;
     }
 }

@@ -1,12 +1,28 @@
+import React from "react";
 import { useState } from "react";
 import StackGrid, { transitions, easings } from "react-stack-grid";
-import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { IconButton } from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Modal from "@mui/material/Modal";
 
 import { useUserStore } from "src/store/userStore";
 import { UserService } from "src/services/DatabaseService";
+import { geohashForLocation } from "geofire-common";
 
 import "./index.css";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  borderRadius: 10,
+};
 
 const images = [
   { src: "/photos/photo01.jpg", label: "Sample image 1" },
@@ -36,10 +52,9 @@ const images = [
 const transition = transitions.scaleDown;
 
 const HobbyChoosingPage = () => {
-  const [showPrivacy, setShowPrivacy] = useState(false);
-
   const setSignedUp = useUserStore((state) => state.setSignedUp);
   const currentUser = useUserStore((state) => state.currentUser);
+
   const [liked, setLiked] = useState(new Set());
   const addHobby = (label) => {
     if (liked.has(label)) {
@@ -49,80 +64,125 @@ const HobbyChoosingPage = () => {
     }
   };
 
+  const [location, setLocation] = useState({ latitude: null, longitude: null });
+  const [deny, setDeny] = useState(false);
+  const getLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLocation({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+          setDeny(false);
+        },
+        (err) => {
+          setDeny(true);
+        }
+      );
+    } else {
+      setDeny(true);
+    }
+  };
+
   const writeHobby = () => {
     UserService.update(currentUser.id, {
       liked: [...liked],
+      location: {
+        ...location,
+        geohash: geohashForLocation([location.latitude, location.longitude]),
+      },
+      denyExposingLocation: deny,
     });
     setSignedUp(false);
   };
 
-  return showPrivacy ? (
-    <div className="privacy">
-      <div className="privacy-content">
-        <h2>Chính sách bảo mật</h2>
-        <p>
-          Để cung cấp cho bạn trải nghiệm tốt nhất, chúng tôi sẽ thu thập và sử
-          dụng thông tin của bạn. Bằng cách nhấn vào nút Tiếp tục dưới đây, bạn
-          đồng ý với điều này và chính sách bảo mật của chúng tôi.
-        </p>
-        <button className="button" onClick={writeHobby}>
-          Tiếp tục
-        </button>
-        <button
-          className="button"
-          onClick={() => {
-            setSignedUp(false);
-          }}
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => {
+    getLocation();
+    setOpen(true);
+  };
+  const handleClose = () => setOpen(false);
+
+  return (
+    <>
+      <div className="hobby">
+        <div className="current">
+          <h2>Hoạt động bạn đã thích</h2>
+          {[...liked].map((item, index) => (
+            <div className="button" key={index}>
+              {item}
+            </div>
+          ))}
+          <button className="button" onClick={handleOpen}>
+            Tiếp tục
+          </button>
+        </div>
+        <StackGrid
+          monitorImagesLoaded
+          columnWidth={270}
+          duration={600}
+          gutterWidth={15}
+          gutterHeight={10}
+          easing={easings.cubicOut}
+          appearDelay={60}
+          appear={transition.appear}
+          appeared={transition.appeared}
+          enter={transition.enter}
+          entered={transition.entered}
+          leaved={transition.leaved}
+          style={{ width: "100vw" }}
         >
-          Không chấp nhận
-        </button>
+          {images.map((obj) => (
+            <figure
+              key={obj.src}
+              className={`image ${liked.has(obj.label) ? `selected` : ``}`}
+              onClick={() => addHobby(obj.label)}
+            >
+              {liked.has(obj.label) ? (
+                <IconButton>
+                  <FavoriteBorderIcon />
+                </IconButton>
+              ) : null}
+              <img src={obj.src} alt={obj.label} />
+              <figcaption>{obj.label}</figcaption>
+            </figure>
+          ))}
+        </StackGrid>
       </div>
-    </div>
-  ) : (
-    <div className="hobby">
-      <div className="current">
-        <h2>Hoạt động bạn đã thích</h2>
-        {[...liked].map((item, index) => (
-          <div className="button" key={index}>
-            {item}
-          </div>
-        ))}
-        <button className="button" onClick={() => setShowPrivacy(true)}>
-          Tiếp tục
-        </button>
-      </div>
-      <StackGrid
-        monitorImagesLoaded
-        columnWidth={280}
-        duration={600}
-        gutterWidth={15}
-        gutterHeight={10}
-        easing={easings.cubicOut}
-        appearDelay={60}
-        appear={transition.appear}
-        appeared={transition.appeared}
-        enter={transition.enter}
-        entered={transition.entered}
-        leaved={transition.leaved}
-        style={{ width: "100vw" }}
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
       >
-        {images.map((obj) => (
-          <figure
-            key={obj.src}
-            className={`image ${liked.has(obj.label) ? `selected` : ``}`}
-            onClick={() => addHobby(obj.label)}
-          >
-            {liked.has(obj.label) ? (
-              <IconButton>
-                <DoneOutlineIcon />
-              </IconButton>
-            ) : null}
-            <img src={obj.src} alt={obj.label} />
-            <figcaption>{obj.label}</figcaption>
-          </figure>
-        ))}
-      </StackGrid>
-    </div>
+        <Box sx={style}>
+          <div className="privacy-content">
+            <h2>Chính sách bảo mật</h2>
+            <p className="info">
+              Để cung cấp trải nghiệm tốt nhất, chúng tôi sẽ thu thập và sử dụng
+              vị trí của bạn. Bằng cách nhấn vào nút{" "}
+              <span style={{ color: "#3a78e7", cursor: "pointer" }}>
+                TIẾP TỤC{" "}
+              </span>
+              dưới đây, bạn đồng ý với chính sách bảo mật của chúng tôi.
+              <br />1 vài tính năng có thể không hiện hữu nếu bạn bỏ qua bước
+              này.
+            </p>
+            <div className="action">
+              <Button
+                variant="contained"
+                className="button"
+                onClick={writeHobby}
+              >
+                Tiếp tục
+              </Button>
+            </div>
+            <p className="note">(Cài đặt này có thể tuỳ chỉnh sau)</p>
+          </div>
+        </Box>
+      </Modal>
+    </>
   );
 };
 

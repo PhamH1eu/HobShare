@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -81,9 +81,11 @@ const NavBar = () => {
   };
 
   const resetChat = useChatStore((state) => state.resetChat);
-  const logout = () => {
-    auth.signOut();
+  const navigate = useNavigate();
+  const logout = async () => {
+    await auth.signOut();
     resetChat();
+    navigate("/");
   };
 
   const handleMobileMenuOpen = (event) => {

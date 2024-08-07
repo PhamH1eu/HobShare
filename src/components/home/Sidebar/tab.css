@@ -30,3 +30,8 @@ div.MuiButtonBase-root {
 .memories {
     color: #228de6 !important;
 }
+
+.disabled {
+    pointer-events: none;
+    opacity: 0.4;
+}

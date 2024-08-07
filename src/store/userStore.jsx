@@ -5,7 +5,7 @@ import { doc, getDoc } from "firebase/firestore";
 export const useUserStore = create((set) => ({
   currentUser: null,
   isLoading: true,
-  isSignedUp: true,
+  isSignedUp: false,
   fetchUserInfo: async (uid) => {
     if (!uid) return set({ currentUser: null, isLoading: false });
     try {

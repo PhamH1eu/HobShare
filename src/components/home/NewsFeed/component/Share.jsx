@@ -1,27 +1,46 @@
+import { useState, useMemo } from "react";
+
 import Box from "@mui/material/Box";
+import SearchIcon from "@mui/icons-material/Search";
+import ForwardToInboxIcon from "@mui/icons-material/ForwardToInbox";
 import styled from "styled-components";
+import CircularLoading from "src/shared/components/Loading";
+
+import { useQueryChatlist } from "src/hooks/useChatList";
+import SendMessage from "src/services/SendMessage";
+import UpdateChat from "src/services/UpdateChat";
+import { useUserStore } from "src/store/userStore";
 
 const style = {
   position: "absolute",
-  top: "50%",
+  top: "45%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: 500,
   bgcolor: "background.paper",
-  border: "2px solid #000",
+  border: "none",
+  borderRadius: "8px",
   boxShadow: 24,
-  p: 4,
+  padding: "12px",
 };
 
 const SearchBar = styled.div`
-  padding: 10px;
+  display: flex;
+  margin-top: 10px;
+  margin-bottom: 10px;
   border-bottom: 1px solid #ddd;
+  background-color: #f0f2f5;
+  padding: 6px;
+  padding-left: 8px;
+  border-radius: 20px;
 
   input {
     width: 100%;
     border: none;
     outline: none;
     font-size: 16px;
+    background-color: #f0f2f5;
+    margin-left: 5px;
   }
 `;
 
@@ -29,83 +48,162 @@ const RecipientList = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0;
+  max-height: 50vh;
+  overflow-y: auto;
+  gap: 10px;
 `;
 
 const RecipientItem = styled.li`
   display: flex;
   align-items: center;
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
+  padding: 5px;
+  border-radius: 10px;
 
   img {
-    width: 30px;
-    height: 30px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     margin-right: 10px;
   }
 
   span {
     flex: 1;
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+
+  &:hover {
+    background-color: #f0f2f5;
+    cursor: pointer;
   }
 
   input {
-    margin-left: 10px;
+    width: 18px;
+    height: 18px;
+    accent-color: #087cfc;
+    margin-right: 10px;
   }
 `;
 
-const SendButton = styled.button`
-  width: 100%;
+const SendButton = styled.div`
+  margin-top: 10px;
   padding: 10px;
   border: none;
   background-color: #007bff;
   color: white;
   cursor: pointer;
-  border-radius: 0 0 8px 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 8px;
 `;
 
-const Share = ({ post }) => {
+const Share = ({ post, handleClose }) => {
+  const { currentUser } = useUserStore();
+  const { isLoading, data: chats } = useQueryChatlist(currentUser);
+  const [search, setSearchinput] = useState("");
+
+  const handleSearch = (e) => {
+    setSearchinput(e.target.value);
+  };
+
+  const searchChat = useMemo(
+    () =>
+      isLoading ? [] : chats.filter((x) => x.user.username.includes(search)),
+    [chats, isLoading, search]
+  );
+
+  const [recipients, setRecipients] = useState([]);
+
+  function checkExist(chatId) {
+    var flag = false;
+    recipients.forEach((value) => {
+      if (value.chatId == chatId) {
+        flag = true;
+      }
+    });
+    return flag;
+  }
+
+  const handleClick = (item) => {
+    if (checkExist(item.chatId)) {
+      setRecipients(recipients.filter((x) => x.chatId !== item.chatId));
+    } else {
+      setRecipients([
+        ...recipients,
+        { chatId: item.chatId, userId: item.user.id },
+      ]);
+    }
+  };
+
+  const sendPost = async () => {
+    const sendAsync = recipients.map((item) =>
+      SendMessage(
+        currentUser,
+        item.chatId,
+        "Hey i just share this with you",
+        [],
+        []
+      )
+    );
+    const updateAsync = recipients.map((item) =>
+      UpdateChat(
+        currentUser,
+        item.userId,
+        item.chatId,
+        "Hey i just share this with you"
+      )
+    );
+    await Promise.all(sendAsync);
+    await Promise.all(updateAsync);
+    handleClose();
+  };
+
+  if (isLoading)
+    return (
+      <Box sx={style}>
+        <CircularLoading />
+      </Box>
+    );
+
   return (
     <Box sx={style}>
-        {/* header */}
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <h2>Gửi đến</h2>
-        </Box>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          borderTop: "1px",
+          borderBottom: "1px solid #ced0d4",
+          padding: "10px",
+          paddingTop: "0",
+        }}
+      >
+        <h3 style={{ fontSize: "1.5rem" }}>Gửi đến</h3>
+      </Box>
       <SearchBar>
-        <input type="text" placeholder="Tìm kiếm người và nhóm" />
+        <SearchIcon color="greyIcon" />
+        <input
+          type="text"
+          placeholder="Tìm kiếm người và nhóm"
+          onChange={(e) => handleSearch(e)}
+        />
       </SearchBar>
       <RecipientList>
-        <RecipientItem>
-          <img src="path_to_image" alt="Profile Picture" />
-          <span>Lựa chọn chia sẻ khác</span>
-          <input type="checkbox" />
-        </RecipientItem>
-        <RecipientItem>
-          <img src="path_to_image" alt="Profile Picture" />
-          <span>em iêu ơi</span>
-          <input type="checkbox" />
-        </RecipientItem>
-        <RecipientItem>
-          <img src="path_to_image" alt="Profile Picture" />
-          <span>Thụ Nhân</span>
-          <input type="checkbox" />
-        </RecipientItem>
-        <RecipientItem>
-          <img src="path_to_image" alt="Profile Picture" />
-          <span>Phòng trọ không hề bất ổn</span>
-          <input type="checkbox" />
-        </RecipientItem>
-        <RecipientItem>
-          <img src="path_to_image" alt="Profile Picture" />
-          <span>Anh Bạn Học Không Thân Thiết💩👹</span>
-          <input type="checkbox" />
-        </RecipientItem>
-        <RecipientItem>
-          <img src="path_to_image" alt="Profile Picture" />
-          <span>Lê Bá Trường</span>
-          <input type="checkbox" />
-        </RecipientItem>
+        {searchChat.map((item, index) => (
+          <RecipientItem key={index} onClick={() => handleClick(item)}>
+            <img src={item.user.avatar} alt="Profile Picture" />
+            <span>{item.user.username}</span>
+            <input type="checkbox" readOnly checked={checkExist(item.chatId)} />
+          </RecipientItem>
+        ))}
       </RecipientList>
-      <SendButton>Gửi</SendButton>
+      <SendButton onClick={sendPost}>
+        <ForwardToInboxIcon color="white" />
+        Gửi
+      </SendButton>
     </Box>
   );
 };

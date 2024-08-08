@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   IoMdThumbsUp,
   IoIosShareAlt,
@@ -14,6 +14,7 @@ import { IconButton } from "@mui/material";
 import BookmarksIcon from "@mui/icons-material/Bookmarks";
 import Divider from "@mui/material/Divider";
 import Share from "./Share";
+import useModal from "src/hooks/useModal";
 
 const PostWrapper = styled.div`
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
@@ -130,9 +131,7 @@ const Post = ({ post }) => {
   };
 
   const [showComment, setShowComment] = useState(false);
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const { open, handleOpen, handleClose } = useModal();
 
   return (
     <PostWrapper>
@@ -207,7 +206,7 @@ const Post = ({ post }) => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Share post={post} />
+        <Share post={post} handleClose={handleClose}/>
       </Modal>
     </PostWrapper>
   );

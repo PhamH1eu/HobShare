@@ -1,53 +1,25 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AddUser from "./addUser/AddUser";
+import useChatList from "src/hooks/useChatList";
 import { useUserStore } from "src/store/userStore";
 import { useChatStore } from "src/store/chatStore";
-import { db } from "src/lib/firebase";
-import { onSnapshot, doc } from "firebase/firestore";
-import { ChatService, UserService } from "src/services/DatabaseService";
+import { ChatService } from "src/services/DatabaseService";
 
 import SearchIcon from "@mui/icons-material/Search";
 import "./chatList.css";
 
 export const ChatList = () => {
   const [addMode, setAddMode] = useState(false);
-  const [chats, setChats] = useState([]);
+  const { chats } = useChatList();
   const { currentUser } = useUserStore();
   const changeChat = useChatStore((state) => state.changeChat);
   const chatId = useChatStore((state) => state.chatId);
 
-  //TODO: listen to message changes [NEED TO UNDERSTAND]
-  useEffect(() => {
-    const unsub = onSnapshot(
-      doc(db, "userchats", currentUser.id),
-      async (res) => {
-        //chats of current user
-        const items = res.data().chats;
-        //get user info of each chat, assign last message info to
-        const promises = items.map(async (item) => {
-          const userDoc = await UserService.get(item.receiverId);
-          const user = userDoc.data();
-
-          return {
-            ...item,
-            user,
-          };
-        });
-        //query all user info
-        const chatData = await Promise.all(promises);
-        setChats(chatData.sort((a, b) => b.updatedAt - a.updatedAt));
-      }
-    );
-
-    return () => unsub();
-  }, [currentUser]);
-
   const handleSelect = async (chat) => {
     //get {chat id, lastMessage, isSeen} from chat list
     const userChats = chats.map((item) => {
+      // eslint-disable-next-line no-unused-vars
       const { user, ...rest } = item;
-      //TODO: try this
-      // delete item.user;
       return rest;
     });
 

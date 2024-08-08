@@ -1,4 +1,3 @@
-import React from "react";
 import { useState } from "react";
 import StackGrid, { transitions, easings } from "react-stack-grid";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -10,6 +9,7 @@ import Modal from "@mui/material/Modal";
 import { useUserStore } from "src/store/userStore";
 import { UserService } from "src/services/DatabaseService";
 import { geohashForLocation } from "geofire-common";
+import useModal from "src/hooks/useModal";
 
 import "./index.css";
 
@@ -76,7 +76,8 @@ const HobbyChoosingPage = () => {
           });
           setDeny(false);
         },
-        (err) => {
+        // eslint-disable-next-line no-unused-vars
+        (_error) => {
           setDeny(true);
         }
       );
@@ -97,12 +98,7 @@ const HobbyChoosingPage = () => {
     setSignedUp(false);
   };
 
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => {
-    getLocation();
-    setOpen(true);
-  };
-  const handleClose = () => setOpen(false);
+  const { open, handleOpen, handleClose } = useModal();
 
   return (
     <>
@@ -114,7 +110,13 @@ const HobbyChoosingPage = () => {
               {item}
             </div>
           ))}
-          <button className="button" onClick={handleOpen}>
+          <button
+            className="button"
+            onClick={() => {
+              handleOpen();
+              getLocation();
+            }}
+          >
             Tiếp tục
           </button>
         </div>

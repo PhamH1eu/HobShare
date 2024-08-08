@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import UserCard from "./Card";
+import UserCard from "./component/Card";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 
@@ -56,7 +56,7 @@ const FriendsRecommend = () => {
       <Swiper
         spaceBetween={20}
         slidesPerView={4}
-        style={{maxWidth: '43vw', padding: '18px'}}
+        style={{ maxWidth: "43vw", padding: "18px" }}
       >
         {friends.map((friend, index) => (
           <SwiperSlide key={index}>

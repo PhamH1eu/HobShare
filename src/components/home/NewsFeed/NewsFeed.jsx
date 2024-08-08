@@ -1,6 +1,6 @@
-import NewPostInput from "./component/NewPostInput";
+import NewPostInput from "./NewPostInput";
 import Post from "./component/Post";
-import FriendsRecommend from "./component/FriendsRecommend";
+import FriendsRecommend from "./FriendsRecommend";
 import styled from "styled-components";
 
 const NewFeed = styled.div`

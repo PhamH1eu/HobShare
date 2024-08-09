@@ -1,4 +1,3 @@
-import VideoCameraBackIcon from "@mui/icons-material/VideoCameraBack";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import AddReactionIcon from "@mui/icons-material/AddReaction";
 import styled from "styled-components";
@@ -49,7 +48,7 @@ const MessageInput = styled.div`
 const Actions = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   margin: 10px;
 `;
 
@@ -89,10 +88,6 @@ const NewPostInput = () => {
       </MessageInput>
       <Divider flexItem variant="middle" color="#bdbdbd" />
       <Actions>
-        <IconButton>
-          <VideoCameraBackIcon color="error" />
-          <span>Video trực tiếp</span>
-        </IconButton>
         <IconButton>
           <AddPhotoAlternateIcon color="success" />
           <span>Ảnh/video</span>

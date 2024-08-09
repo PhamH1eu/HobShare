@@ -7,9 +7,7 @@ import { useInView } from "react-intersection-observer";
 
 import KeyboardDoubleArrowDownIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
 import CancelIcon from "@mui/icons-material/Cancel";
-import CallIcon from "@mui/icons-material/Call";
 import InfoIcon from "@mui/icons-material/Info";
-import VideocamIcon from "@mui/icons-material/Videocam";
 import ImageIcon from "@mui/icons-material/Image";
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 
@@ -138,12 +136,6 @@ export const Chat = () => {
           </div>
         </div>
         <div className="icons">
-          <button>
-            <CallIcon color="blue" />
-          </button>
-          <button>
-            <VideocamIcon color="blue" />
-          </button>
           <button onClick={showInfo}>
             <InfoIcon color="blue" />
           </button>

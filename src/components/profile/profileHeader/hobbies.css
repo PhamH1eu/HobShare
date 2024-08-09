@@ -1,0 +1,39 @@
+.hobby-wrapper {
+    img {
+        max-width: 100%;
+        vertical-align: top;
+        transition: transform .3s, box-shadow 0.3s;
+    }
+    
+    img:hover {
+        -webkit-filter: brightness(60%);
+        filter: brightness(60%);
+        cursor: pointer;
+        z-index: 1000;
+    }
+    
+    .image {
+        position: relative;
+    }
+    
+    .image figcaption {
+        display: none;
+        position: fixed;
+        bottom: 10px;
+        color: black;
+        background-color: white;
+        border-radius: 16px;
+        margin: 10px;
+        padding: 6px 10px;
+        font-weight: normal;
+        font-size: 14px;
+        font-weight: bold;
+
+    }
+    
+    .image:hover>figcaption {
+        display: block;
+        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    }
+    
+}

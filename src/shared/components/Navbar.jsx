@@ -109,7 +109,10 @@ const NavBar = () => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>{currentUser.username}</MenuItem>
+      <MenuItem onClick={() => {
+        handleMenuClose();
+        navigate(`/profile/${currentUser.id}`);
+      }}>{currentUser.username}</MenuItem>
       <MenuItem onClick={logout}>Đăng xuất</MenuItem>
     </Menu>
   );

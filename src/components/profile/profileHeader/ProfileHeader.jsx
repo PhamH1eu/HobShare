@@ -6,7 +6,7 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 
 const HeaderWrapper = styled.div`
   width: 100%;
-  height: 600px;
+  height: 70%;
   background: linear-gradient(to bottom, #8c8882 0%, #ffffff 50%, #ffffff 100%);
   display: flex;
   flex-direction: column;
@@ -86,7 +86,7 @@ const ProfileHeader = () => {
   return (
     <HeaderWrapper>
       <WallImage>
-        <Wallpaper src="/public/background.png" />
+        <Wallpaper src="/background.png" />
         <InfoWrapper>
           <AvatarWrapper>
             <Avatar src={currentUser.avatar} />

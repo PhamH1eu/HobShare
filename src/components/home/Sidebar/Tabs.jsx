@@ -1,3 +1,5 @@
+import StyledLink from "src/shared/components/StyledLink";
+
 import styled from "styled-components";
 import PeopleIcon from "@mui/icons-material/People";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
@@ -43,6 +45,8 @@ const ProfilePicture = styled.img`
 const ProfileName = styled.span`
   font-size: 16px;
   font-weight: bold;
+  color: black;
+  text-decoration: none !important;
 `;
 
 const MenuItem = styled.div`
@@ -68,10 +72,12 @@ const Tabs = () => {
   const { currentUser } = useUserStore();
   return (
     <SidebarWrapper>
-      <Profile>
-        <ProfilePicture src={currentUser.avatar} alt="Profile" />
-        <ProfileName>{currentUser.username}</ProfileName>
-      </Profile>
+      <StyledLink to={`/profile/${currentUser.id}`}>
+        <Profile >
+          <ProfilePicture src={currentUser.avatar} alt="Profile" />
+          <ProfileName>{currentUser.username}</ProfileName>
+        </Profile>
+      </StyledLink>
       <MenuItem>
         <PeopleIcon className="people" />
         <span>Bạn bè</span>

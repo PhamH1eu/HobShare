@@ -28,7 +28,7 @@ const Wrapper = styled.div`
 
 const Main = styled.div`
   display: flex;
-  width: 60%;
+  width: 70%;
   gap: 30px;
 `;
 

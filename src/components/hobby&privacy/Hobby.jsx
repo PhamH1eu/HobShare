@@ -91,7 +91,7 @@ const HobbyChoosingPage = () => {
       liked: [...liked],
       location: {
         ...location,
-        geohash: geohashForLocation([location.latitude, location.longitude]),
+        geohash: deny ? null : geohashForLocation([location.latitude, location.longitude]),
       },
       denyExposingLocation: deny,
     });
@@ -181,6 +181,10 @@ const HobbyChoosingPage = () => {
               </Button>
             </div>
             <p className="note">(Cài đặt này có thể tuỳ chỉnh sau)</p>
+            <span>Nếu bạn từ chối, vui lòng bật lại theo hướng dẫn tại</span>{" "}
+            <a href="https://support.google.com/chrome/answer/142065?hl=en">
+              Chrome Location Guide
+            </a>
           </div>
         </Box>
       </Modal>

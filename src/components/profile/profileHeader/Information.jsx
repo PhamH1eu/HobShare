@@ -1,16 +1,12 @@
-import { useEffect, useRef } from "react";
-
 import styled from "styled-components";
 import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
 import SchoolIcon from "@mui/icons-material/School";
 import WatchLaterIcon from "@mui/icons-material/WatchLater";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 
 import useModal from "src/hooks/useModal";
 import ProfileEdit from "./EditModal";
-import Profile from "../Profile";
 
 const style = {
   position: "absolute",
@@ -76,16 +72,12 @@ const EditButton = styled.button`
 `;
 
 const Information = () => {
-  const endRef = useRef(null);
-  useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth" });
-  });
 
   const { open, handleOpen, handleClose } = useModal();
 
   return (
     <BiographyWrapper>
-      <h2 ref={endRef}>Giới thiệu</h2>
+      <h2>Giới thiệu</h2>
       <Section>
         <CenterItem>
           <Title>blank</Title>

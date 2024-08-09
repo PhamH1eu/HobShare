@@ -9,6 +9,8 @@ import Post from "../home/NewsFeed/component/Post";
 import Information from "./profileHeader/Information";
 import Hobbies from "./profileHeader/Hobbies";
 import Friends from "./profileHeader/Friends";
+import Privacy from "./profileHeader/Privacy";
+import HobbyPage from "./profileHeader/HobbyPage";
 
 import styled from "styled-components";
 import Tab from "@mui/material/Tab";
@@ -103,6 +105,8 @@ const Profile = () => {
           <TabList onChange={handleChange} aria-label="lab API tabs example">
             <Tab label="Bài viết" value="1" sx={{ fontWeight: "600" }} />
             <Tab label="Bạn bè" value="2" sx={{ fontWeight: "600" }} />
+            <Tab label="Sở thích" value="3" sx={{ fontWeight: "600" }} />
+            <Tab label="Vị trí" value="4" sx={{ fontWeight: "600" }} />
           </TabList>
         </TabsHeader>
         <TabPanel value="1" sx={{ display: "flex", placeContent: "center" }}>
@@ -121,8 +125,14 @@ const Profile = () => {
             </MainContent>
           </Main>
         </TabPanel>
-        <TabPanel value="2">
+        <TabPanel value="2" sx={{padding: 0}}>
           <Friends />
+        </TabPanel>
+        <TabPanel value="3" sx={{padding: 0}}>
+          <HobbyPage />
+        </TabPanel>
+        <TabPanel value="4" sx={{padding: 0}}>
+          <Privacy />
         </TabPanel>
       </Wrapper>
     </TabContext>

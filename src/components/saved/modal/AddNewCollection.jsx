@@ -82,10 +82,11 @@ const AddNewCollectionModal = ({ open, handleClose, handleAdd }) => {
               type="file" 
               onChange={handleAvatarChange} 
             />
-            <label htmlFor="icon-button-file">
+            <label htmlFor="icon-button-file" style={{display: 'flex', alignItems: 'center'}}>
               <IconButton color="primary" aria-label="upload picture" component="span">
                 <PhotoCamera />
               </IconButton>
+              <Typography variant="h6">Chọn ảnh đại diện</Typography>
             </label>
           </AvatarContainer>
           <Button

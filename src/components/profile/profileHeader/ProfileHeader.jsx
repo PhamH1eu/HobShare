@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import { useUserStore } from "src/store/userStore";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import React from "react";
 
 const HeaderWrapper = styled.div`
   width: 100%;
@@ -64,7 +65,7 @@ const AddFriend = styled.button`
 
 const TextWrapper = styled.div`
   position: absolute;
-  right: 0;
+  left: 160px;
   top: 50px;
 `;
 
@@ -99,7 +100,10 @@ const ProfileHeader = () => {
         </InfoWrapper>
         {!isViewingOwnProfile && (
           <AddFriend>
-            <PersonAddIcon color="white" />
+            <PersonAddIcon
+              // @ts-ignore
+              color="white"
+            />
             Thêm bạn bè
           </AddFriend>
         )}

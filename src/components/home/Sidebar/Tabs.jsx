@@ -12,6 +12,7 @@ import WatchLaterOutlinedIcon from "@mui/icons-material/WatchLaterOutlined";
 import PinDropIcon from "@mui/icons-material/PinDrop";
 import { useUserStore } from "src/store/userStore";
 import "./tab.css";
+import React from "react";
 
 const SidebarWrapper = styled.div`
   width: 280px;
@@ -93,10 +94,12 @@ const Tabs = () => {
           <span>Sở thích gần bạn</span>
         </MenuItem>
       </StyledLink>
-      <MenuItem>
-        <Diversity2Icon className="group" />
-        <span>Nhóm</span>
-      </MenuItem>
+      <StyledLink to="/group">
+        <MenuItem>
+          <Diversity2Icon className="group" />
+          <span>Nhóm</span>
+        </MenuItem>
+      </StyledLink>
       <StyledLink to="/saved">
         <MenuItem>
           <BookmarkIcon className="saved" />

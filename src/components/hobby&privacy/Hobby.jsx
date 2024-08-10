@@ -59,9 +59,9 @@ const HobbyChoosingPage = () => {
   const [liked, setLiked] = useState(new Set());
   const addHobby = (label) => {
     if (liked.has(label)) {
-      setLiked((prev) => new Set([prev].filter((x) => x !== label)));
+      setLiked((prev) => new Set([...prev].filter((x) => x !== label)));
     } else {
-      setLiked((prev) => new Set([prev, label]));
+      setLiked((prev) => new Set([...prev, label]));
     }
   };
 
@@ -89,10 +89,12 @@ const HobbyChoosingPage = () => {
 
   const writeHobby = () => {
     UserService.update(currentUser.id, {
-      liked: [liked],
+      liked: [...liked],
       location: {
         ...location,
-        geohash: deny ? null : geohashForLocation([location.latitude, location.longitude]),
+        geohash: deny
+          ? null
+          : geohashForLocation([location.latitude, location.longitude]),
       },
       denyExposingLocation: deny,
     });
@@ -106,7 +108,7 @@ const HobbyChoosingPage = () => {
       <div className="hobby">
         <div className="current">
           <h2>Hoạt động bạn đã thích</h2>
-          {[liked].map((item, index) => (
+          {[...liked].map((item, index) => (
             <div className="button" key={index}>
               {item}
             </div>
@@ -182,7 +184,9 @@ const HobbyChoosingPage = () => {
               </Button>
             </div>
             <p className="note">(Cài đặt này có thể tuỳ chỉnh sau)</p>
-            <span>Nếu bạn từ chối, vui lòng bật lại theo hướng dẫn tại</span>{" "}
+            <span>
+              Nếu bạn từ chối, vui lòng bật lại theo hướng dẫn tại
+            </span>{" "}
             <a href="https://support.google.com/chrome/answer/142065?hl=en">
               Chrome Location Guide
             </a>

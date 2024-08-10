@@ -2,6 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "checkJs": true,
+    "downlevelIteration": true,
     "jsx": "react",
     "paths": {
       "src/*": ["./src/*"],

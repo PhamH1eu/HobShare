@@ -7,6 +7,7 @@ import { ChatService } from "src/services/DatabaseService";
 
 import SearchIcon from "@mui/icons-material/Search";
 import "./chatList.css";
+import React from "react";
 
 export const ChatList = () => {
   const [addMode, setAddMode] = useState(false);
@@ -44,7 +45,9 @@ export const ChatList = () => {
     <div className="chatList">
       <div className="search">
         <div className="searchBar">
-          <SearchIcon color="greyIcon" />
+          <SearchIcon 
+// @ts-ignore
+          color="greyIcon" />
           <input type="text" placeholder="Tìm kiếm bạn bè..." />
         </div>
         <img

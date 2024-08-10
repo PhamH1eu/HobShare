@@ -3,6 +3,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { Badge } from "@mui/material";
 import { styled as muiStyled } from "@mui/material/styles";
 import styled from "styled-components";
+import React from "react";
 
 const StyledBadge = muiStyled(Badge)(() => ({
   "& .MuiBadge-badge": {

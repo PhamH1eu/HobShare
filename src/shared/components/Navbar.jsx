@@ -10,15 +10,17 @@ import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
-import AccountCircle from "@mui/icons-material/AccountCircle";
 import SmsIcon from "@mui/icons-material/Sms";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import MoreIcon from "@mui/icons-material/MoreVert";
 import Avatar from "@mui/material/Avatar";
 
 import { auth } from "src/lib/firebase";
+import useDialog from "src/hooks/useDialog";
 import { useChatStore } from "src/store/chatStore";
 import { useUserStore } from "src/store/userStore";
+
+import NotificationDialog from "./navbar_dialog/NotificationDialog";
+import MessengerDialog from "./navbar_dialog/MessengerDialog";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -61,24 +63,64 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const NavBar = () => {
   const { currentUser } = useUserStore();
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const {
+    anchorEl: menuAnchorEl,
+    isOpen: isMenuOpen,
+    handleOpen: handleMenuOpen,
+    handleClose: handleMenuClose,
+  } = useDialog();
 
-  const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const {
+    anchorEl: notiAnchorEl,
+    isOpen: isNotiOpen,
+    handleOpen: handleNotiOpen,
+    handleClose: handleNotiClose,
+  } = useDialog();
 
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const {
+    anchorEl: messengerAnchorEl,
+    isOpen: isMessengerOpen,
+    handleOpen: handleMessengerOpen,
+    handleClose: handleMessengerClose,
+  } = useDialog();
 
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
+  const renderNoti = (
+    <Menu
+      anchorEl={notiAnchorEl}
+      anchorOrigin={{
+        vertical: "bottom",
+        horizontal: "right",
+      }}
+      keepMounted
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      open={isNotiOpen}
+      onClose={handleNotiClose}
+    >
+      <NotificationDialog />
+    </Menu>
+  );
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
-  };
+  const renderMessenger = (
+    <Menu
+      anchorEl={messengerAnchorEl}
+      anchorOrigin={{
+        vertical: "bottom",
+        horizontal: "right",
+      }}
+      keepMounted
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      open={isMessengerOpen}
+      onClose={handleMessengerClose}
+    >
+      <MessengerDialog />
+    </Menu>
+  );
 
   const resetChat = useChatStore((state) => state.resetChat);
   const navigate = useNavigate();
@@ -88,14 +130,10 @@ const NavBar = () => {
     navigate("/");
   };
 
-  const handleMobileMenuOpen = (event) => {
-    setMobileMoreAnchorEl(event.currentTarget);
-  };
-
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
-      anchorEl={anchorEl}
+      anchorEl={menuAnchorEl}
       anchorOrigin={{
         vertical: "bottom",
         horizontal: "right",
@@ -109,63 +147,15 @@ const NavBar = () => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={() => {
-        handleMenuClose();
-        navigate(`/profile/${currentUser.id}`);
-      }}>{currentUser.username}</MenuItem>
+      <MenuItem
+        onClick={() => {
+          handleMenuClose();
+          navigate(`/profile/${currentUser.id}`);
+        }}
+      >
+        {currentUser.username}
+      </MenuItem>
       <MenuItem onClick={logout}>Đăng xuất</MenuItem>
-    </Menu>
-  );
-
-  const mobileMenuId = "primary-search-account-menu-mobile";
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
-            <SmsIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          size="large"
-          aria-label="show 17 new notifications"
-          color="inherit"
-        >
-          <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
     </Menu>
   );
 
@@ -173,6 +163,7 @@ const NavBar = () => {
     <Box>
       <AppBar
         position="fixed"
+        // @ts-ignore
         color="white"
         style={{
           boxShadow:
@@ -188,7 +179,10 @@ const NavBar = () => {
           </Link>
           <Search>
             <SearchIconWrapper>
-              <SearchIcon color="greyIcon" />
+              <SearchIcon
+                // @ts-ignore
+                color="greyIcon"
+              />
             </SearchIconWrapper>
             <StyledInputBase
               placeholder="Tìm kiếm..."
@@ -197,24 +191,30 @@ const NavBar = () => {
           </Search>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" }, gap: "16px" }}>
-            <Link to="messenger">
-              <IconButton
-                size="large"
-                aria-label="show 4 new mails"
-                style={{ backgroundColor: "rgba(228,230,235,255)" }}
-              >
-                <Badge badgeContent={""} color="error">
-                  <SmsIcon color="black" />
-                </Badge>
-              </IconButton>
-            </Link>
+            <IconButton
+              size="large"
+              aria-label="show 4 new mails"
+              style={{ backgroundColor: "rgba(228,230,235,255)" }}
+              onClick={handleMessengerOpen}
+            >
+              <Badge badgeContent={""} color="error">
+                <SmsIcon
+                  // @ts-ignore
+                  color="black"
+                />
+              </Badge>
+            </IconButton>
             <IconButton
               size="large"
               aria-label="show 17 new notifications"
               style={{ backgroundColor: "rgba(228,230,235,255)" }}
+              onClick={handleNotiOpen}
             >
               <Badge badgeContent={17} color="error">
-                <NotificationsIcon color="black" />
+                <NotificationsIcon
+                  // @ts-ignore
+                  color="black"
+                />
               </Badge>
             </IconButton>
             <IconButton
@@ -223,7 +223,7 @@ const NavBar = () => {
               aria-label="account of current user"
               aria-controls={menuId}
               aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
+              onClick={handleMenuOpen}
               style={{ padding: 0, margin: 0 }}
             >
               <Avatar
@@ -232,22 +232,11 @@ const NavBar = () => {
               />
             </IconButton>
           </Box>
-          <Box sx={{ display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
-            </IconButton>
-          </Box>
         </Toolbar>
       </AppBar>
-      {renderMobileMenu}
       {renderMenu}
+      {renderNoti}
+      {renderMessenger}
     </Box>
   );
 };

@@ -73,30 +73,36 @@ const Tabs = () => {
   return (
     <SidebarWrapper>
       <StyledLink to={`/profile/${currentUser.id}`}>
-        <Profile >
+        <Profile>
           <ProfilePicture src={currentUser.avatar} alt="Profile" />
           <ProfileName>{currentUser.username}</ProfileName>
         </Profile>
       </StyledLink>
-      <MenuItem>
-        <PeopleIcon className="people" />
-        <span>Bạn bè</span>
-      </MenuItem>
-      <MenuItem
-        className={`${currentUser.denyExposingLocation ? "disabled" : ""}`}
-        onClick={() => console.log("Location")}
-      >
-        <PinDropIcon className="location" />
-        <span>Sở thích gần bạn</span>
-      </MenuItem>
+      <StyledLink to="/friends">
+        <MenuItem>
+          <PeopleIcon className="people" />
+          <span>Bạn bè</span>
+        </MenuItem>
+      </StyledLink>
+      <StyledLink to="/nearby">
+        <MenuItem
+          className={`${currentUser.denyExposingLocation ? "disabled" : ""}`}
+          onClick={() => console.log("Location")}
+        >
+          <PinDropIcon className="location" />
+          <span>Sở thích gần bạn</span>
+        </MenuItem>
+      </StyledLink>
       <MenuItem>
         <Diversity2Icon className="group" />
         <span>Nhóm</span>
       </MenuItem>
-      <MenuItem>
-        <BookmarkIcon className="saved" />
-        <span>Đã lưu</span>
-      </MenuItem>
+      <StyledLink to="/saved">
+        <MenuItem>
+          <BookmarkIcon className="saved" />
+          <span>Đã lưu</span>
+        </MenuItem>
+      </StyledLink>
       <Accordion style={{ marginTop: 0 }}>
         <AccordionSummary
           expandIcon={<ArrowDropDownCircleIcon color="warning" />}
@@ -107,10 +113,12 @@ const Tabs = () => {
           </MenuItem>
         </AccordionSummary>
         <AccordionDetails>
-          <MenuItem>
-            <WatchLaterOutlinedIcon className="memories" />
-            <span>Kỉ niệm</span>
-          </MenuItem>
+          <StyledLink to="/memories">
+            <MenuItem>
+              <WatchLaterOutlinedIcon className="memories" />
+              <span>Kỉ niệm</span>
+            </MenuItem>
+          </StyledLink>
         </AccordionDetails>
       </Accordion>
     </SidebarWrapper>

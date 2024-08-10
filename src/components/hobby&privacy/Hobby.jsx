@@ -12,6 +12,7 @@ import { geohashForLocation } from "geofire-common";
 import useModal from "src/hooks/useModal";
 
 import "./index.css";
+import React from "react";
 
 const style = {
   position: "absolute",
@@ -58,9 +59,9 @@ const HobbyChoosingPage = () => {
   const [liked, setLiked] = useState(new Set());
   const addHobby = (label) => {
     if (liked.has(label)) {
-      setLiked((prev) => new Set([...prev].filter((x) => x !== label)));
+      setLiked((prev) => new Set([prev].filter((x) => x !== label)));
     } else {
-      setLiked((prev) => new Set([...prev, label]));
+      setLiked((prev) => new Set([prev, label]));
     }
   };
 
@@ -88,7 +89,7 @@ const HobbyChoosingPage = () => {
 
   const writeHobby = () => {
     UserService.update(currentUser.id, {
-      liked: [...liked],
+      liked: [liked],
       location: {
         ...location,
         geohash: deny ? null : geohashForLocation([location.latitude, location.longitude]),
@@ -105,7 +106,7 @@ const HobbyChoosingPage = () => {
       <div className="hobby">
         <div className="current">
           <h2>Hoạt động bạn đã thích</h2>
-          {[...liked].map((item, index) => (
+          {[liked].map((item, index) => (
             <div className="button" key={index}>
               {item}
             </div>

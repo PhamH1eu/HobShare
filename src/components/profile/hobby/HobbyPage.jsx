@@ -16,6 +16,9 @@ import { Add, Delete } from "@mui/icons-material";
 import useModal from "src/hooks/useModal";
 import styled from "styled-components";
 
+import { useUserStore } from "src/store/userStore";
+import { useParams } from "react-router-dom";
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -72,6 +75,10 @@ const HobbyCaption = styled.span`
 
 // Main Component
 const HobbiesPage = () => {
+  const { currentUser } = useUserStore();
+  const { userId } = useParams();
+  const isViewingOwnProfile = userId === currentUser.id;
+
   const [hobbies, setHobbies] = useState([
     { id: 1, image: "/photos/photo01.jpg", caption: "Photography" },
     { id: 2, image: "/photos/photo06.jpg", caption: "Cycling" },
@@ -92,10 +99,17 @@ const HobbiesPage = () => {
   return (
     <Container>
       <HobbiesHeader>
-        <Typography variant="h5">Sở Thích Của Bạn</Typography>
-        <AddHobbyButton startIcon={<Add color="white" />} onClick={handleOpen}>
-          Thêm Sở Thích
-        </AddHobbyButton>
+        <Typography variant="h5">
+          {isViewingOwnProfile ? "Sở thích của bạn" : `Sở thích của nó`}
+        </Typography>
+        {isViewingOwnProfile && (
+          <AddHobbyButton
+            startIcon={<Add color="white" />}
+            onClick={handleOpen}
+          >
+            Thêm Sở Thích
+          </AddHobbyButton>
+        )}
       </HobbiesHeader>
 
       <HobbiesGrid container spacing={2}>
@@ -110,12 +124,14 @@ const HobbiesPage = () => {
               />
               <HobbyCaption>
                 {hobby.caption}
-                <IconButton
-                  size="small"
-                  onClick={() => handleDeleteHobby(hobby.image)}
-                >
-                  <Delete />
-                </IconButton>
+                {isViewingOwnProfile && (
+                  <IconButton
+                    size="small"
+                    onClick={() => handleDeleteHobby(hobby.image)}
+                  >
+                    <Delete />
+                  </IconButton>
+                )}
               </HobbyCaption>
             </Card>
           </Grid>
@@ -154,7 +170,9 @@ const HobbiesPage = () => {
           <Button onClick={handleAddHobby}>Lưu</Button>
         </DialogActions>
       </Dialog>
-      <SaveButton onClick={() => console.log("saved")}>Lưu</SaveButton>
+      {isViewingOwnProfile && (
+        <SaveButton onClick={() => console.log("saved")}>Lưu</SaveButton>
+      )}
     </Container>
   );
 };

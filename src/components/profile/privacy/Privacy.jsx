@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Button } from "@mui/material";
 
 const Container = styled.div`
-  width: 800px;
+  width: 50vw;
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -34,6 +34,10 @@ const Privacy = () => {
       setDeny(true);
     }
   };
+
+  const handleDeny = () => {
+    setDeny(true);
+  }
 
   return (
     <Container>

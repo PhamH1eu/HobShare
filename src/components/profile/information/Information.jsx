@@ -6,7 +6,10 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 
 import useModal from "src/hooks/useModal";
-import ProfileEdit from "./EditModal";
+import ProfileEdit from "../EditModal";
+
+import { useUserStore } from "src/store/userStore";
+import { useParams } from "react-router-dom";
 
 const style = {
   position: "absolute",
@@ -72,7 +75,9 @@ const EditButton = styled.button`
 `;
 
 const Information = () => {
-
+  const { currentUser } = useUserStore();
+  const { userId } = useParams();
+  const isViewingOwnProfile = userId === currentUser.id;
   const { open, handleOpen, handleClose } = useModal();
 
   return (
@@ -101,7 +106,9 @@ const Information = () => {
           <WatchLaterIcon color="greyIcon" />
           <Text>Tham gia vào Tháng 8 năm 2016</Text>
         </Item>
-        <EditButton onClick={handleOpen}>Chỉnh sửa chi tiết</EditButton>
+        {isViewingOwnProfile && (
+          <EditButton onClick={handleOpen}>Chỉnh sửa chi tiết</EditButton>
+        )}
       </Section>
       <Modal
         open={open}
@@ -110,7 +117,7 @@ const Information = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <ProfileEdit handleClose={handleClose}/>
+          <ProfileEdit handleClose={handleClose} />
         </Box>
       </Modal>
     </BiographyWrapper>

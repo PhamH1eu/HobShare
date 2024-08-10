@@ -6,11 +6,11 @@ import { useUserStore } from "src/store/userStore";
 import ProfileHeader from "./profileHeader/ProfileHeader";
 import NewPostInput from "../home/NewsFeed/NewPostInput";
 import Post from "../home/NewsFeed/component/Post";
-import Information from "./profileHeader/Information";
-import Hobbies from "./profileHeader/Hobbies";
-import Friends from "./profileHeader/Friends";
-import Privacy from "./profileHeader/Privacy";
-import HobbyPage from "./profileHeader/HobbyPage";
+import Information from "./information/Information";
+import Hobbies from "./hobby/Hobbies";
+import Friends from "./friends/Friends";
+import Privacy from "./privacy/Privacy";
+import HobbyPage from "./hobby/HobbyPage";
 
 import styled from "styled-components";
 import Tab from "@mui/material/Tab";
@@ -90,6 +90,7 @@ const posts = [
 const Profile = () => {
   const { userId } = useParams();
   const { currentUser } = useUserStore();
+  const isViewingOwnProfile = userId === currentUser.id;
 
   const [value, setValue] = useState("1");
 
@@ -106,7 +107,7 @@ const Profile = () => {
             <Tab label="Bài viết" value="1" sx={{ fontWeight: "600" }} />
             <Tab label="Bạn bè" value="2" sx={{ fontWeight: "600" }} />
             <Tab label="Sở thích" value="3" sx={{ fontWeight: "600" }} />
-            <Tab label="Vị trí" value="4" sx={{ fontWeight: "600" }} />
+            {isViewingOwnProfile && <Tab label="Vị trí" value="4" sx={{ fontWeight: "600" }} />}
           </TabList>
         </TabsHeader>
         <TabPanel value="1" sx={{ display: "flex", placeContent: "center" }}>
@@ -116,7 +117,7 @@ const Profile = () => {
               <Hobbies />
             </Info>
             <MainContent>
-              <NewPostInput />
+              {isViewingOwnProfile && <NewPostInput />} 
               <div>
                 {posts.map((post, index) => (
                   <Post key={index} post={post} />
@@ -125,13 +126,13 @@ const Profile = () => {
             </MainContent>
           </Main>
         </TabPanel>
-        <TabPanel value="2" sx={{padding: 0}}>
+        <TabPanel value="2" sx={{ padding: 0 }}>
           <Friends />
         </TabPanel>
-        <TabPanel value="3" sx={{padding: 0}}>
+        <TabPanel value="3" sx={{ padding: 0 }}>
           <HobbyPage />
         </TabPanel>
-        <TabPanel value="4" sx={{padding: 0}}>
+        <TabPanel value="4" sx={{ padding: 0 }}>
           <Privacy />
         </TabPanel>
       </Wrapper>

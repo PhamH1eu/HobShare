@@ -82,6 +82,7 @@ const Friends = styled.p`
 const ProfileHeader = () => {
   const { currentUser } = useUserStore();
   const { userId } = useParams();
+  const isViewingOwnProfile = userId === currentUser.id;
 
   return (
     <HeaderWrapper>
@@ -96,10 +97,12 @@ const ProfileHeader = () => {
             <Friends>329 người bạn</Friends>
           </TextWrapper>
         </InfoWrapper>
-        <AddFriend>
-          <PersonAddIcon color="white" />
-          Thêm bạn bè
-        </AddFriend>
+        {!isViewingOwnProfile && (
+          <AddFriend>
+            <PersonAddIcon color="white" />
+            Thêm bạn bè
+          </AddFriend>
+        )}
       </WallImage>
     </HeaderWrapper>
   );

@@ -30,18 +30,12 @@ export const useChatDialogStore = create((set, get) => ({
   },
 
   removeOpenChat: (chat) => {
-    if (get().openChats.length === 2) {
-      set({
-        openChats: get().openChats.filter((c) => c !== chat),
-      });
-      if (get().minimizedChats.length > 0) {
-        const newMinimizedChats = get().minimizedChats.pop();
-        get().setOpenChats([...get().openChats, newMinimizedChats]);
-      }
-    } else {
-      set({
-        openChats: get().openChats.filter((c) => c !== chat),
-      });
+    set({
+      openChats: get().openChats.filter((c) => c !== chat),
+    });
+    if (get().minimizedChats.length > 0) {
+      const newMinimizedChats = get().minimizedChats.pop();
+      get().setOpenChats([...get().openChats, newMinimizedChats]);
     }
   },
 

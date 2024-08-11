@@ -109,8 +109,8 @@ const ContactItem = styled.div`
 `;
 
 const Avatar = styled.img`
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   margin-right: 10px;
 `;
@@ -155,7 +155,10 @@ const Friends = () => {
       {chats.map((contact, index) => (
         <ContactItem key={index} onClick={() => addChat(index)}>
           <StyledBadge color={"success"} variant="dot">
-            <Avatar src={contact.user.avatar} alt={contact.user.username} />
+            <Avatar
+              src={contact.user.avatar}
+              alt={contact.user.username}
+            />
           </StyledBadge>
           <ContactName>{contact.user.username}</ContactName>
         </ContactItem>

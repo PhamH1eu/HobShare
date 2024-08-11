@@ -10,6 +10,9 @@ const queryClient = new QueryClient();
 
 const theme = createTheme({
   palette: {
+    primary: {
+      main: "#6ec924",
+    },
     // @ts-ignore
     white: {
       main: "rgba(255, 255, 255, 1)",

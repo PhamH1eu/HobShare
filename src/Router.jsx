@@ -7,6 +7,8 @@ import NavBar from "./shared/components/Navbar";
 import FriendsTab from "./components/friendpost/FriendPost";
 import SavedPage from "./components/saved/SavedPage";
 import MemoriesPage from "./components/memories/Memories";
+import ChatDialog from "./shared/components/chat_dialog/ChatDialog";
+import MinimizedChatDialog from "./shared/components/chat_dialog/MinimizedChatDialog";
 
 const Router = () => {
   return (
@@ -20,6 +22,8 @@ const Router = () => {
         <Route path="/saved" element={<SavedPage />} />
         <Route path="/memories" element={<MemoriesPage />} />
       </Routes>
+      <ChatDialog />
+      <MinimizedChatDialog />
     </>
   );
 };

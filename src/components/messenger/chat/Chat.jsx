@@ -21,6 +21,7 @@ import UpdateChat from "src/services/UpdateChat";
 import SendMessage from "src/services/SendMessage";
 import CircularLoading from "src/shared/components/Loading";
 import "./chat.css";
+import React from "react";
 
 export const Chat = () => {
   //local states
@@ -86,11 +87,13 @@ export const Chat = () => {
     //handle video
     if (type === "video") {
       setVideoList((videoList) =>
+        // @ts-ignore
         videoList.filter((item, index) => index !== location)
       );
       return;
     }
     setImgList((imgList) =>
+      // @ts-ignore
       imgList.filter((item, index) => index !== location)
     );
   }
@@ -137,7 +140,9 @@ export const Chat = () => {
         </div>
         <div className="icons">
           <button onClick={showInfo}>
-            <InfoIcon color="blue" />
+            <InfoIcon 
+// @ts-ignore
+            color="blue" />
           </button>
         </div>
       </div>
@@ -191,7 +196,9 @@ export const Chat = () => {
             onClick={() => scrollDown()}
             aria-label="hs"
           >
-            <KeyboardDoubleArrowDownIcon fontSize="inherit" color="white"/>
+            <KeyboardDoubleArrowDownIcon fontSize="inherit" 
+// @ts-ignore
+            color="white"/>
           </IconButton>
         )}
       </div>
@@ -228,7 +235,9 @@ export const Chat = () => {
         <div className="bottom">
           <div className="icons">
             <label htmlFor="file">
-              <ImageIcon color="blue"/>
+              <ImageIcon 
+// @ts-ignore
+              color="blue"/>
             </label>
             <input
               type="file"
@@ -259,7 +268,9 @@ export const Chat = () => {
             disabled={isCurrentUserBlocked || isReceiverBlocked}
           />
           <div className="emoji">
-            <SentimentSatisfiedAltIcon onClick={() => setOpen(!open)} color="blue"/>
+            <SentimentSatisfiedAltIcon onClick={() => setOpen(!open)} 
+// @ts-ignore
+            color="blue"/>
             <div className="picker">
               <EmojiPicker
                 open={open}

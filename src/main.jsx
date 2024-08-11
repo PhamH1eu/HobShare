@@ -4,11 +4,13 @@ import { createTheme, ThemeProvider } from "@mui/material";
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import "./index.css";
+import React from "react";
 
 const queryClient = new QueryClient();
 
 const theme = createTheme({
   palette: {
+    // @ts-ignore
     white: {
       main: "rgba(255, 255, 255, 1)",
     },
@@ -23,7 +25,6 @@ const theme = createTheme({
     },
   },
 });
-//search cord.com
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>

@@ -5,106 +5,15 @@ import { styled as muiStyled } from "@mui/material/styles";
 import styled from "styled-components";
 import React from "react";
 
+import useChatList from "src/hooks/useChatList";
+import { useChatDialogStore } from "src/store/chatDialogStore";
+
 const StyledBadge = muiStyled(Badge)(() => ({
   "& .MuiBadge-badge": {
     right: 16,
     top: 35,
   },
 }));
-
-const contacts = [
-  {
-    name: "Thu Hieu",
-    avatar:
-      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
-    online: true,
-  },
-  {
-    name: "Nguyễn Đăng Hải",
-    avatar:
-      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
-    online: false,
-  },
-  {
-    name: "Tuấn Anh-nichan",
-    avatar:
-      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
-    online: true,
-  },
-  {
-    name: "Trí Nhân",
-    avatar:
-      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
-    online: false,
-  },
-  {
-    name: "Trí Nhân",
-    avatar:
-      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
-    online: false,
-  },
-  {
-    name: "Trí Nhân",
-    avatar:
-      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
-    online: false,
-  },
-  {
-    name: "Trí Nhân",
-    avatar:
-      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
-    online: false,
-  },
-  {
-    name: "Trí Nhân",
-    avatar:
-      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
-    online: false,
-  },
-  {
-    name: "Trí Nhân",
-    avatar:
-      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
-    online: false,
-  },
-  {
-    name: "Trí Nhân",
-    avatar:
-      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
-    online: false,
-  },
-  {
-    name: "Trí Nhân",
-    avatar:
-      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
-    online: false,
-  },
-  {
-    name: "Trí Nhân",
-    avatar:
-      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
-    online: false,
-  },
-  {
-    name: "Trí Nhân",
-    avatar:
-      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
-    online: false,
-  },
-  {
-    name: "Trí Nhân",
-    avatar:
-      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
-    online: false,
-  },
-  {
-    name: "Trí Nhân",
-    avatar:
-      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
-    online: false,
-  },
-  // Add more contacts here
-];
 
 const groupChats = [
   {
@@ -228,27 +137,30 @@ const Status = styled.span`
   }
 `;
 const Friends = () => {
+  const { chats } = useChatList();
+
+  const addChat = useChatDialogStore((state) => state.addChat);
+
   return (
     <ContactList>
       <SearchBar>
         <h2>Người liên hệ</h2>
         <IconButton style={{ width: "40px", height: "40px" }}>
-          <SearchIcon color="greyIcon" />
+          <SearchIcon
+            // @ts-ignore
+            color="greyIcon"
+          />
         </IconButton>
       </SearchBar>
-      {contacts.map((contact, index) => (
-        <ContactItem key={index}>
-          <StyledBadge
-            badgeContent={4}
-            color={contact.online ? "success" : "error"}
-            variant="dot"
-          >
-            <Avatar src={contact.avatar} alt={contact.name} />
+      {chats.map((contact, index) => (
+        <ContactItem key={index} onClick={() => addChat(index)}>
+          <StyledBadge color={"success"} variant="dot">
+            <Avatar src={contact.user.avatar} alt={contact.user.username} />
           </StyledBadge>
-          <ContactName>{contact.name}</ContactName>
+          <ContactName>{contact.user.username}</ContactName>
         </ContactItem>
       ))}
-      <h2>Cuộc trò chuyện nhóm</h2>
+      {groupChats.length > 0 && <h2>Cuộc trò chuyện nhóm</h2>}
       {groupChats.map((chat, index) => (
         <ContactItem key={index}>
           <Avatar src={chat.avatar} alt={chat.name} />

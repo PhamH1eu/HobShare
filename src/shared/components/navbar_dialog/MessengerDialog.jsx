@@ -53,6 +53,17 @@ const StyledBadge = muiStyled(Badge)(() => ({
   },
 }));
 
+const StyledListItem = styled(ListItem)`
+  padding: 10px 10px;
+  margin: 0px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+`;
+
 const MessengerDialog = () => {
   const { chats } = useChatList();
   const { currentUser } = useUserStore();
@@ -109,43 +120,71 @@ const MessengerDialog = () => {
       <List>
         {chats.map((chat, index) => (
           <React.Fragment key={index}>
-            <ListItem alignItems="flex-start">
+            <StyledListItem alignItems="flex-start">
               <ListItemAvatar>
                 <StyledBadge variant="dot" color="success">
-                  <Avatar src={chat.user.avatar} />
+                  <Avatar
+                    src={chat.user.avatar}
+                  />
                 </StyledBadge>
               </ListItemAvatar>
-              <ListItemText
-                primary={
-                  <Typography variant="body2" style={{ fontWeight: "bold" }}>
-                    {chat.user.username}
-                  </Typography>
-                }
-                secondary={
-                  <React.Fragment>
+              <Typography>
+                <ListItemText
+                  primary={
                     <Typography
                       variant="body2"
-                      color="textSecondary"
-                      component="span"
-                      noWrap={true}
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: chat.isSeen ? "0.9rem" : "1rem",
+                      }}
                     >
-                      {chat.lastMessage}
+                      {chat.user.username}
                     </Typography>
-                    <Typography
-                      variant="body2"
-                      color="textSecondary"
-                      component="span"
-                      style={{ marginLeft: "5px" }}
-                    >
-                      · {convertDifferenceTime(chat.updatedAt)}
-                    </Typography>
-                  </React.Fragment>
-                }
-              />
-            </ListItem>
-            {index < chats.length - 1 && (
-              <Divider variant="inset" component="li" />
-            )}
+                  }
+                  secondary={
+                    <React.Fragment>
+                      <Typography
+                        variant="body2"
+                        color={chat.isSeen ? "textSecondary" : "black"}
+                        component="span"
+                        noWrap={true}
+                        sx={{
+                          fontWeight: chat.isSeen ? "normal" : "600",
+                        }}
+                      >
+                        {chat.lastMessage}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color={chat.isSeen ? "textSecondary" : "black"}
+                        component="span"
+                        style={{
+                          marginLeft: "5px",
+                          fontWeight: chat.isSeen ? "normal" : "600",
+                        }}
+                      >
+                        · {convertDifferenceTime(chat.updatedAt)}
+                      </Typography>
+                    </React.Fragment>
+                  }
+                />
+              </Typography>
+              {!chat.isSeen && (
+                <div
+                  style={{
+                    backgroundColor: "rgba(5,81,233,255)",
+                    width: "10px",
+                    height: "10px",
+                    borderRadius: "50%",
+                    marginLeft: "auto",
+                    position: "absolute",
+                    right: "20px",
+                    top: "50%",
+                  }}
+                ></div>
+              )}
+            </StyledListItem>
+            <Divider variant="middle" />
           </React.Fragment>
         ))}
       </List>

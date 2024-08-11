@@ -79,7 +79,7 @@ export const ChatList = () => {
               chat?.isSeen
                 ? {}
                 : {
-                    backgroundColor: "rgba(5,81,233,255)",
+                    backgroundColor: "#6ec924",
                     width: "8px",
                     height: "8px",
                     borderRadius: "50%",

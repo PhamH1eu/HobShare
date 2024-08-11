@@ -4,6 +4,7 @@ import EmojiPicker from "emoji-picker-react";
 import InfiniteScroll from "react-infinite-scroller";
 import IconButton from "@mui/material/IconButton";
 import { useInView } from "react-intersection-observer";
+import StyledLink from "src/shared/components/StyledLink";
 
 import KeyboardDoubleArrowDownIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -132,17 +133,19 @@ export const Chat = () => {
   return (
     <div className="chat">
       <div className="top">
-        <div className="user">
-          <img src={user?.avatar || "./avatar.png"} alt="" />
-          <div className="texts">
-            <span>{user?.username}</span>
+        <StyledLink to="/profile/3">
+          <div className="user">
+            <img src={user?.avatar || "./avatar.png"} alt="" />
+            <div className="texts">
+              <span>{user?.username}</span>
+            </div>
           </div>
-        </div>
+        </StyledLink>
         <div className="icons">
           <button onClick={showInfo}>
             <InfoIcon 
 // @ts-ignore
-            color="blue" />
+            color="primary" />
           </button>
         </div>
       </div>
@@ -237,7 +240,7 @@ export const Chat = () => {
             <label htmlFor="file">
               <ImageIcon 
 // @ts-ignore
-              color="blue"/>
+              color="primary"/>
             </label>
             <input
               type="file"
@@ -250,8 +253,8 @@ export const Chat = () => {
             type="text"
             placeholder={
               isCurrentUserBlocked || isReceiverBlocked
-                ? "You cannot send a message"
-                : "Type a message..."
+                ? "Bạn đã bị chặn"
+                : "Gửi tin nhắn..."
             }
             value={text}
             onChange={(e) => setText(e.target.value)}
@@ -270,7 +273,7 @@ export const Chat = () => {
           <div className="emoji">
             <SentimentSatisfiedAltIcon onClick={() => setOpen(!open)} 
 // @ts-ignore
-            color="blue"/>
+            color="primary"/>
             <div className="picker">
               <EmojiPicker
                 open={open}
@@ -284,7 +287,7 @@ export const Chat = () => {
             disabled={isCurrentUserBlocked || isReceiverBlocked}
             onClick={handleSend}
           >
-            Send
+            Gửi
           </button>
         </div>
       </div>

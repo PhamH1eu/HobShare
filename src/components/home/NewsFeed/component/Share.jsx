@@ -10,6 +10,7 @@ import { useQueryChatlist } from "src/hooks/useChatList";
 import SendMessage from "src/services/SendMessage";
 import UpdateChat from "src/services/UpdateChat";
 import { useUserStore } from "src/store/userStore";
+import React from "react";
 
 const style = {
   position: "absolute",
@@ -80,7 +81,7 @@ const RecipientItem = styled.li`
   input {
     width: 18px;
     height: 18px;
-    accent-color: #087cfc;
+    accent-color: #6ec924;
     margin-right: 10px;
   }
 `;
@@ -89,7 +90,7 @@ const SendButton = styled.div`
   margin-top: 10px;
   padding: 10px;
   border: none;
-  background-color: #007bff;
+  background-color: #6ec924;
   color: white;
   cursor: pointer;
   font-weight: 600;

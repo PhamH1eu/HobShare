@@ -27,7 +27,7 @@ export const Sidebar = () => {
       </Typography>
       <List>
         <ListItem button>
-          <IconButton sx={{ backgroundColor: "#1877f2", marginRight: "10px" }}>
+          <IconButton sx={{ backgroundColor: "#6ec924", marginRight: "10px" }}>
             <HomeIcon
               // @ts-ignore
               color="white"

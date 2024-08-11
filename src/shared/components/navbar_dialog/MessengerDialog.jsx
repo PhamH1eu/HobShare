@@ -25,7 +25,7 @@ import {
 import StyledLink from "../StyledLink";
 import useChatList from "src/hooks/useChatList";
 import { useUserStore } from "src/store/userStore";
-import { useChatStore } from "src/store/chatStore";
+import { useChatDialogStore } from "src/store/chatDialogStore";
 import { ChatService } from "src/services/DatabaseService";
 
 const Container = styled(Box)`
@@ -41,7 +41,7 @@ const NotificationHeader = styled(Typography)`
 
 const ChatListFooter = styled(Typography)`
   text-align: center;
-  color: #007bff;
+  color: #6ec924;
   cursor: pointer;
   margin-top: 10px;
 `;
@@ -64,16 +64,14 @@ const StyledListItem = styled(ListItem)`
   }
 `;
 
-const MessengerDialog = () => {
+const MessengerDialog = ({ handleClose }) => {
   const { chats } = useChatList();
   const { currentUser } = useUserStore();
-  const changeChat = useChatStore((state) => state.changeChat);
-  const chatId = useChatStore((state) => state.chatId);
+  const addChat = useChatDialogStore((state) => state.addChat);
 
   const handleSelect = async (chat) => {
     //get {chat id, lastMessage, isSeen} from chat list
     const userChats = chats.map((item) => {
-      // eslint-disable-next-line no-unused-vars
       const { user, ...rest } = item;
       return rest;
     });
@@ -90,9 +88,8 @@ const MessengerDialog = () => {
     ChatService.update(currentUser.id, {
       chats: userChats,
     });
-    //pop up chat in screen
-    if (chatId === chat.chatId) return;
-    changeChat(chat.chatId, chat.user);
+    addChat(chat);
+    handleClose();
   };
 
   const convertDifferenceTime = (time) => {
@@ -120,12 +117,13 @@ const MessengerDialog = () => {
       <List>
         {chats.map((chat, index) => (
           <React.Fragment key={index}>
-            <StyledListItem alignItems="flex-start">
+            <StyledListItem
+              alignItems="flex-start"
+              onClick={() => handleSelect(chat)}
+            >
               <ListItemAvatar>
                 <StyledBadge variant="dot" color="success">
-                  <Avatar
-                    src={chat.user.avatar}
-                  />
+                  <Avatar src={chat.user.avatar} />
                 </StyledBadge>
               </ListItemAvatar>
               <Typography>
@@ -172,7 +170,7 @@ const MessengerDialog = () => {
               {!chat.isSeen && (
                 <div
                   style={{
-                    backgroundColor: "rgba(5,81,233,255)",
+                    backgroundColor: "#6ec924",
                     width: "10px",
                     height: "10px",
                     borderRadius: "50%",
@@ -189,7 +187,7 @@ const MessengerDialog = () => {
         ))}
       </List>
       <StyledLink to="/messenger">
-        <ChatListFooter variant="body2">
+        <ChatListFooter variant="body2" onClick={handleClose}>
           Xem tất cả trong Messenger
         </ChatListFooter>
       </StyledLink>

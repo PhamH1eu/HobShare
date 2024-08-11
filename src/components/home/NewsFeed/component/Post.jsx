@@ -15,6 +15,7 @@ import BookmarksIcon from "@mui/icons-material/Bookmarks";
 import Divider from "@mui/material/Divider";
 import Share from "./Share";
 import useModal from "src/hooks/useModal";
+import React from "react";
 
 const PostWrapper = styled.div`
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
@@ -143,7 +144,7 @@ const Post = ({ post }) => {
         </PostInfo>
         <Marked>
           <IconButton onClick={handleMarked}>
-            <BookmarksIcon color={marked ? "blue" : "greyIcon"} />
+            <BookmarksIcon color={marked ? "primary" : "greyIcon"} />
           </IconButton>
         </Marked>
       </PostHeader>
@@ -169,7 +170,7 @@ const Post = ({ post }) => {
         <PostActions>
           <PostAction
             style={{
-              color: like ? "rgba(5,97,242,255)" : "rgba(91, 98, 106, 255)",
+              color: like ? "#6ec924" : "rgba(91, 98, 106, 255)",
             }}
             onClick={handleLike}
           >

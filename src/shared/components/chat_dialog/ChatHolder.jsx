@@ -18,7 +18,7 @@ const ChatHolder = () => {
   return (
     <Wrapper>
       {openChats.map((chat, index) => (
-        <ChatDialog key={index} index={chat} />
+        <ChatDialog key={index} chat={chat} />
       ))}
     </Wrapper>
   );

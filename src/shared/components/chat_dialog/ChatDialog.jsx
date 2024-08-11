@@ -122,33 +122,26 @@ const messages = [
   { position: "left", text: "Cố lên nha", avatar: "/path/to/avatar1.png" },
 ];
 
-const ChatDialog = ({index}) => {
+const ChatDialog = ({chat}) => {
   const { minimizeChat, removeOpenChat } = useChatDialogStore();
 
   return (
     <Wrapper>
-      {/* {openChats.map((chat) => (
-        <div key={chat}>
-          <div>{chat}</div>
-          <button onClick={() => minimizeChat(chat)}>Minimize</button>
-          <button onClick={() => removeOpenChat(chat)}>Close</button>
-        </div>
-      ))} */}
       <Header>
-        <Avatar src="/path/to/avatar1.png" />
+        <Avatar src={chat.user.avatar} />
         <StyledLink to="/profile/5">
           <Box sx={{ marginLeft: 1, cursor: "pointer", paddingRight: '5px' }}>
-            <Box fontWeight="bold">em iêu ơi</Box>
+            <Box fontWeight="bold">{chat.user.username}</Box>
             <Box fontSize="small" color="gray">
               Hoạt động 31 phút trước
             </Box>
           </Box>
         </StyledLink>
         <Box sx={{ marginLeft: "auto", display: "flex" }}>
-          <IconButton color="primary" onClick={() => minimizeChat(index)}>
+          <IconButton color="primary" onClick={() => minimizeChat(chat)}>
             <RemoveIcon color="primary" />
           </IconButton>
-          <IconButton color="primary" onClick={() => removeOpenChat(index)}>
+          <IconButton color="primary" onClick={() => removeOpenChat(chat)}>
             <ClearIcon color="primary" />
           </IconButton>
         </Box>

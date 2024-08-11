@@ -31,7 +31,7 @@ export const useChatDialogStore = create((set, get) => ({
 
   removeOpenChat: (chat) => {
     set({
-      openChats: get().openChats.filter((c) => c !== chat),
+      openChats: get().openChats.filter((c) => c.chatId !== chat.chatId),
     });
     if (get().minimizedChats.length > 0) {
       const newMinimizedChats = get().minimizedChats.pop();
@@ -41,7 +41,7 @@ export const useChatDialogStore = create((set, get) => ({
 
   removeMinimizedChat: (chat) => {
     set((state) => ({
-      minimizedChats: state.minimizedChats.filter((c) => c !== chat),
+      minimizedChats: state.minimizedChats.filter((c) => c.chatId !== chat.chatId),
     }));
   },
 
@@ -50,7 +50,7 @@ export const useChatDialogStore = create((set, get) => ({
       get().setMiniMizedChats(get().minimizedChats.slice(1));
     }
     set({
-      openChats: get().openChats.filter((c) => c !== chat),
+      openChats: get().openChats.filter((c) => c.chatId !== chat.chatId),
       minimizedChats: [...get().minimizedChats, chat],
     });
   },
@@ -59,11 +59,11 @@ export const useChatDialogStore = create((set, get) => ({
     if (get().openChats.length === 2) {
       const [firstChat, secondChat] = get().openChats;
       get().setOpenChats([secondChat, chat]);
-      get().setMiniMizedChats(get().minimizedChats.filter((c) => c !== chat));
+      get().setMiniMizedChats(get().minimizedChats.filter((c) => c.chatId !== chat.chatId));
       get().setMiniMizedChats([...get().minimizedChats, firstChat]);
     } else {
       set({
-        minimizedChats: get().minimizedChats.filter((c) => c !== chat),
+        minimizedChats: get().minimizedChats.filter((c) => c.chatId !== chat.chatId),
         openChats: [...get().openChats, chat],
       });
     }

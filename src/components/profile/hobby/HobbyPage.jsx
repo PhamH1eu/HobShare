@@ -44,20 +44,20 @@ const HobbiesGrid = styled(Grid)`
 `;
 
 const AddHobbyButton = styled(Button)`
-  background-color: #1976d2;
+  background-color: #6ec924;
   color: white;
   &:hover {
-    background-color: #1565c0;
+    background-color: #53961d;
   }
 `;
 
 const SaveButton = styled(Button)`
   margin-left: auto;
   margin-top: 20px;
-  background-color: #1976d2;
+  background-color: #6ec924;
   color: white;
   &:hover {
-    background-color: #1565c0;
+    background-color: #53961d;
   }
 `;
 
@@ -104,6 +104,7 @@ const HobbiesPage = () => {
         </Typography>
         {isViewingOwnProfile && (
           <AddHobbyButton
+            // @ts-ignore
             startIcon={<Add color="white" />}
             onClick={handleOpen}
           >

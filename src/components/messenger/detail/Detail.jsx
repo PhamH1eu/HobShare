@@ -8,6 +8,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import CircularLoading from "src/shared/components/Loading";
 import "./detail.css";
+import React from "react";
 
 export const Detail = () => {
   const {
@@ -66,16 +67,16 @@ export const Detail = () => {
               expandIcon={<KeyboardArrowDownIcon />}
             >
               <div className="title">
-                <span>Privacy & Help</span>
+                <span>Quyền riêng tư & hỗ trợ</span>
               </div>
             </AccordionSummary>
             <AccordionDetails>
               <button onClick={handleBlock}>
                 {isCurrentUserBlocked
-                  ? "You are blocked"
+                  ? "Bạn đã bị chặn"
                   : isReceiverBlocked
-                  ? "User blocked"
-                  : "Block User"}
+                  ? "Đã chặn"
+                  : "Chặn người này"}
               </button>
             </AccordionDetails>
           </Accordion>
@@ -87,7 +88,7 @@ export const Detail = () => {
               expandIcon={<KeyboardArrowDownIcon />}
             >
               <div className="title">
-                <span>Shared photos</span>
+                <span>Đa phương tiện</span>
               </div>
             </AccordionSummary>
             <AccordionDetails>

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -62,6 +62,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const NavBar = () => {
   const { currentUser } = useUserStore();
+  let location = useLocation();
+  let checkMess = Boolean(location.pathname === "/messenger");
 
   const {
     anchorEl: menuAnchorEl,
@@ -118,7 +120,7 @@ const NavBar = () => {
       open={isMessengerOpen}
       onClose={handleMessengerClose}
     >
-      <MessengerDialog />
+      <MessengerDialog handleClose={handleMessengerClose}/>
     </Menu>
   );
 
@@ -191,7 +193,7 @@ const NavBar = () => {
           </Search>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" }, gap: "16px" }}>
-            <IconButton
+            {!checkMess && <IconButton
               size="large"
               aria-label="show 4 new mails"
               style={{ backgroundColor: "rgba(228,230,235,255)" }}
@@ -203,7 +205,7 @@ const NavBar = () => {
                   color="black"
                 />
               </Badge>
-            </IconButton>
+            </IconButton>}
             <IconButton
               size="large"
               aria-label="show 17 new notifications"

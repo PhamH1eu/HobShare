@@ -153,7 +153,7 @@ const Friends = () => {
         </IconButton>
       </SearchBar>
       {chats.map((contact, index) => (
-        <ContactItem key={index} onClick={() => addChat(index)}>
+        <ContactItem key={index} onClick={() => addChat(contact)}>
           <StyledBadge color={"success"} variant="dot">
             <Avatar
               src={contact.user.avatar}

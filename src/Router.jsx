@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Home from "src/components/home/Home";
 import Messenger from "src/components/messenger/Messenger";
 import Profile from "./components/profile/Profile";
@@ -11,6 +11,9 @@ import ChatHolder from "./shared/components/chat_dialog/ChatHolder";
 import MinimizedChatDialog from "./shared/components/chat_dialog/MinimizedChatDialog";
 
 const Router = () => {
+
+  let location = useLocation();
+  let checkMess = Boolean(location.pathname === "/messenger");
   return (
     <>
       <NavBar />
@@ -22,8 +25,8 @@ const Router = () => {
         <Route path="/saved" element={<SavedPage />} />
         <Route path="/memories" element={<MemoriesPage />} />
       </Routes>
-      <ChatHolder />
-      <MinimizedChatDialog />
+      {!checkMess && <ChatHolder />}
+      {!checkMess && <MinimizedChatDialog />}
     </>
   );
 };

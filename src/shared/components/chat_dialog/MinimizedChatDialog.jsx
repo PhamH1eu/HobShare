@@ -22,7 +22,8 @@ const Wrapper = styled.div`
 
 const AvatarWrapper = styled(Box)(({ theme }) => ({
   position: "relative",
-  padding: "4px",
+  boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.3)",
+  borderRadius: "50%",
   cursor: "pointer",
   "&:hover .close-button": {
     display: "flex",
@@ -88,9 +89,9 @@ const MinimizedChatDialog = () => {
               onClick={() => maximizeChat(chat)}
             >
               <Avatar
-                alt="hieu"
-                src="/path/to/avatar.png"
-                sx={{ width: 45, height: 45 }}
+                alt="avatar"
+                src={chat.user.avatar}
+                sx={{ width: 50, height: 50 }}
               />
             </OnlineBadge>
             <CloseButton

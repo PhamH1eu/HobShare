@@ -1,17 +1,36 @@
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
-import { Badge } from "@mui/material";
+import { Avatar, Badge, Box } from "@mui/material";
 import { styled as muiStyled } from "@mui/material/styles";
 import styled from "styled-components";
-import React from "react";
 
 import useChatList from "src/hooks/useChatList";
 import { useChatDialogStore } from "src/store/chatDialogStore";
 
-const StyledBadge = muiStyled(Badge)(() => ({
+const StyledBadge = muiStyled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
-    right: 16,
-    top: 35,
+    backgroundColor: "#44b700",
+    color: "#44b700",
+    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+    "&::after": {
+      position: "absolute",
+      top: "10px",
+      left: 0,
+      width: "100%",
+      height: "100%",
+      borderRadius: "50%",
+      content: '""',
+    },
+  },
+}));
+
+const AvatarWrapper = styled(Box)(() => ({
+  position: "relative",
+  boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.3)",
+  borderRadius: "50%",
+  cursor: "pointer",
+  "&:hover .close-button": {
+    display: "flex",
   },
 }));
 
@@ -41,9 +60,7 @@ const ContactList = styled.div`
   position: sticky;
   top: 0;
   height: calc(100vh - 64px);
-  margin-left: 10px;
-  margin-top: 5px
-  width: 350px;
+  margin-top: 5px;
   padding-right: 10px;
   padding-left: 10px;
   overflow-y: auto;
@@ -102,17 +119,11 @@ const ContactItem = styled.div`
   padding: 10px;
   border-radius: 5px;
   cursor: pointer;
+  gap: 10px;
 
   &:hover {
     background-color: rgba(228, 230, 233, 255);
   }
-`;
-
-const Avatar = styled.img`
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  margin-right: 10px;
 `;
 
 const ContactName = styled.span`
@@ -154,12 +165,20 @@ const Friends = () => {
       </SearchBar>
       {chats.map((contact, index) => (
         <ContactItem key={index} onClick={() => addChat(contact)}>
-          <StyledBadge color={"success"} variant="dot">
-            <Avatar
-              src={contact.user.avatar}
-              alt={contact.user.username}
-            />
-          </StyledBadge>
+          <AvatarWrapper>
+            <StyledBadge
+              key={index}
+              overlap="circular"
+              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+              variant="dot"
+            >
+              <Avatar
+                src={contact.user.avatar}
+                alt={contact.user.username}
+                sx={{ width: 50, height: 50 }}
+              />
+            </StyledBadge>
+          </AvatarWrapper>
           <ContactName>{contact.user.username}</ContactName>
         </ContactItem>
       ))}

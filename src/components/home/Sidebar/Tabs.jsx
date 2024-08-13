@@ -12,7 +12,6 @@ import WatchLaterOutlinedIcon from "@mui/icons-material/WatchLaterOutlined";
 import PinDropIcon from "@mui/icons-material/PinDrop";
 import { useUserStore } from "src/store/userStore";
 import "./tab.css";
-import React from "react";
 
 const SidebarWrapper = styled.div`
   width: 280px;

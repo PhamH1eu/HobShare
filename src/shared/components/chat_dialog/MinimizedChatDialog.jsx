@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import {
   Avatar,
@@ -20,7 +19,7 @@ const Wrapper = styled.div`
   flex-direction: column-reverse;
 `;
 
-const AvatarWrapper = styled(Box)(({ theme }) => ({
+const AvatarWrapper = styled(Box)(() => ({
   position: "relative",
   boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.3)",
   borderRadius: "50%",
@@ -30,7 +29,7 @@ const AvatarWrapper = styled(Box)(({ theme }) => ({
   },
 }));
 
-const CloseButton = styled(IconButton)(({ theme }) => ({
+const CloseButton = styled(IconButton)(() => ({
   position: "absolute",
   top: 0,
   right: 0,
@@ -79,7 +78,7 @@ const MinimizedChatDialog = () => {
     <Wrapper>
       <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
         {minimizedChats.map((chat, index) => (
-          <AvatarWrapper>
+          <AvatarWrapper key={index}>
             <OnlineBadge
               key={index}
               overlap="circular"

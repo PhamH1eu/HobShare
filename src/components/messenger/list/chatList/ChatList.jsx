@@ -7,7 +7,6 @@ import { ChatService } from "src/services/DatabaseService";
 
 import SearchIcon from "@mui/icons-material/Search";
 import "./chatList.css";
-import React from "react";
 
 export const ChatList = () => {
   const [addMode, setAddMode] = useState(false);

@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import StyledLink from "../StyledLink";
 import {
@@ -8,7 +7,7 @@ import {
   InputBase,
   styled as MuiStyled,
 } from "@mui/material";
-import { Mic, Image, EmojiEmotions, Gif, Send } from "@mui/icons-material";
+import { Image, EmojiEmotions, Send } from "@mui/icons-material";
 import RemoveIcon from "@mui/icons-material/Remove";
 import ClearIcon from "@mui/icons-material/Clear";
 import { useChatDialogStore } from "src/store/chatDialogStore";
@@ -123,6 +122,7 @@ const messages = [
 ];
 
 const ChatDialog = ({chat}) => {
+  console.log("🚀 ~ ChatDialog ~ chat:", chat)
   const { minimizeChat, removeOpenChat } = useChatDialogStore();
 
   return (

@@ -1,11 +1,10 @@
 import styled from "styled-components";
 import { useState } from "react";
-import {
-  IoMdThumbsUp,
-  IoIosShareAlt,
-  IoIosChatbubbles,
-  IoMdHappy,
-} from "react-icons/io";
+
+import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
+import ShareIcon from '@mui/icons-material/Share';
+import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
 
 import Comments from "./Comments";
 
@@ -15,7 +14,6 @@ import BookmarksIcon from "@mui/icons-material/Bookmarks";
 import Divider from "@mui/material/Divider";
 import Share from "./Share";
 import useModal from "src/hooks/useModal";
-import React from "react";
 
 const PostWrapper = styled.div`
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
@@ -144,7 +142,9 @@ const Post = ({ post }) => {
         </PostInfo>
         <Marked>
           <IconButton onClick={handleMarked}>
-            <BookmarksIcon color={marked ? "primary" : "greyIcon"} />
+            <BookmarksIcon 
+// @ts-ignore
+            color={marked ? "primary" : "greyIcon"} />
           </IconButton>
         </Marked>
       </PostHeader>
@@ -159,35 +159,39 @@ const Post = ({ post }) => {
       </PostContent>
       <PostFooter>
         <PostReactions>
-          <IoMdThumbsUp
+          <ThumbUpAltIcon
             style={{ fontSize: "1.25rem" }}
-            color="cornflowerblue"
+            color="primary"
           />
-          <IoMdHappy style={{ fontSize: "1.25rem" }} color="#F5C33B" />
+          <SentimentVerySatisfiedIcon style={{ fontSize: "1.25rem" }} color="warning" />
           {post.reactions}
         </PostReactions>
         <Divider flexItem variant="middle" color="#bdbdbd" />
         <PostActions>
           <PostAction
-            style={{
-              color: like ? "#6ec924" : "rgba(91, 98, 106, 255)",
-            }}
             onClick={handleLike}
+            style={{color: like ? "#6ec924" : "rgba(91, 98, 106, 255)"}}
           >
-            <IoMdThumbsUp /> Thích
+            <ThumbUpAltIcon 
+// @ts-ignore
+            color={like ? "primary" : "greyIcon"}/> Thích
           </PostAction>
           <PostAction
             onClick={() => setShowComment(true)}
             style={{ color: "rgba(91, 98, 106, 255)" }}
           >
-            <IoIosChatbubbles />
+            <QuestionAnswerIcon 
+// @ts-ignore
+            color="greyIcon"/>
             Bình luận
           </PostAction>
           <PostAction
             onClick={handleOpen}
             style={{ color: "rgba(91, 98, 106, 255)" }}
           >
-            <IoIosShareAlt />
+            <ShareIcon 
+// @ts-ignore
+            color="greyIcon"/>
             Chia sẻ
           </PostAction>
         </PostActions>

@@ -12,7 +12,6 @@ import { geohashForLocation } from "geofire-common";
 import useModal from "src/hooks/useModal";
 
 import "./index.css";
-import React from "react";
 
 const style = {
   position: "absolute",

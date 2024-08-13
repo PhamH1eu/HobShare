@@ -10,7 +10,6 @@ import { useQueryChatlist } from "src/hooks/useChatList";
 import SendMessage from "src/services/SendMessage";
 import UpdateChat from "src/services/UpdateChat";
 import { useUserStore } from "src/store/userStore";
-import React from "react";
 
 const style = {
   position: "absolute",
@@ -101,7 +100,7 @@ const SendButton = styled.div`
   border-radius: 8px;
 `;
 
-const Share = ({ post, handleClose }) => {
+const Share = ({ handleClose }) => {
   const { currentUser } = useUserStore();
   const { isLoading, data: chats } = useQueryChatlist(currentUser);
   const [search, setSearchinput] = useState("");
@@ -185,7 +184,9 @@ const Share = ({ post, handleClose }) => {
         <h3 style={{ fontSize: "1.5rem" }}>Gửi đến</h3>
       </Box>
       <SearchBar>
-        <SearchIcon color="greyIcon" />
+        <SearchIcon 
+// @ts-ignore
+        color="greyIcon" />
         <input
           type="text"
           placeholder="Tìm kiếm người và nhóm"
@@ -202,7 +203,9 @@ const Share = ({ post, handleClose }) => {
         ))}
       </RecipientList>
       <SendButton onClick={sendPost}>
-        <ForwardToInboxIcon color="white" />
+        <ForwardToInboxIcon 
+// @ts-ignore
+        color="white" />
         Gửi
       </SendButton>
     </Box>

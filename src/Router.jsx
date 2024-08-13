@@ -1,4 +1,3 @@
-import React from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Home from "src/components/home/Home";
 import Messenger from "src/components/messenger/Messenger";

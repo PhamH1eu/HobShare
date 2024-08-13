@@ -17,7 +17,6 @@ import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
-import React from "react";
 
 const Wrapper = styled.div`
   display: flex;

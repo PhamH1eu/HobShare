@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import styled from "styled-components";
 import Switch from "@mui/material/Switch";
 import EditIcon from "@mui/icons-material/Edit";
@@ -43,11 +42,6 @@ const Item = styled.div`
 `;
 
 const EditableText = styled.div`
-  margin-left: 10px;
-  flex-grow: 1;
-`;
-
-const Text = styled.div`
   margin-left: 10px;
   flex-grow: 1;
 `;

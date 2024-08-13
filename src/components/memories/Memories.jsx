@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import { Box, Typography, Paper, Divider, Avatar, Button } from "@mui/material";
 import { Sidebar } from "./Sidebar";
@@ -90,8 +89,8 @@ function MemoriesPage() {
           </Typography>
         </Card>
 
-        {memories.map((memory) => (
-          <MemoryCard>
+        {memories.map((memory, index) => (
+          <MemoryCard key={index}>
             <Typography variant="overline" display="block" gutterBottom>
               Vào ngày này
             </Typography>

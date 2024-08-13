@@ -22,7 +22,6 @@ import UpdateChat from "src/services/UpdateChat";
 import SendMessage from "src/services/SendMessage";
 import CircularLoading from "src/shared/components/Loading";
 import "./chat.css";
-import React from "react";
 
 export const Chat = () => {
   //local states

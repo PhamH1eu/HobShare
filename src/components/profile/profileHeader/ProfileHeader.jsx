@@ -3,7 +3,6 @@ import styled from "styled-components";
 
 import { useUserStore } from "src/store/userStore";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import React from "react";
 
 const HeaderWrapper = styled.div`
   width: 100%;

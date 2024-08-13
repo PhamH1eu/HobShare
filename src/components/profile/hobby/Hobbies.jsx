@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import "./hobbies.css";
-import React from "react";
 
 const images = [
   { src: "/photos/photo01.jpg", label: "Sample image 1" },

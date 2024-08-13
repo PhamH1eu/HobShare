@@ -8,7 +8,6 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import CircularLoading from "src/shared/components/Loading";
 import "./detail.css";
-import React from "react";
 
 export const Detail = () => {
   const {

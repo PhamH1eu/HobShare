@@ -1,6 +1,6 @@
-import { CommentSection } from "react-comments-section";
+import { CommentSection } from "@pmhieu/react-comments-section";
 import { useUserStore } from "src/store/userStore";
-import "react-comments-section/dist/index.css";
+import "@pmhieu/react-comments-section/dist/index.css";
 import "./comment.css";
 
 const Comments = () => {
@@ -51,8 +51,12 @@ const Comments = () => {
       }}
       titleStyle={{ display: "none" }}
       hrStyle={{ display: "none" }}
-      submitBtnStyle={{ fontSize: "0.8rem" }}
+      submitBtnStyle={{ fontSize: "0.8rem", content: "123" }}
       cancelBtnStyle={{ fontSize: "0.8rem" }}
+      logIn={{
+        loginLink: "",
+        signupLink: "",
+      }}
     />
   );
 };

@@ -4,7 +4,6 @@ import { createTheme, ThemeProvider } from "@mui/material";
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import "./index.css";
-import React from "react";
 
 const queryClient = new QueryClient();
 

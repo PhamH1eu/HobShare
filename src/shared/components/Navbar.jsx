@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";

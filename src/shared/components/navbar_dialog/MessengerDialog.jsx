@@ -72,6 +72,7 @@ const MessengerDialog = ({ handleClose }) => {
   const handleSelect = async (chat) => {
     //get {chat id, lastMessage, isSeen} from chat list
     const userChats = chats.map((item) => {
+      // eslint-disable-next-line no-unused-vars
       const { user, ...rest } = item;
       return rest;
     });

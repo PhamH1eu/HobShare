@@ -41,7 +41,7 @@ const Comments = () => {
       currentUser={{
         currentUserId: "01a",
         currentUserImg: currentUser.avatar,
-        currentUserProfile: "https://www.linkedin.com/in/riya-negi-8879631a9/",
+        currentUserProfile: `http://127.0.0.1:5173/profile/${currentUser.id}`,
         currentUserFullName: currentUser.username,
       }}
       commentData={data}

@@ -10,7 +10,15 @@ import {
 import { Image, EmojiEmotions, Send } from "@mui/icons-material";
 import RemoveIcon from "@mui/icons-material/Remove";
 import ClearIcon from "@mui/icons-material/Clear";
+import CircularLoading from "../Loading";
+
+import InfiniteScroll from "react-infinite-scroller";
+import { useUserStore } from "src/store/userStore";
+import { useChatStore } from "src/store/chatStore";
 import { useChatDialogStore } from "src/store/chatDialogStore";
+import { useListenChat } from "src/hooks/useListenChat";
+import { loadMoreMessages } from "src/hooks/useListenChat";
+import { useState } from "react";
 
 const Wrapper = styled.div`
   width: 320px;
@@ -82,55 +90,54 @@ const CustomInput = MuiStyled(InputBase)`
   padding: 5px 10px;
 `;
 
-const messages = [
-  {
-    position: "left",
-    text: "Sao da kho ngủ ?",
-    avatar: "/path/to/avatar1.png",
-  },
-  {
-    position: "right",
-    text: "Cứ mơ màng nghĩ đến em ý",
-    avatar: "/path/to/avatar2.png",
-  },
-  { position: "left", text: "Sắp gặp rồi", avatar: "/path/to/avatar1.png" },
-  { position: "right", text: "Huhu", avatar: "/path/to/avatar2.png" },
-  {
-    position: "right",
-    text: "Thui đi học tiếp z",
-    avatar: "/path/to/avatar2.png",
-  },
-  { position: "left", text: "Cố lên nha", avatar: "/path/to/avatar1.png" },
-  {
-    position: "left",
-    text: "Sao da kho ngủ ?",
-    avatar: "/path/to/avatar1.png",
-  },
-  {
-    position: "right",
-    text: "Cứ mơ màng nghĩ đến em ý",
-    avatar: "/path/to/avatar2.png",
-  },
-  { position: "left", text: "Sắp gặp rồi", avatar: "/path/to/avatar1.png" },
-  { position: "right", text: "Huhu", avatar: "/path/to/avatar2.png" },
-  {
-    position: "right",
-    text: "Thui đi học tiếp z",
-    avatar: "/path/to/avatar2.png",
-  },
-  { position: "left", text: "Cố lên nha", avatar: "/path/to/avatar1.png" },
-];
-
-const ChatDialog = ({chat}) => {
-  console.log("🚀 ~ ChatDialog ~ chat:", chat)
+const ChatDialog = ({ chat }) => {
   const { minimizeChat, removeOpenChat } = useChatDialogStore();
+
+  const { currentUser } = useUserStore();
+  const { chatId, user } = chat;
+  const isCurrentUserBlocked = user.blocked.includes(currentUser.id);
+  const isReceiverBlocked = currentUser.blocked.includes(user.id);
+
+  const [messages, setMessages] = useState([]);
+  const setMessage = (incomingMess) => {
+    setMessages([...incomingMess]);
+  };
+  const setNewMessage = (incomingMess) => {
+    setMessages([...messages, incomingMess]);
+  };
+
+  const [lastMessageTimestamp, setLastMessageTimestamp] = useState(null);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  useListenChat(
+    chatId,
+    setNewMessage,
+    setMessage,
+    setLastMessageTimestamp,
+    setHasMore
+  );
+
+  function load() {
+    if (loading) return;
+    if (!lastMessageTimestamp) return;
+    loadMoreMessages(
+      chatId,
+      lastMessageTimestamp,
+      setLastMessageTimestamp,
+      messages,
+      setMessage,
+      setHasMore,
+      setLoading
+    );
+  }
 
   return (
     <Wrapper>
       <Header>
         <Avatar src={chat.user.avatar} />
         <StyledLink to="/profile/5">
-          <Box sx={{ marginLeft: 1, cursor: "pointer", paddingRight: '5px' }}>
+          <Box sx={{ marginLeft: 1, cursor: "pointer", paddingRight: "5px" }}>
             <Box fontWeight="bold">{chat.user.username}</Box>
             <Box fontSize="small" color="gray">
               Hoạt động 31 phút trước
@@ -147,23 +154,35 @@ const ChatDialog = ({chat}) => {
         </Box>
       </Header>
       <MessageContainer>
-        {messages.map((message, index) => (
-          <Message
-            key={index}
-            // @ts-ignore
-            position={message.position}
-          >
-            {message.position === "left" && (
-              <Avatar src={message.avatar} sx={{ marginRight: 1 }} />
-            )}
-            <MessageText
+        <InfiniteScroll
+          loadMore={() => load()}
+          hasMore={hasMore}
+          isReverse={true}
+          loader={<CircularLoading key={0} />}
+          useWindow={false}
+        >
+
+
+          {messages.map((message, index) => (
+            <Message
+              key={index}
               // @ts-ignore
               position={message.position}
             >
-              {message.text}
-            </MessageText>
-          </Message>
-        ))}
+              {message.position === "left" && (
+                <Avatar src={message.avatar} sx={{ marginRight: 1 }} />
+              )}
+              <MessageText
+                // @ts-ignore
+                position={message.position}
+              >
+                {message.text}
+              </MessageText>
+            </Message>
+          ))}
+
+          
+        </InfiniteScroll>
       </MessageContainer>
       <InputContainer>
         <IconButton color="primary">

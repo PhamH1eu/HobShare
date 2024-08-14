@@ -74,7 +74,7 @@ export const Detail = () => {
                 {isCurrentUserBlocked
                   ? "Bạn đã bị chặn"
                   : isReceiverBlocked
-                  ? "Đã chặn"
+                  ? "Bỏ chặn"
                   : "Chặn người này"}
               </button>
             </AccordionDetails>

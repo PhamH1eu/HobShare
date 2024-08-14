@@ -53,10 +53,7 @@ export const useChatStore = create((set) => ({
       isReceiverBlocked: false,
     });
   },
-  setMessage: (newMess) => {
-    set(() => ({ message: [...newMess] }));
-  },
-  setNewMessage: (newMess) => {
-    set((state) => ({ message: [...state.message, newMess] }));
-  },
+  setMessages: (newMess) => {
+    set(() => ({ message: newMess }));
+  }
 }));

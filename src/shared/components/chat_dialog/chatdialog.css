@@ -1,0 +1,70 @@
+.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+  cursor: not-allowed !important;
+  pointer-events: all !important;
+}
+
+.picker {
+  position: absolute;
+  bottom: 50px;
+  left: 0;
+}
+
+.preview {
+  position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 450px;
+  gap: 5px;
+  bottom: 50px;
+  padding: 8px;
+
+  .img-wrapper {
+    position: relative;
+
+    img {
+      margin-right: 5px;
+      margin-top: 5px;
+      height: 50px;
+      width: 50px;
+      border-radius: 8px;
+      margin-right: 20px;
+    }
+
+    .delete {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background-color: transparent;
+
+      :hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  .video-wrapper {
+    position: relative;
+    border-radius: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    video {
+      width: 100px;
+      border-radius: 8px;
+      margin-right: 20px;
+    }
+
+    .delete {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background-color: transparent;
+
+      :hover {
+        cursor: pointer;
+      }
+    }
+  }
+}

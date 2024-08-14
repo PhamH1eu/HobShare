@@ -12,8 +12,7 @@ import { db } from "src/lib/firebase";
 //listen to chat
 export const useListenChat = (
   chatId,
-  setNewMessage,
-  setMessage,
+  setMessages,
   setLastMessageTimestamp,
   setHasMore
 ) => {
@@ -41,7 +40,7 @@ export const useListenChat = (
         }
         if (change.type === "modified") {
           flag = true;
-          setNewMessage(change.doc.data());
+          setMessages((prev) => [...prev, change.doc.data()]);
         }
       });
       if (flag) return;
@@ -54,13 +53,13 @@ export const useListenChat = (
       querySnapshot.docs.reverse().forEach((doc) => {
         chats.push(doc.data());
       });
-      setMessage(chats);
+      setMessages(chats);
     });
 
     return () => {
       unSub();
     };
-  }, [chatId, setMessage, setNewMessage, setLastMessageTimestamp, setHasMore]);
+  }, [chatId]);
 };
 
 export const loadMoreMessages = async (
@@ -80,7 +79,7 @@ export const loadMoreMessages = async (
     startAfter(lastMessageTimestamp),
     limit(20)
   );
-  await new Promise(resolve => setTimeout(resolve, 2000));
+  await new Promise((resolve) => setTimeout(resolve, 2000));
   onSnapshot(q, (snapshot) => {
     const docs = snapshot.docs;
     if (docs.length > 0) {

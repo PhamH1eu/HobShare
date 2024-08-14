@@ -7,18 +7,25 @@ import {
   InputBase,
   styled as MuiStyled,
 } from "@mui/material";
-import { Image, EmojiEmotions, Send } from "@mui/icons-material";
+import { EmojiEmotions, Send } from "@mui/icons-material";
 import RemoveIcon from "@mui/icons-material/Remove";
 import ClearIcon from "@mui/icons-material/Clear";
+import ImageIcon from "@mui/icons-material/Image";
+import KeyboardDoubleArrowDownIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
 import CircularLoading from "../Loading";
+import CancelIcon from "@mui/icons-material/Cancel";
+import "./chatdialog.css";
 
 import InfiniteScroll from "react-infinite-scroller";
 import { useUserStore } from "src/store/userStore";
-import { useChatStore } from "src/store/chatStore";
 import { useChatDialogStore } from "src/store/chatDialogStore";
 import { useListenChat } from "src/hooks/useListenChat";
 import { loadMoreMessages } from "src/hooks/useListenChat";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import SendMessage from "src/services/SendMessage";
+import UpdateChat from "src/services/UpdateChat";
+import EmojiPicker from "emoji-picker-react";
+import { useInView } from "react-intersection-observer";
 
 const Wrapper = styled.div`
   width: 320px;
@@ -49,7 +56,18 @@ const MessageContainer = MuiStyled(Box)`
   height: 340px;
 `;
 
-const Message = MuiStyled(Box)`
+const MessageWithAvatar = MuiStyled(Box)`
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 10px;
+  ${(props) =>
+    // @ts-ignore
+    props.position === "right"
+      ? "justify-content: flex-end;"
+      : "justify-content: flex-start;"}
+`;
+
+const MessWrapper = MuiStyled(Box)`
   display: flex;
   align-items: flex-end;
   margin-bottom: 10px;
@@ -69,8 +87,23 @@ const MessageText = MuiStyled(Box)`
   padding: 6px 12px;
   font-size: 15px;
   border-radius: 18px;
-  max-width: 60%;
   word-break: break-word;
+`;
+
+const MediaMessage = styled(Box)`
+  max-width: 100%;
+  ${(props) =>
+    // @ts-ignore
+    props.position === "right"
+      ? "border-bottom-right-radius: 0;"
+      : "border-bottom-left-radius: 0;"}
+  img, video {
+    border-radius: 12px;
+    max-width: 100%;
+    height: auto;
+  }
+  overflow: hidden;
+  border-radius: 12px;
 `;
 
 const InputContainer = MuiStyled(Box)`
@@ -91,32 +124,85 @@ const CustomInput = MuiStyled(InputBase)`
 `;
 
 const ChatDialog = ({ chat }) => {
+  const { ref, inView, entry } = useInView();
+  console.log("🚀 ~ ChatDialog ~ inView:", inView);
+  const scrollDown = useCallback(() => {
+    entry.target.scrollIntoView({ behavior: "smooth" });
+  }, [entry]);
+
   const { minimizeChat, removeOpenChat } = useChatDialogStore();
+
+  const [open, setOpen] = useState(false);
+  const [text, setText] = useState("");
+  const [imgList, setImgList] = useState([]);
+  const [videoList, setVideoList] = useState([]);
+
+  const handleEmoji = (e) => {
+    setText(text + e.emoji);
+    setOpen(false);
+  };
+
+  //add video more
+  const handleImg = (e) => {
+    const file = {
+      file: e.target.files[0],
+      url: URL.createObjectURL(e.target.files[0]),
+    };
+    //check if file is image or video
+    if (e.target.files[0].type.includes("image")) {
+      setImgList([...imgList, file]);
+    } else {
+      setVideoList([...videoList, file]);
+    }
+    e.target.value = null;
+  };
+
+  function deleteImg(location, type) {
+    //handle video
+    if (type === "video") {
+      setVideoList((videoList) =>
+        // @ts-ignore
+        videoList.filter((item, index) => index !== location)
+      );
+      return;
+    }
+    setImgList((imgList) =>
+      // @ts-ignore
+      imgList.filter((item, index) => index !== location)
+    );
+  }
+
+  const handleSend = async () => {
+    await Promise.all([
+      //pass video list
+      SendMessage(currentUser, chatId, text, imgList, videoList),
+      UpdateChat(currentUser, user.id, chatId, text),
+    ]);
+    setImgList([]);
+    setVideoList([]);
+    setText("");
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleSend();
+    }
+  };
 
   const { currentUser } = useUserStore();
   const { chatId, user } = chat;
-  const isCurrentUserBlocked = user.blocked.includes(currentUser.id);
-  const isReceiverBlocked = currentUser.blocked.includes(user.id);
+
+  const isBlocking =
+    user.blocked.includes(currentUser.id) ||
+    currentUser.blocked.includes(user.id);
 
   const [messages, setMessages] = useState([]);
-  const setMessage = (incomingMess) => {
-    setMessages([...incomingMess]);
-  };
-  const setNewMessage = (incomingMess) => {
-    setMessages([...messages, incomingMess]);
-  };
 
   const [lastMessageTimestamp, setLastMessageTimestamp] = useState(null);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
 
-  useListenChat(
-    chatId,
-    setNewMessage,
-    setMessage,
-    setLastMessageTimestamp,
-    setHasMore
-  );
+  useListenChat(chatId, setMessages, setLastMessageTimestamp, setHasMore);
 
   function load() {
     if (loading) return;
@@ -126,11 +212,15 @@ const ChatDialog = ({ chat }) => {
       lastMessageTimestamp,
       setLastMessageTimestamp,
       messages,
-      setMessage,
+      setMessages,
       setHasMore,
       setLoading
     );
   }
+
+  useEffect(() => {
+    if (inView) scrollDown();
+  }, [messages, inView, scrollDown]);
 
   return (
     <Wrapper>
@@ -161,38 +251,118 @@ const ChatDialog = ({ chat }) => {
           loader={<CircularLoading key={0} />}
           useWindow={false}
         >
-
-
-          {messages.map((message, index) => (
-            <Message
-              key={index}
-              // @ts-ignore
-              position={message.position}
-            >
-              {message.position === "left" && (
-                <Avatar src={message.avatar} sx={{ marginRight: 1 }} />
-              )}
-              <MessageText
+          {messages.map((message, index) => {
+            const position =
+              message.senderId === currentUser.id ? "right" : "left";
+            return (
+              <MessageWithAvatar
+                key={index}
                 // @ts-ignore
-                position={message.position}
+                position={position}
               >
-                {message.text}
-              </MessageText>
-            </Message>
-          ))}
-
-          
+                {message.senderId !== currentUser.id && (
+                  <Avatar src={message.senderAvatar} sx={{ marginRight: 1 }} />
+                )}
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    maxWidth: "60%",
+                    gap: "5px",
+                  }}
+                >
+                  {message.text && (
+                    <MessageText
+                      // @ts-ignore
+                      position={position}
+                    >
+                      {message.text}
+                    </MessageText>
+                  )}
+                  {message.img?.map((img, index) => (
+                    <MediaMessage position={message.position} key={index}>
+                      <img src={img} alt="Sent media" />
+                    </MediaMessage>
+                  ))}
+                  {message.video?.map((video, index) => (
+                    <MediaMessage position={message.position} key={index}>
+                      <video controls>
+                        <source src={video} type="video/mp4" />
+                      </video>
+                    </MediaMessage>
+                  ))}
+                </div>
+              </MessageWithAvatar>
+            );
+          })}
         </InfiniteScroll>
+        <div ref={ref}></div>
       </MessageContainer>
+      <div className="preview">
+        {imgList.map(function (img, index) {
+          return (
+            <div className="img-wrapper" key={img.url}>
+              <img src={img.url} alt="" />
+              <div className="delete" onClick={() => deleteImg(index)}>
+                <CancelIcon />
+              </div>
+            </div>
+          );
+        })}
+        {videoList.map(function (video, index) {
+          return (
+            <div className="video-wrapper" key={index}>
+              <video controls>
+                <source src={video.url} type="video/mp4" />
+              </video>
+              <div className="delete" onClick={() => deleteImg(index, "video")}>
+                <CancelIcon />
+              </div>
+            </div>
+          );
+        })}
+      </div>
       <InputContainer>
-        <IconButton color="primary">
-          <Image color="primary" />
+        <label htmlFor="file" style={{ cursor: "pointer", marginTop: "4px" }}>
+          <ImageIcon
+            // @ts-ignore
+            color="primary"
+          />
+        </label>
+        <input
+          type="file"
+          id="file"
+          style={{ display: "none" }}
+          onChange={handleImg}
+        />
+        <IconButton color="primary" disabled={isBlocking}>
+          <EmojiEmotions color="primary" onClick={() => setOpen(true)} />
+          <div className="picker">
+            <EmojiPicker
+              open={open}
+              onEmojiClick={handleEmoji}
+              style={{ zIndex: 20000 }}
+              width="300px"
+            />
+          </div>
         </IconButton>
-        <IconButton color="primary">
-          <EmojiEmotions color="primary" />
-        </IconButton>
-        <CustomInput placeholder="Aa" />
-        <IconButton color="primary">
+        <CustomInput
+          placeholder={isBlocking ? "Bạn đã bị chặn" : "Gửi tin nhắn..."}
+          disabled={isBlocking}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          onPasteCapture={(e) => {
+            setImgList([
+              ...imgList,
+              {
+                file: e.clipboardData.files[0],
+                url: URL.createObjectURL(e.clipboardData.files[0]),
+              },
+            ]);
+          }}
+          onKeyDown={handleKeyPress}
+        />
+        <IconButton color="primary" disabled={isBlocking} onClick={handleSend}>
           <Send color="primary" />
         </IconButton>
       </InputContainer>

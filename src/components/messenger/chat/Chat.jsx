@@ -10,7 +10,7 @@ import KeyboardDoubleArrowDownIcon from "@mui/icons-material/KeyboardDoubleArrow
 import CancelIcon from "@mui/icons-material/Cancel";
 import InfoIcon from "@mui/icons-material/Info";
 import ImageIcon from "@mui/icons-material/Image";
-import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
+import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
 
 import { useUserStore } from "src/store/userStore";
 import { useChatStore } from "src/store/chatStore";
@@ -49,15 +49,14 @@ export const Chat = () => {
     isCurrentUserBlocked,
     isReceiverBlocked,
     message,
-    setMessage,
-    setNewMessage,
+    setMessages,
   } = useChatStore();
   useEffect(() => {
     if (inView) scrollDown();
   }, [message, inView, scrollDown]);
 
   //khi chatID thay đổi(bằng cách bấm chat với ng khác) => lấy dữ liệu chat từ db && lắng nghe sự thay đổi
-  useListenChat(chatId, setNewMessage, setMessage, setLastMessageTimestamp, setHasMore);
+  useListenChat(chatId, setMessages, setLastMessageTimestamp, setHasMore);
   useEffect(() => {
     setHasMore(true);
     setLastMessageTimestamp(null);
@@ -123,7 +122,7 @@ export const Chat = () => {
       lastMessageTimestamp,
       setLastMessageTimestamp,
       message,
-      setMessage,
+      setMessages,
       setHasMore,
       setLoading
     );
@@ -142,9 +141,10 @@ export const Chat = () => {
         </StyledLink>
         <div className="icons">
           <button onClick={showInfo}>
-            <InfoIcon 
-// @ts-ignore
-            color="primary" />
+            <InfoIcon
+              // @ts-ignore
+              color="primary"
+            />
           </button>
         </div>
       </div>
@@ -198,9 +198,11 @@ export const Chat = () => {
             onClick={() => scrollDown()}
             aria-label="hs"
           >
-            <KeyboardDoubleArrowDownIcon fontSize="inherit" 
-// @ts-ignore
-            color="white"/>
+            <KeyboardDoubleArrowDownIcon
+              fontSize="inherit"
+              // @ts-ignore
+              color="white"
+            />
           </IconButton>
         )}
       </div>
@@ -237,9 +239,10 @@ export const Chat = () => {
         <div className="bottom">
           <div className="icons">
             <label htmlFor="file">
-              <ImageIcon 
-// @ts-ignore
-              color="primary"/>
+              <ImageIcon
+                // @ts-ignore
+                color="primary"
+              />
             </label>
             <input
               type="file"
@@ -252,7 +255,7 @@ export const Chat = () => {
             type="text"
             placeholder={
               isCurrentUserBlocked || isReceiverBlocked
-                ? "Bạn đã bị chặn"
+                ? "Tin nhắn đang bị chặn"
                 : "Gửi tin nhắn..."
             }
             value={text}
@@ -270,9 +273,11 @@ export const Chat = () => {
             disabled={isCurrentUserBlocked || isReceiverBlocked}
           />
           <div className="emoji">
-            <SentimentSatisfiedAltIcon onClick={() => setOpen(!open)} 
-// @ts-ignore
-            color="primary"/>
+            <SentimentSatisfiedAltIcon
+              onClick={() => setOpen(!open)}
+              // @ts-ignore
+              color="primary"
+            />
             <div className="picker">
               <EmojiPicker
                 open={open}

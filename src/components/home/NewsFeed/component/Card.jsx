@@ -33,7 +33,9 @@ export default function UserCard({ user }) {
       <CardActions
         style={{ justifyContent: "center", padding: 0, paddingBottom: "10px" }}
       >
-        <Button size="small" color="white" style={{ backgroundColor: "green" }}>
+        <Button size="small" 
+// @ts-ignore
+        color="white" style={{ backgroundColor: "green" }}>
           Kết bạn
         </Button>
       </CardActions>

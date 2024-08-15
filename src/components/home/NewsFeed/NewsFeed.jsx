@@ -1,4 +1,4 @@
-import NewPostInput from "./NewPostInput";
+import NewPostInput from "./new_post/NewPostInput";
 import Post from "./component/Post";
 import FriendsRecommend from "./FriendsRecommend";
 import styled from "styled-components";

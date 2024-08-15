@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { useUserStore } from "src/store/userStore";
 
 import ProfileHeader from "./profileHeader/ProfileHeader";
-import NewPostInput from "../home/NewsFeed/NewPostInput";
+import NewPostInput from "../home/NewsFeed/new_post/NewPostInput";
 import Post from "../home/NewsFeed/component/Post";
 import Information from "./information/Information";
 import Hobbies from "./hobby/Hobbies";
@@ -107,7 +107,9 @@ const Profile = () => {
             <Tab label="Bài viết" value="1" sx={{ fontWeight: "600" }} />
             <Tab label="Bạn bè" value="2" sx={{ fontWeight: "600" }} />
             <Tab label="Sở thích" value="3" sx={{ fontWeight: "600" }} />
-            {isViewingOwnProfile && <Tab label="Vị trí" value="4" sx={{ fontWeight: "600" }} />}
+            {isViewingOwnProfile && (
+              <Tab label="Vị trí" value="4" sx={{ fontWeight: "600" }} />
+            )}
           </TabList>
         </TabsHeader>
         <TabPanel value="1" sx={{ display: "flex", placeContent: "center" }}>
@@ -117,7 +119,7 @@ const Profile = () => {
               <Hobbies />
             </Info>
             <MainContent>
-              {isViewingOwnProfile && <NewPostInput />} 
+              {isViewingOwnProfile && <NewPostInput />}
               <div>
                 {posts.map((post, index) => (
                   <Post key={index} post={post} />

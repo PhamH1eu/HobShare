@@ -18,9 +18,9 @@ import "./chatdialog.css";
 import InfiniteScroll from "react-infinite-scroller";
 import { useUserStore } from "src/store/userStore";
 import { useChatDialogStore } from "src/store/chatDialogStore";
-import { useListenChat } from "src/hooks/useListenChat";
-import { loadMoreMessages } from "src/hooks/useListenChat";
-import useListenOnline from "src/hooks/useListenOnline";
+import { useListenChat } from "src/hooks/listen/useListenChat";
+import { loadMoreMessages } from "src/hooks/listen/useListenChat";
+import useListenOnline from "src/hooks/listen/useListenOnline";
 import { useCallback, useEffect, useState } from "react";
 import SendMessage from "src/services/SendMessage";
 import UpdateChat from "src/services/UpdateChat";
@@ -220,7 +220,11 @@ const ChatDialog = ({ chat }) => {
           <Box sx={{ marginLeft: 1, cursor: "pointer", paddingRight: "5px" }}>
             <Box fontWeight="bold">{chat.user.username}</Box>
             <Box fontSize="small" color="gray">
-              {!timeOff ? "" : online ? "Đang hoạt động" : `Hoạt động ${timeOff} trước`}
+              {!timeOff
+                ? ""
+                : online
+                ? "Đang hoạt động"
+                : `Hoạt động ${timeOff} trước`}
             </Box>
           </Box>
         </StyledLink>

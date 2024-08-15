@@ -8,7 +8,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import CircularLoading from "src/shared/components/Loading";
 import "./detail.css";
-import useListenOnline from "src/hooks/useListenOnline";
+import useListenOnline from "src/hooks/listen/useListenOnline";
 
 export const Detail = () => {
   const {
@@ -59,7 +59,13 @@ export const Detail = () => {
       <div className="user">
         <img src={user?.avatar || "./avatar.png"} alt="" />
         <h2>{user?.username}</h2>
-        <h3 style={{fontWeight: '500', color: "#7d7e81"}}>{!timeOff ? "Đã lâu không hoạt động" : online ? "Đang hoạt động" : `Hoạt động ${timeOff} trước`}</h3>
+        <h3 style={{ fontWeight: "500", color: "#7d7e81" }}>
+          {!timeOff
+            ? "Đã lâu không hoạt động"
+            : online
+            ? "Đang hoạt động"
+            : `Hoạt động ${timeOff} trước`}
+        </h3>
       </div>
       <div className="info">
         <div className="option">

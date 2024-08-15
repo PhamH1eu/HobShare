@@ -4,6 +4,9 @@ import styled from "styled-components";
 import { useUserStore } from "src/store/userStore";
 import Divider from "@mui/material/Divider";
 
+import useModal from "src/hooks/useModal";
+import NewModal from "./NewModal";
+
 const ChatInput = styled.div`
   display: flex;
   flex-direction: column;
@@ -38,6 +41,7 @@ const MessageInput = styled.div`
     font-size: 1rem;
     width: 100%;
     background-color: rgba(240, 242, 245, 255);
+    cursor: pointer;
 
     &:hover {
       background-color: rgba(228, 230, 233, 255);
@@ -69,13 +73,14 @@ const IconButton = styled.button`
     text-align: start;
     font-size: 0.9rem;
     font-weight: 500;
-    color: rgba(101,103,107,255);
+    color: rgba(101, 103, 107, 255);
     margin-left: 10px;
   }
 `;
 
 const NewPostInput = () => {
   const { currentUser } = useUserStore();
+  const { open, handleOpen, handleClose } = useModal();
 
   return (
     <ChatInput>
@@ -83,20 +88,23 @@ const NewPostInput = () => {
         <img src={currentUser.avatar} alt="User Avatar" />
         <input
           type="text"
+          value={""}
           placeholder={`${currentUser.username} ơi, bạn đang nghĩ gì thế?`}
+          onClick={handleOpen}
         />
       </MessageInput>
       <Divider flexItem variant="middle" color="#bdbdbd" />
       <Actions>
-        <IconButton>
+        <IconButton onClick={handleOpen}>
           <AddPhotoAlternateIcon color="success" />
           <span>Ảnh/video</span>
         </IconButton>
-        <IconButton>
+        <IconButton onClick={handleOpen}>
           <AddReactionIcon color="warning" />
           <span>Cảm xúc/hoạt động</span>
         </IconButton>
       </Actions>
+      <NewModal open={open} onClose={handleClose} />
     </ChatInput>
   );
 };

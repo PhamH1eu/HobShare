@@ -13,7 +13,12 @@ import SmsIcon from "@mui/icons-material/Sms";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Avatar from "@mui/material/Avatar";
 
-import { auth } from "src/lib/firebase";
+import {
+  ref,
+  set,
+  serverTimestamp,
+} from "firebase/database";
+import { auth, database } from "src/lib/firebase";
 import useDialog from "src/hooks/useDialog";
 import { useChatStore } from "src/store/chatStore";
 import { useUserStore } from "src/store/userStore";
@@ -119,13 +124,17 @@ const NavBar = () => {
       open={isMessengerOpen}
       onClose={handleMessengerClose}
     >
-      <MessengerDialog handleClose={handleMessengerClose}/>
+      <MessengerDialog handleClose={handleMessengerClose} />
     </Menu>
   );
 
   const resetChat = useChatStore((state) => state.resetChat);
   const navigate = useNavigate();
   const logout = async () => {
+    set(ref(database, "/status/" + currentUser.id), {
+      state: "offline",
+      last_changed: serverTimestamp(),
+    });
     await auth.signOut();
     resetChat();
     navigate("/");
@@ -192,19 +201,21 @@ const NavBar = () => {
           </Search>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" }, gap: "16px" }}>
-            {!checkMess && <IconButton
-              size="large"
-              aria-label="show 4 new mails"
-              style={{ backgroundColor: "rgba(228,230,235,255)" }}
-              onClick={handleMessengerOpen}
-            >
-              <Badge badgeContent={""} color="error">
-                <SmsIcon
-                  // @ts-ignore
-                  color="black"
-                />
-              </Badge>
-            </IconButton>}
+            {!checkMess && (
+              <IconButton
+                size="large"
+                aria-label="show 4 new mails"
+                style={{ backgroundColor: "rgba(228,230,235,255)" }}
+                onClick={handleMessengerOpen}
+              >
+                <Badge badgeContent={""} color="error">
+                  <SmsIcon
+                    // @ts-ignore
+                    color="black"
+                  />
+                </Badge>
+              </IconButton>
+            )}
             <IconButton
               size="large"
               aria-label="show 17 new notifications"

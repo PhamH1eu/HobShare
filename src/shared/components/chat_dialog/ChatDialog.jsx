@@ -11,7 +11,6 @@ import { EmojiEmotions, Send } from "@mui/icons-material";
 import RemoveIcon from "@mui/icons-material/Remove";
 import ClearIcon from "@mui/icons-material/Clear";
 import ImageIcon from "@mui/icons-material/Image";
-import KeyboardDoubleArrowDownIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
 import CircularLoading from "../Loading";
 import CancelIcon from "@mui/icons-material/Cancel";
 import "./chatdialog.css";
@@ -21,6 +20,7 @@ import { useUserStore } from "src/store/userStore";
 import { useChatDialogStore } from "src/store/chatDialogStore";
 import { useListenChat } from "src/hooks/useListenChat";
 import { loadMoreMessages } from "src/hooks/useListenChat";
+import useListenOnline from "src/hooks/useListenOnline";
 import { useCallback, useEffect, useState } from "react";
 import SendMessage from "src/services/SendMessage";
 import UpdateChat from "src/services/UpdateChat";
@@ -57,17 +57,6 @@ const MessageContainer = MuiStyled(Box)`
 `;
 
 const MessageWithAvatar = MuiStyled(Box)`
-  display: flex;
-  align-items: flex-end;
-  margin-bottom: 10px;
-  ${(props) =>
-    // @ts-ignore
-    props.position === "right"
-      ? "justify-content: flex-end;"
-      : "justify-content: flex-start;"}
-`;
-
-const MessWrapper = MuiStyled(Box)`
   display: flex;
   align-items: flex-end;
   margin-bottom: 10px;
@@ -125,7 +114,6 @@ const CustomInput = MuiStyled(InputBase)`
 
 const ChatDialog = ({ chat }) => {
   const { ref, inView, entry } = useInView();
-  console.log("🚀 ~ ChatDialog ~ inView:", inView);
   const scrollDown = useCallback(() => {
     entry.target.scrollIntoView({ behavior: "smooth" });
   }, [entry]);
@@ -222,6 +210,8 @@ const ChatDialog = ({ chat }) => {
     if (inView) scrollDown();
   }, [messages, inView, scrollDown]);
 
+  const { online, timeOff } = useListenOnline(user.id);
+
   return (
     <Wrapper>
       <Header>
@@ -230,7 +220,7 @@ const ChatDialog = ({ chat }) => {
           <Box sx={{ marginLeft: 1, cursor: "pointer", paddingRight: "5px" }}>
             <Box fontWeight="bold">{chat.user.username}</Box>
             <Box fontSize="small" color="gray">
-              Hoạt động 31 phút trước
+              {!timeOff ? "" : online ? "Đang hoạt động" : `Hoạt động ${timeOff} trước`}
             </Box>
           </Box>
         </StyledLink>

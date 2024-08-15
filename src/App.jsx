@@ -7,7 +7,10 @@ import { useListenAuth } from "src/hooks/useListenAuth";
 import Notification from "src/shared/components/Notification";
 import CircularLoading from "src/shared/components/Loading";
 
+import useStatus from "./lib/status";
+
 const App = () => {
+  useStatus();
   const { currentUser, isLoading, isSignedUp } = useUserStore();
 
   useListenAuth();

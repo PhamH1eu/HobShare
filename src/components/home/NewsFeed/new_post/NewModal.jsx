@@ -7,7 +7,7 @@ import {
   Button,
   TextField,
 } from "@mui/material";
-import { Close, SentimentSatisfied } from "@mui/icons-material";
+import { Close } from "@mui/icons-material";
 import Cancel from "@mui/icons-material/Cancel";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";

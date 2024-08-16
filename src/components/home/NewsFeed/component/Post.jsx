@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import { useState } from "react";
 
-import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
-import ShareIcon from '@mui/icons-material/Share';
-import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
-import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
+import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
+import ShareIcon from "@mui/icons-material/Share";
+import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
+import SentimentVerySatisfiedIcon from "@mui/icons-material/SentimentVerySatisfied";
 
 import Comments from "./Comments";
 
@@ -13,7 +13,7 @@ import { IconButton } from "@mui/material";
 import BookmarksIcon from "@mui/icons-material/Bookmarks";
 import Divider from "@mui/material/Divider";
 import Share from "./Share";
-import useModal from "src/hooks/useModal";
+import useModal from "src/shared/hooks/useModal";
 
 const PostWrapper = styled.div`
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
@@ -142,9 +142,10 @@ const Post = ({ post }) => {
         </PostInfo>
         <Marked>
           <IconButton onClick={handleMarked}>
-            <BookmarksIcon 
-// @ts-ignore
-            color={marked ? "primary" : "greyIcon"} />
+            <BookmarksIcon
+              // @ts-ignore
+              color={marked ? "primary" : "greyIcon"}
+            />
           </IconButton>
         </Marked>
       </PostHeader>
@@ -159,39 +160,43 @@ const Post = ({ post }) => {
       </PostContent>
       <PostFooter>
         <PostReactions>
-          <ThumbUpAltIcon
+          <ThumbUpAltIcon style={{ fontSize: "1.25rem" }} color="primary" />
+          <SentimentVerySatisfiedIcon
             style={{ fontSize: "1.25rem" }}
-            color="primary"
+            color="warning"
           />
-          <SentimentVerySatisfiedIcon style={{ fontSize: "1.25rem" }} color="warning" />
           {post.reactions}
         </PostReactions>
         <Divider flexItem variant="middle" color="#bdbdbd" />
         <PostActions>
           <PostAction
             onClick={handleLike}
-            style={{color: like ? "#6ec924" : "rgba(91, 98, 106, 255)"}}
+            style={{ color: like ? "#6ec924" : "rgba(91, 98, 106, 255)" }}
           >
-            <ThumbUpAltIcon 
-// @ts-ignore
-            color={like ? "primary" : "greyIcon"}/> Thích
+            <ThumbUpAltIcon
+              // @ts-ignore
+              color={like ? "primary" : "greyIcon"}
+            />{" "}
+            Thích
           </PostAction>
           <PostAction
             onClick={() => setShowComment(true)}
             style={{ color: "rgba(91, 98, 106, 255)" }}
           >
-            <QuestionAnswerIcon 
-// @ts-ignore
-            color="greyIcon"/>
+            <QuestionAnswerIcon
+              // @ts-ignore
+              color="greyIcon"
+            />
             Bình luận
           </PostAction>
           <PostAction
             onClick={handleOpen}
             style={{ color: "rgba(91, 98, 106, 255)" }}
           >
-            <ShareIcon 
-// @ts-ignore
-            color="greyIcon"/>
+            <ShareIcon
+              // @ts-ignore
+              color="greyIcon"
+            />
             Chia sẻ
           </PostAction>
         </PostActions>
@@ -211,7 +216,7 @@ const Post = ({ post }) => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Share post={post} handleClose={handleClose}/>
+        <Share post={post} handleClose={handleClose} />
       </Modal>
     </PostWrapper>
   );

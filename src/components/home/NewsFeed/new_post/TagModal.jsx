@@ -14,7 +14,7 @@ import {
 import { styled } from "@mui/system";
 import { ArrowBack } from "@mui/icons-material";
 
-import useChatList from "src/hooks/listen/useChatList";
+import useChatList from "src/shared/hooks/listen/useChatList";
 import useFriendStore from "src/store/useFriendStore";
 
 const ModalContainer = styled(Box)`

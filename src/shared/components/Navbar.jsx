@@ -13,13 +13,9 @@ import SmsIcon from "@mui/icons-material/Sms";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Avatar from "@mui/material/Avatar";
 
-import {
-  ref,
-  set,
-  serverTimestamp,
-} from "firebase/database";
+import { ref, set, serverTimestamp } from "firebase/database";
 import { auth, database } from "src/lib/firebase";
-import useDialog from "src/hooks/useDialog";
+import useDialog from "src/shared/hooks/useDialog";
 import { useChatStore } from "src/store/chatStore";
 import { useUserStore } from "src/store/userStore";
 

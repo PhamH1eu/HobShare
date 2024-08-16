@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import TextField from "@mui/material/TextField";
 
-import useEditableText from "src/hooks/useEditableText";
+import useEditableText from "src/shared/hooks/useEditableText";
 
 const Container = styled.div`
   padding: 20px;
@@ -53,7 +53,6 @@ const ButtonContainer = styled.div`
 `;
 
 const ProfileEdit = ({ handleClose }) => {
-
   const {
     value: bioText,
     isEditing: isEditingBio,

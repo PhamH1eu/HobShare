@@ -15,8 +15,8 @@ import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt
 import { useUserStore } from "src/store/userStore";
 import { useChatStore } from "src/store/chatStore";
 import { useInfoShowStore } from "src/store/infoShowStore";
-import { useListenChat } from "src/hooks/listen/useListenChat";
-import { loadMoreMessages } from "src/hooks/listen/useListenChat";
+import { useListenChat } from "src/shared/hooks/listen/useListenChat";
+import { loadMoreMessages } from "src/shared/hooks/listen/useListenChat";
 
 import UpdateChat from "src/services/UpdateChat";
 import SendMessage from "src/services/SendMessage";

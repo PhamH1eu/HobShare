@@ -3,7 +3,7 @@ import { Landing } from "src/components/auth/Landing";
 import HobbyChoosingPage from "./components/hobby&privacy/Hobby";
 
 import { useUserStore } from "src/store/userStore";
-import { useListenAuth } from "src/hooks/useListenAuth";
+import { useListenAuth } from "src/shared/hooks/listen/useListenAuth";
 import Notification from "src/shared/components/Notification";
 import CircularLoading from "src/shared/components/Loading";
 

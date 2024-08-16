@@ -5,7 +5,7 @@ import WatchLaterIcon from "@mui/icons-material/WatchLater";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 
-import useModal from "src/hooks/useModal";
+import useModal from "src/shared/hooks/useModal";
 import ProfileEdit from "../EditModal";
 
 import { useUserStore } from "src/store/userStore";

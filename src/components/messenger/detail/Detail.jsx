@@ -8,7 +8,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import CircularLoading from "src/shared/components/Loading";
 import "./detail.css";
-import useListenOnline from "src/hooks/listen/useListenOnline";
+import useListenOnline from "src/shared/hooks/listen/useListenOnline";
 
 export const Detail = () => {
   const {

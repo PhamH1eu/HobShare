@@ -1,6 +1,6 @@
 import { useState } from "react";
 import AddUser from "./addUser/AddUser";
-import useChatList from "src/hooks/useChatList";
+import useChatList from "src/shared/hooks/listen/useChatList";
 import { useUserStore } from "src/store/userStore";
 import { useChatStore } from "src/store/chatStore";
 import { ChatService } from "src/services/DatabaseService";
@@ -71,7 +71,7 @@ export const ChatList = () => {
                   : "transparent",
             }}
           >
-            <Avatar src={chat.user.avatar} receiverId={chat.receiverId}/>
+            <Avatar src={chat.user.avatar} receiverId={chat.receiverId} />
             <div className="text">
               <span>{chat.user.username}</span>
               <p style={{ fontWeight: chat?.isSeen ? "normal" : "bold" }}>

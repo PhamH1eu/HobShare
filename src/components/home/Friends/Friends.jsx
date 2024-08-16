@@ -3,7 +3,7 @@ import SearchIcon from "@mui/icons-material/Search";
 
 import styled from "styled-components";
 
-import useChatList from "src/hooks/useChatList";
+import useChatList from "src/shared/hooks/listen/useChatList";
 
 import Contact from "./Contact";
 

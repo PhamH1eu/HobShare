@@ -13,7 +13,7 @@ import {
   Box,
 } from "@mui/material";
 import LayersClearIcon from "@mui/icons-material/LayersClear";
-import useModal from "src/hooks/useModal";
+import useModal from "src/shared/hooks/useModal";
 import AddNewCollectionModal from "./modal/AddNewCollection";
 
 const SidebarContainer = styled.div`

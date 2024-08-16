@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { Box, Typography, List } from "@mui/material";
 
 import StyledLink from "../StyledLink";
-import useChatList from "src/hooks/useChatList";
+import useChatList from "src/shared/hooks/listen/useChatList";
 import { useUserStore } from "src/store/userStore";
 import { useChatDialogStore } from "src/store/chatDialogStore";
 import { ChatService } from "src/services/DatabaseService";
@@ -65,7 +65,9 @@ const MessengerDialog = ({ handleClose }) => {
   return (
     <Container>
       <NotificationHeader>Đoạn chat</NotificationHeader>
-      <List sx={{overflowY: "scroll", overflowX: "hidden" ,maxHeight: "600px"}}>
+      <List
+        sx={{ overflowY: "scroll", overflowX: "hidden", maxHeight: "600px" }}
+      >
         {chats.map((chat, index) => (
           <MessItem key={index} chat={chat} handleSelect={handleSelect} />
         ))}

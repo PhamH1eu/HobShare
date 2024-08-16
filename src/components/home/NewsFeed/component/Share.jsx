@@ -6,7 +6,7 @@ import ForwardToInboxIcon from "@mui/icons-material/ForwardToInbox";
 import styled from "styled-components";
 import CircularLoading from "src/shared/components/Loading";
 
-import { useQueryChatlist } from "src/hooks/useChatList";
+import { useQueryChatlist } from "src/shared/hooks/listen/useChatList";
 import SendMessage from "src/services/SendMessage";
 import UpdateChat from "src/services/UpdateChat";
 import { useUserStore } from "src/store/userStore";
@@ -184,9 +184,10 @@ const Share = ({ handleClose }) => {
         <h3 style={{ fontSize: "1.5rem" }}>Gửi đến</h3>
       </Box>
       <SearchBar>
-        <SearchIcon 
-// @ts-ignore
-        color="greyIcon" />
+        <SearchIcon
+          // @ts-ignore
+          color="greyIcon"
+        />
         <input
           type="text"
           placeholder="Tìm kiếm người và nhóm"
@@ -203,9 +204,10 @@ const Share = ({ handleClose }) => {
         ))}
       </RecipientList>
       <SendButton onClick={sendPost}>
-        <ForwardToInboxIcon 
-// @ts-ignore
-        color="white" />
+        <ForwardToInboxIcon
+          // @ts-ignore
+          color="white"
+        />
         Gửi
       </SendButton>
     </Box>

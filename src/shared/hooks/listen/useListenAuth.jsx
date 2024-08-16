@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../lib/firebase";
+import { auth } from "src/lib/firebase";
 
-import { useUserStore } from "../store/userStore";
+import { useUserStore } from "src/store/userStore";
 
 export const useListenAuth = () => {
   const { fetchUserInfo } = useUserStore();

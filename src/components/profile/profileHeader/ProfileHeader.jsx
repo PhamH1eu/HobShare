@@ -2,7 +2,9 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
 import { useUserStore } from "src/store/userStore";
+import useModal from "src/shared/hooks/useModal";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import AddRequestModal from "./AddRequestModal";
 
 const HeaderWrapper = styled.div`
   width: 100%;
@@ -51,7 +53,7 @@ const AddFriend = styled.button`
   position: absolute;
   right: 20px;
   bottom: 40px;
-  background-color: #0866ff;
+  background-color: #6ec924;
   color: white;
   border: none;
   border-radius: 8px;
@@ -84,6 +86,8 @@ const ProfileHeader = () => {
   const { userId } = useParams();
   const isViewingOwnProfile = userId === currentUser.id;
 
+  const { open, handleClose, handleOpen } = useModal();
+
   return (
     <HeaderWrapper>
       <WallImage>
@@ -98,7 +102,7 @@ const ProfileHeader = () => {
           </TextWrapper>
         </InfoWrapper>
         {!isViewingOwnProfile && (
-          <AddFriend>
+          <AddFriend onClick={handleOpen}>
             <PersonAddIcon
               // @ts-ignore
               color="white"
@@ -107,6 +111,7 @@ const ProfileHeader = () => {
           </AddFriend>
         )}
       </WallImage>
+      <AddRequestModal open={open} handleClose={handleClose} />
     </HeaderWrapper>
   );
 };

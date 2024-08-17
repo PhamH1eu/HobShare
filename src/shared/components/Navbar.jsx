@@ -21,6 +21,7 @@ import { useUserStore } from "src/store/userStore";
 
 import NotificationDialog from "./navbar_dialog/NotificationDialog";
 import MessengerDialog from "./navbar_dialog/MessengerDialog";
+import { useState } from "react";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -165,6 +166,15 @@ const NavBar = () => {
     </Menu>
   );
 
+  const [inputValue, setInputValue] = useState("");
+  const handleSearch = (e) => {
+    setInputValue(e.target.value);
+  };
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (inputValue.length > 0) navigate(`/search/${inputValue}`);
+  };
+
   return (
     <Box>
       <AppBar
@@ -193,6 +203,13 @@ const NavBar = () => {
             <StyledInputBase
               placeholder="Tìm kiếm..."
               inputProps={{ "aria-label": "search" }}
+              value={inputValue}
+              onChange={handleSearch}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSearchSubmit(e);
+                }
+              }}
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />

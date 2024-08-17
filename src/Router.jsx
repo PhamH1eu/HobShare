@@ -8,6 +8,7 @@ import SavedPage from "./components/saved/SavedPage";
 import MemoriesPage from "./components/memories/Memories";
 import ChatHolder from "./shared/components/chat_dialog/ChatHolder";
 import MinimizedChatDialog from "./shared/components/chat_dialog/MinimizedChatDialog";
+import SearchScreen from "./components/search/SearchScreen";
 
 const Router = () => {
 
@@ -23,6 +24,7 @@ const Router = () => {
         <Route path="/friends" element={<FriendsTab />} />
         <Route path="/saved" element={<SavedPage />} />
         <Route path="/memories" element={<MemoriesPage />} />
+        <Route path="/search/:id" element={<SearchScreen />} />
       </Routes>
       {!checkMess && <ChatHolder />}
       {!checkMess && <MinimizedChatDialog />}

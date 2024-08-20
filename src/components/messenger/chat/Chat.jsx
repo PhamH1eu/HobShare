@@ -49,11 +49,14 @@ export const Chat = () => {
     isCurrentUserBlocked,
     isReceiverBlocked,
     message,
-    setMessages,
   } = useChatStore();
+  const [messages, setMessages] = useState(message);
+  useEffect(() => {
+    setMessages(message);
+  }, [message]);
   useEffect(() => {
     if (inView) scrollDown();
-  }, [message, inView, scrollDown]);
+  }, [messages, inView, scrollDown]);
 
   //khi chatID thay đổi(bằng cách bấm chat với ng khác) => lấy dữ liệu chat từ db && lắng nghe sự thay đổi
   useListenChat(chatId, setMessages, setLastMessageTimestamp, setHasMore);
@@ -121,7 +124,7 @@ export const Chat = () => {
       chatId,
       lastMessageTimestamp,
       setLastMessageTimestamp,
-      message,
+      messages,
       setMessages,
       setHasMore,
       setLoading
@@ -156,7 +159,7 @@ export const Chat = () => {
           loader={<CircularLoading key={0} />}
           useWindow={false}
         >
-          {message?.map((mess, index) => {
+          {messages?.map((mess, index) => {
             return (
               <div
                 className={
@@ -180,7 +183,7 @@ export const Chat = () => {
                     })}
 
                   {mess.text != "" && <p>{mess.text}</p>}
-                  {index == message.length - 1 && (
+                  {index == messages.length - 1 && (
                     <span>
                       {format(mess.sendAt?.toDate() ?? new Date(), "dd MMM")}
                     </span>

@@ -6,7 +6,7 @@ import {
   styled as MuiStyled,
   IconButton,
 } from "@mui/material";
-import RateReviewIcon from "@mui/icons-material/RateReview";
+// import RateReviewIcon from "@mui/icons-material/RateReview";
 import CloseIcon from "@mui/icons-material/Close";
 import { useChatDialogStore } from "src/store/chatDialogStore";
 
@@ -59,16 +59,16 @@ const OnlineBadge = MuiStyled(Badge)(({ theme }) => ({
   },
 }));
 
-const IconButtonStyle = MuiStyled(IconButton)(({ theme }) => ({
-  backgroundColor: "white",
-  boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.3)",
-  width: "50px",
-  height: "50px",
+// const IconButtonStyle = MuiStyled(IconButton)(({ theme }) => ({
+//   backgroundColor: "white",
+//   boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.3)",
+//   width: "50px",
+//   height: "50px",
 
-  "&:hover": {
-    backgroundColor: theme.palette.grey[300],
-  },
-}));
+//   "&:hover": {
+//     backgroundColor: theme.palette.grey[300],
+//   },
+// }));
 
 const MinimizedChatDialog = () => {
   const { minimizedChats, maximizeChat, removeMinimizedChat } =
@@ -101,9 +101,9 @@ const MinimizedChatDialog = () => {
             </CloseButton>
           </AvatarWrapper>
         ))}
-        <IconButtonStyle>
+        {/* <IconButtonStyle>
           <RateReviewIcon />
-        </IconButtonStyle>
+        </IconButtonStyle> */}
       </Box>
     </Wrapper>
   );

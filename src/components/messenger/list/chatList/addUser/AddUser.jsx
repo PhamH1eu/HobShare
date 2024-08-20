@@ -3,8 +3,11 @@ import { useState } from "react";
 import { useUserStore } from "src/store/userStore";
 import SearchUser from "src/services/SearchUser";
 import AddUserToChat from "src/services/AddUserToChat";
+import useChatList from "src/shared/hooks/listen/useChatList";
+import { ChatService } from "src/services/DatabaseService";
+import { useChatStore } from "src/store/chatStore";
 
-const AddUser = () => {
+const AddUser = ({ setAddMode }) => {
   const [targetUser, setTargetUser] = useState(null);
   const currentUser = useUserStore((state) => state.currentUser);
 
@@ -17,15 +20,53 @@ const AddUser = () => {
     setTargetUser(user);
   };
 
-  const handleAdd = async () => {
-    await AddUserToChat(targetUser, currentUser);
+  const { chats } = useChatList();
+  const chatId = useChatStore((state) => state.chatId);
+  const changeChat = useChatStore((state) => state.changeChat);
+
+  const handleSelect = async (chat) => {
+    //get {chat id, lastMessage, isSeen} from chat list
+    const userChats = chats.map((item) => {
+      // eslint-disable-next-line no-unused-vars
+      const { user, ...rest } = item;
+      return rest;
+    });
+
+    //get index of selected chat in list
+    const chatIndex = userChats.findIndex(
+      (item) => item.chatId === chat.chatId
+    );
+
+    //seen message
+    userChats[chatIndex].isSeen = true;
+
+    //update with seen status
+    ChatService.update(currentUser.id, {
+      chats: userChats,
+    });
+    //pop up chat in screen
+    if (chatId === chat.chatId) {
+      return;
+    }
+    changeChat(chat.chatId, chat.user);
+  };
+
+  const handleAddUser = async () => {
+    var didInboxed = chats.find((chat) => chat.user.id === targetUser.id);
+    if (didInboxed === undefined) {
+      await AddUserToChat(targetUser, currentUser);
+    }
+    if (didInboxed) {
+      await handleSelect(didInboxed);
+    }
+    setAddMode(false);
   };
 
   return (
     <div className="addUser">
       <form onSubmit={handleSearch}>
         <input type="text" placeholder="Username" name="username" />
-        <button>Search</button>
+        <button>Tìm kiếm</button>
       </form>
       {targetUser && (
         <div className="user">
@@ -33,7 +74,7 @@ const AddUser = () => {
             <img src={targetUser.avatar || "./avatar.png"} alt="" />
             <span>{targetUser.username}</span>
           </div>
-          <button onClick={handleAdd}>Add User</button>
+          <button onClick={handleAddUser}>Nhắn tin</button>
         </div>
       )}
     </div>

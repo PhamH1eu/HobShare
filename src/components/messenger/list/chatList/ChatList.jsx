@@ -16,6 +16,15 @@ export const ChatList = () => {
   const changeChat = useChatStore((state) => state.changeChat);
   const chatId = useChatStore((state) => state.chatId);
 
+  const [search, setSearch] = useState("");
+
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+  };
+  const filteredChats = chats.filter((chat) =>
+    chat.user.username.toLowerCase().includes(search.toLowerCase())
+  );
+
   const handleSelect = async (chat) => {
     //get {chat id, lastMessage, isSeen} from chat list
     const userChats = chats.map((item) => {
@@ -49,7 +58,11 @@ export const ChatList = () => {
             // @ts-ignore
             color="greyIcon"
           />
-          <input type="text" placeholder="Tìm kiếm bạn bè..." />
+          <input
+            type="text"
+            placeholder="Tìm kiếm bạn bè..."
+            onChange={handleSearch}
+          />
         </div>
         <img
           src={addMode ? "./minus.png" : "./plus.png"}
@@ -58,7 +71,7 @@ export const ChatList = () => {
           onClick={() => setAddMode(!addMode)}
         />
       </div>
-      {chats.map((chat) => {
+      {filteredChats.map((chat) => {
         return (
           <div
             className="item"
@@ -94,7 +107,7 @@ export const ChatList = () => {
           </div>
         );
       })}
-      {addMode && <AddUser />}
+      {addMode && <AddUser setAddMode={setAddMode} />}
     </div>
   );
 };

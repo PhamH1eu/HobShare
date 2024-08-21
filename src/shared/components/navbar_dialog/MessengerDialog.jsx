@@ -24,7 +24,6 @@ const ChatListFooter = styled(Typography)`
   text-align: center;
   color: #6ec924;
   cursor: pointer;
-  margin-top: 10px;
   position: sticky;
   bottom: 0;
 
@@ -66,7 +65,7 @@ const MessengerDialog = ({ handleClose }) => {
     <Container>
       <NotificationHeader>Đoạn chat</NotificationHeader>
       <List
-        sx={{ overflowY: "scroll", overflowX: "hidden", maxHeight: "600px" }}
+        sx={{ overflowY: "auto", overflowX: "hidden", maxHeight: "600px" }}
       >
         {chats.map((chat, index) => (
           <MessItem key={index} chat={chat} handleSelect={handleSelect} />

@@ -61,6 +61,15 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+const StyledMenu = styled(Menu)(({ theme }) => ({
+  "& .MuiPaper-root": {
+    borderRadius: 0,
+  },
+  "& .MuiList-root": {
+    padding: 0,
+  },
+}));
+
 const NavBar = () => {
   const { currentUser } = useUserStore();
   let location = useLocation();
@@ -107,7 +116,7 @@ const NavBar = () => {
   );
 
   const renderMessenger = (
-    <Menu
+    <StyledMenu
       anchorEl={messengerAnchorEl}
       anchorOrigin={{
         vertical: "bottom",
@@ -118,11 +127,12 @@ const NavBar = () => {
         vertical: "top",
         horizontal: "right",
       }}
+      sx={{ paddingBottom: "0px" }}
       open={isMessengerOpen}
       onClose={handleMessengerClose}
     >
       <MessengerDialog handleClose={handleMessengerClose} />
-    </Menu>
+    </StyledMenu>
   );
 
   const resetChat = useChatStore((state) => state.resetChat);

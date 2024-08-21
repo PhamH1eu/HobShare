@@ -5,7 +5,7 @@ import { LoadingButton } from "@mui/lab";
 import { auth } from "../../lib/firebase";
 import { useUserStore } from "../../store/userStore";
 import { UserService, ChatService } from "../../services/DatabaseService";
-import upload from "../../shared/helper/upload";
+import uploadAvatar from "src/shared/helper/uploadAvatar";
 
 import styled from "styled-components";
 
@@ -93,6 +93,7 @@ const Signup = () => {
     e.preventDefault();
     try {
       const formData = new FormData(e.target);
+      // @ts-ignore
       const { username, email, password } = Object.fromEntries(formData);
 
       //validate data
@@ -109,7 +110,7 @@ const Signup = () => {
       //write to firebase
       const res = await mutationSignUp.mutateAsync({ email, password });
 
-      const avatarUrl = await upload(avatar.file);
+      const avatarUrl = await uploadAvatar(avatar.file, res.user.uid);
 
       await UserService.create(
         {

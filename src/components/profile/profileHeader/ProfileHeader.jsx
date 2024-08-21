@@ -6,6 +6,11 @@ import useModal from "src/shared/hooks/useModal";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import AddRequestModal from "./AddRequestModal";
 
+import CameraAltIcon from "@mui/icons-material/CameraAlt";
+import Avatar from "@mui/material/Avatar";
+import { useState } from "react";
+import uploadAvatar from "src/shared/helper/uploadAvatar";
+
 const HeaderWrapper = styled.div`
   width: 100%;
   height: 70%;
@@ -33,12 +38,17 @@ const AvatarWrapper = styled.div`
   border-radius: 50%;
   padding: 5px;
   background: white;
+  position: relative;
 `;
 
-const Avatar = styled.img`
+const StyledAvatar = styled(Avatar)`
   width: 140px;
   height: 140px;
-  border-radius: 50%;
+  transition: filter 0.3s ease-in-out;
+  filter: ${({
+    // @ts-ignore
+    isHovered,
+  }) => (isHovered ? "brightness(0.5)" : "none")};
 `;
 
 const InfoWrapper = styled.div`
@@ -81,6 +91,25 @@ const Friends = styled.p`
   font-weight: 600;
 `;
 
+const CameraIcon = styled(CameraAltIcon)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 30px;
+  color: white;
+  opacity: ${({
+    // @ts-ignore
+    isHovered,
+  }) => (isHovered ? 1 : 0)};
+  transition: opacity 0.3s ease-in-out;
+  z-index: 2;
+`;
+
+const FileInput = styled.input`
+  display: none;
+`;
+
 const ProfileHeader = () => {
   const { currentUser } = useUserStore();
   const { userId } = useParams();
@@ -88,13 +117,45 @@ const ProfileHeader = () => {
 
   const { open, handleClose, handleOpen } = useModal();
 
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleImageUpload = async (event) => {
+    const file = event.target.files[0];
+    await uploadAvatar(file, currentUser.id);
+    window.location.reload();
+  };
+
   return (
     <HeaderWrapper>
       <WallImage>
         <Wallpaper src="/background.png" />
         <InfoWrapper>
-          <AvatarWrapper>
-            <Avatar src={currentUser.avatar} />
+          <AvatarWrapper
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
+            <label
+              style={{ cursor: "pointer" }}
+              htmlFor="avatar-upload"
+              // @ts-ignore
+              isHovered={isHovered}
+            >
+              <StyledAvatar
+                // @ts-ignore
+                isHovered={isHovered}
+                src={currentUser.avatar}
+              />
+              <CameraIcon
+                // @ts-ignore
+                isHovered={isHovered}
+              />
+            </label>
+            <FileInput
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              id="avatar-upload"
+            />
           </AvatarWrapper>
           <TextWrapper>
             <Name>{currentUser.username}</Name>

@@ -13,7 +13,7 @@ import {
   TextField,
 } from "@mui/material";
 import { Add, Delete } from "@mui/icons-material";
-import useModal from "src/shared/hooks/useModal";
+import useModal from "src/shared/hooks/util/useModal";
 import styled from "styled-components";
 
 import { useUserStore } from "src/store/userStore";

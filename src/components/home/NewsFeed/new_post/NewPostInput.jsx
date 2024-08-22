@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { useUserStore } from "src/store/userStore";
 import Divider from "@mui/material/Divider";
 
-import useModal from "src/shared/hooks/useModal";
+import useModal from "src/shared/hooks/util/useModal";
 import NewModal from "./NewModal";
 
 const ChatInput = styled.div`

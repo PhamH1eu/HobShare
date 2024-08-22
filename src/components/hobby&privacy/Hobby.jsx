@@ -9,7 +9,7 @@ import Modal from "@mui/material/Modal";
 import { useUserStore } from "src/store/userStore";
 import { UserService } from "src/services/DatabaseService";
 import { geohashForLocation } from "geofire-common";
-import useModal from "src/shared/hooks/useModal";
+import useModal from "src/shared/hooks/util/useModal";
 
 import "./index.css";
 

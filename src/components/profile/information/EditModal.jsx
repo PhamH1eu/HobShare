@@ -5,7 +5,9 @@ import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import TextField from "@mui/material/TextField";
 
-import useEditableText from "src/shared/hooks/useEditableText";
+import useEditableText from "src/shared/hooks/util/useEditableText";
+import { UserService } from "src/services/DatabaseService";
+import { useUserStore } from "src/store/userStore";
 
 const Container = styled.div`
   padding: 20px;
@@ -53,6 +55,8 @@ const ButtonContainer = styled.div`
 `;
 
 const ProfileEdit = ({ handleClose }) => {
+  const { currentUser, fetchUserInfo } = useUserStore();
+
   const {
     value: bioText,
     isEditing: isEditingBio,
@@ -61,7 +65,10 @@ const ProfileEdit = ({ handleClose }) => {
     handleEdit: handleBioEdit,
     handleChange: handleBioChange,
     handleSave: handleBioSave,
-  } = useEditableText("blank");
+  } = useEditableText(
+    currentUser.bio?.biography ?? "",
+    currentUser.bio?.showBio ?? false
+  );
 
   const {
     value: workText,
@@ -71,7 +78,10 @@ const ProfileEdit = ({ handleClose }) => {
     handleEdit: handleWorkEdit,
     handleChange: handleWorkChange,
     handleSave: handleWorkSave,
-  } = useEditableText("Làm việc tại CMC Global");
+  } = useEditableText(
+    currentUser.bio?.work ?? "",
+    currentUser.bio?.showWork ?? false
+  );
 
   const {
     value: educationText,
@@ -81,7 +91,10 @@ const ProfileEdit = ({ handleClose }) => {
     handleEdit: handleEducationEdit,
     handleChange: handleEducationChange,
     handleSave: handleEducationSave,
-  } = useEditableText("Đại học Công Nghệ - ĐHQGHN");
+  } = useEditableText(
+    currentUser.bio?.education ?? "",
+    currentUser.bio?.showEducation ?? false
+  );
 
   const {
     value: currentCity,
@@ -91,7 +104,10 @@ const ProfileEdit = ({ handleClose }) => {
     handleEdit: handleCurrentCityEdit,
     handleChange: handleCurrentCityChange,
     handleSave: handleCurrentCitySave,
-  } = useEditableText("Cầu Giấy, Hà Nội");
+  } = useEditableText(
+    currentUser.bio?.currentCity ?? "",
+    currentUser.bio?.showCurrentCity ?? false
+  );
 
   const {
     value: homeTown,
@@ -101,7 +117,29 @@ const ProfileEdit = ({ handleClose }) => {
     handleEdit: handleHomeTownEdit,
     handleChange: handleHomeTownChange,
     handleSave: handleHomeTownSave,
-  } = useEditableText("Lạc Thuỷ, Hoà Bình");
+  } = useEditableText(
+    currentUser.bio?.homeTown ?? "",
+    currentUser.bio?.showHomeTown ?? false
+  );
+
+  const handleSave = async () => {
+    await UserService.update(currentUser.id, {
+      bio: {
+        biography: bioText,
+        showBio: showBio,
+        work: workText,
+        showWork: showWork,
+        education: educationText,
+        showEducation: showEducation,
+        currentCity: currentCity,
+        showCurrentCity: showCurrentCity,
+        homeTown: homeTown,
+        showHomeTown: showHomeTown,
+      },
+    });
+    handleClose();
+    fetchUserInfo(currentUser.id);
+  };
 
   return (
     <Container>
@@ -233,7 +271,7 @@ const ProfileEdit = ({ handleClose }) => {
         >
           Hủy
         </Button>
-        <Button variant="contained" color="primary" onClick={handleClose}>
+        <Button variant="contained" color="primary" onClick={handleSave}>
           Lưu
         </Button>
       </ButtonContainer>

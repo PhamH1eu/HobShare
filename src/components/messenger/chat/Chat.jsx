@@ -43,13 +43,8 @@ export const Chat = () => {
   const [loading, setLoading] = useState(false);
 
   const { currentUser } = useUserStore();
-  const {
-    chatId,
-    user,
-    isCurrentUserBlocked,
-    isReceiverBlocked,
-    message,
-  } = useChatStore();
+  const { chatId, user, isCurrentUserBlocked, isReceiverBlocked, message } =
+    useChatStore();
   const [messages, setMessages] = useState(message);
   useEffect(() => {
     setMessages(message);
@@ -134,7 +129,7 @@ export const Chat = () => {
   return (
     <div className="chat">
       <div className="top">
-        <StyledLink to="/profile/3">
+        <StyledLink to={"/profile/" + user.id}>
           <div className="user">
             <img src={user?.avatar || "./avatar.png"} alt="" />
             <div className="texts">

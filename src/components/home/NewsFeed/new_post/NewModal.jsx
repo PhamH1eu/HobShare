@@ -156,7 +156,6 @@ const NewModal = ({ open, onClose }) => {
     if (!text && !selectedFile) {
       return;
     }
-    console.log(text, selectedFile);
   };
 
   const [isTagging, setIsTagging] = useState(false);

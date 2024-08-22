@@ -17,6 +17,8 @@ import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
+import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
+import CircularLoading from "src/shared/components/Loading";
 
 const Wrapper = styled.div`
   display: flex;
@@ -92,11 +94,21 @@ const Profile = () => {
   const { currentUser } = useUserStore();
   const isViewingOwnProfile = userId === currentUser.id;
 
+  const { isLoading } = useUserInfo(userId);
+
   const [value, setValue] = useState("1");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  if (isLoading) {
+    return (
+      <Wrapper>
+        <CircularLoading />
+      </Wrapper>
+    );
+  }
 
   return (
     <TabContext value={value}>

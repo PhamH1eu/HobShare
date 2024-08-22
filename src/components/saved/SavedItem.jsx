@@ -11,7 +11,7 @@ import { styled } from "@mui/system";
 import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
 import { Link } from "react-router-dom";
 
-import useModal from "src/shared/hooks/useModal";
+import useModal from "src/shared/hooks/util/useModal";
 import SaveToCollectionModal from "./modal/SaveItemToCollection";
 
 const ItemCard = styled(Card)`

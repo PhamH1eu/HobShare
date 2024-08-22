@@ -216,7 +216,7 @@ const ChatDialog = ({ chat }) => {
     <Wrapper>
       <Header>
         <Avatar src={chat.user.avatar} />
-        <StyledLink to="/profile/5">
+        <StyledLink to={"/profile/" + chat.user.id}>
           <Box sx={{ marginLeft: 1, cursor: "pointer", paddingRight: "5px" }}>
             <Box fontWeight="bold">{chat.user.username}</Box>
             <Box fontSize="small" color="gray">

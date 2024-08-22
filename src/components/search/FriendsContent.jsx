@@ -1,7 +1,7 @@
 import { Box, Typography, Button, Avatar } from "@mui/material";
 import styled from "styled-components";
 
-import useModal from "src/shared/hooks/useModal";
+import useModal from "src/shared/hooks/util/useModal";
 import AddRequestModal from "../profile/profileHeader/AddRequestModal";
 
 const Container = styled(Box)`

@@ -15,7 +15,7 @@ import Avatar from "@mui/material/Avatar";
 
 import { ref, set, serverTimestamp } from "firebase/database";
 import { auth, database } from "src/lib/firebase";
-import useDialog from "src/shared/hooks/useDialog";
+import useDialog from "src/shared/hooks/util/useDialog";
 import { useChatStore } from "src/store/chatStore";
 import { useUserStore } from "src/store/userStore";
 

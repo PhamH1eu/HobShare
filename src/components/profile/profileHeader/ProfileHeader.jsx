@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
 import { useUserStore } from "src/store/userStore";
-import useModal from "src/shared/hooks/useModal";
+import useModal from "src/shared/hooks/util/useModal";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import AddRequestModal from "./AddRequestModal";
 
@@ -10,6 +10,8 @@ import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import Avatar from "@mui/material/Avatar";
 import { useState } from "react";
 import uploadAvatar from "src/shared/helper/uploadAvatar";
+
+import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
 
 const HeaderWrapper = styled.div`
   width: 100%;
@@ -114,6 +116,7 @@ const ProfileHeader = () => {
   const { currentUser } = useUserStore();
   const { userId } = useParams();
   const isViewingOwnProfile = userId === currentUser.id;
+  const { data: user } = useUserInfo(userId);
 
   const { open, handleClose, handleOpen } = useModal();
 
@@ -130,34 +133,40 @@ const ProfileHeader = () => {
       <WallImage>
         <Wallpaper src="/background.png" />
         <InfoWrapper>
-          <AvatarWrapper
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-          >
-            <label
-              style={{ cursor: "pointer" }}
-              htmlFor="avatar-upload"
-              // @ts-ignore
+          {isViewingOwnProfile ? (
+            <AvatarWrapper
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
             >
-              <StyledAvatar
+              <label
+                style={{ cursor: "pointer" }}
+                htmlFor="avatar-upload"
                 // @ts-ignore
-                isHovered={isHovered}
-                src={currentUser.avatar}
+              >
+                <StyledAvatar
+                  // @ts-ignore
+                  isHovered={isHovered}
+                  src={currentUser.avatar}
+                />
+                <CameraIcon
+                  // @ts-ignore
+                  isHovered={isHovered}
+                />
+              </label>
+              <FileInput
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                id="avatar-upload"
               />
-              <CameraIcon
-                // @ts-ignore
-                isHovered={isHovered}
-              />
-            </label>
-            <FileInput
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              id="avatar-upload"
-            />
-          </AvatarWrapper>
+            </AvatarWrapper>
+          ) : (
+            <AvatarWrapper>
+              <StyledAvatar src={user.avatar} />
+            </AvatarWrapper>
+          )}
           <TextWrapper>
-            <Name>{currentUser.username}</Name>
+            <Name>{user.username}</Name>
             <Friends>329 người bạn</Friends>
           </TextWrapper>
         </InfoWrapper>

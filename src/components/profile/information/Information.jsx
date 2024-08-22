@@ -2,14 +2,17 @@ import styled from "styled-components";
 import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
 import SchoolIcon from "@mui/icons-material/School";
 import WatchLaterIcon from "@mui/icons-material/WatchLater";
+import HouseIcon from "@mui/icons-material/House";
+import PlaceIcon from "@mui/icons-material/Place";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 
-import useModal from "src/shared/hooks/useModal";
-import ProfileEdit from "../EditModal";
+import useModal from "src/shared/hooks/util/useModal";
+import ProfileEdit from "./EditModal";
 
 import { useUserStore } from "src/store/userStore";
 import { useParams } from "react-router-dom";
+import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
 
 const style = {
   position: "absolute",
@@ -33,6 +36,7 @@ const BiographyWrapper = styled.div`
 `;
 
 const Section = styled.div`
+  margin-top: 5px;
   margin-bottom: 20px;
   gap: 20px;
 `;
@@ -75,36 +79,72 @@ const EditButton = styled.button`
 `;
 
 const Information = () => {
+  const { open, handleOpen, handleClose } = useModal();
   const { currentUser } = useUserStore();
   const { userId } = useParams();
   const isViewingOwnProfile = userId === currentUser.id;
-  const { open, handleOpen, handleClose } = useModal();
+
+  const { data: userProfile } = useUserInfo(userId);
 
   return (
     <BiographyWrapper>
       <h2>Giới thiệu</h2>
       <Section>
-        <CenterItem>
-          <Title>blank</Title>
-        </CenterItem>
+        {userProfile.bio?.showBio && (
+          <CenterItem>
+            <Title>{userProfile.bio.biography}</Title>
+          </CenterItem>
+        )}
+        {userProfile.bio?.showWork && (
+          <Item>
+            <BusinessCenterIcon
+              // @ts-ignore
+              color="greyIcon"
+            />
+            <Text>
+              Làm việc tại <strong>{userProfile.bio.work}</strong>
+            </Text>
+          </Item>
+        )}
+        {userProfile.bio?.showEducation && (
+          <Item>
+            <SchoolIcon
+              // @ts-ignore
+              color="greyIcon"
+            />
+            <Text>
+              Học tại <strong>{userProfile.bio.education}</strong>
+            </Text>
+          </Item>
+        )}
+        {userProfile.bio?.showCurrentCity && (
+          <Item>
+            <HouseIcon
+              // @ts-ignore
+              color="greyIcon"
+            />
+            <Text>
+              Sống tại <strong>{userProfile.bio.currentCity}</strong>
+            </Text>
+          </Item>
+        )}
+        {userProfile.bio?.showHomeTown && (
+          <Item>
+            <PlaceIcon
+              // @ts-ignore
+              color="greyIcon"
+            />
+            <Text>
+              Đến từ <strong>{userProfile.bio.homeTown}</strong>
+            </Text>
+          </Item>
+        )}
         <Item>
-          <BusinessCenterIcon color="greyIcon" />
-          <Text>
-            Làm việc tại <strong>CMC Global</strong>
-          </Text>
-        </Item>
-        <Item>
-          <SchoolIcon color="greyIcon" />
-          <Text>
-            Học tại{" "}
-            <strong>
-              Khoa Công nghệ Thông tin - Trường ĐH Công Nghệ - VNU
-            </strong>
-          </Text>
-        </Item>
-        <Item>
-          <WatchLaterIcon color="greyIcon" />
-          <Text>Tham gia vào Tháng 8 năm 2016</Text>
+          <WatchLaterIcon
+            // @ts-ignore
+            color="greyIcon"
+          />
+          <Text>Tham gia vào {formatDate(userProfile.createdAt)}</Text>
         </Item>
         {isViewingOwnProfile && (
           <EditButton onClick={handleOpen}>Chỉnh sửa chi tiết</EditButton>
@@ -123,5 +163,14 @@ const Information = () => {
     </BiographyWrapper>
   );
 };
+
+function formatDate(date) {
+  const formatDate = new Date(date.seconds * 1000 + date.nanoseconds / 1000000);
+  return formatDate.toLocaleDateString("vi-vn", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
 
 export default Information;

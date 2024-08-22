@@ -1,9 +1,9 @@
 import { useState } from "react";
 
-const useEditableText = (initialValue) => {
+const useEditableText = (initialValue, initialFlag) => {
   const [value, setValue] = useState(initialValue);
   const [isEditing, setIsEditing] = useState(false);
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(initialFlag);
 
   const handleToggle = () => {
     setShow(!show);

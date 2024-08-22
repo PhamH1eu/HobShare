@@ -10,6 +10,7 @@ import { useQueryChatlist } from "src/shared/hooks/listen/useChatList";
 import SendMessage from "src/services/SendMessage";
 import UpdateChat from "src/services/UpdateChat";
 import { useUserStore } from "src/store/userStore";
+import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
 
 const style = {
   position: "absolute",
@@ -101,8 +102,9 @@ const SendButton = styled.div`
 `;
 
 const Share = ({ handleClose }) => {
-  const { currentUser } = useUserStore();
-  const { isLoading, data: chats } = useQueryChatlist(currentUser);
+  const { currentUserId } = useUserStore();
+  const { isLoading, data: chats } = useQueryChatlist(currentUserId);
+  const { data: currentUser } = useUserInfo(currentUserId);
   const [search, setSearchinput] = useState("");
 
   const handleSearch = (e) => {

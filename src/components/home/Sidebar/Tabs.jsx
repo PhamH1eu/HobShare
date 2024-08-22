@@ -12,6 +12,7 @@ import WatchLaterOutlinedIcon from "@mui/icons-material/WatchLaterOutlined";
 import PinDropIcon from "@mui/icons-material/PinDrop";
 import { useUserStore } from "src/store/userStore";
 import "./tab.css";
+import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
 
 const SidebarWrapper = styled.div`
   width: 280px;
@@ -69,7 +70,8 @@ const MenuItem = styled.div`
 `;
 
 const Tabs = () => {
-  const { currentUser } = useUserStore();
+  const { currentUserId } = useUserStore();
+  const { data: currentUser } = useUserInfo(currentUserId);
   return (
     <SidebarWrapper>
       <StyledLink to={`/profile/${currentUser.id}`}>

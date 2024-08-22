@@ -53,7 +53,7 @@ const transition = transitions.scaleDown;
 
 const HobbyChoosingPage = () => {
   const setSignedUp = useUserStore((state) => state.setSignedUp);
-  const currentUser = useUserStore((state) => state.currentUser);
+  const currentUserId = useUserStore((state) => state.currentUserId);
 
   const [liked, setLiked] = useState(new Set());
   const addHobby = (label) => {
@@ -87,7 +87,7 @@ const HobbyChoosingPage = () => {
   };
 
   const writeHobby = () => {
-    UserService.update(currentUser.id, {
+    UserService.update(currentUserId, {
       liked: [...liked],
       location: {
         ...location,

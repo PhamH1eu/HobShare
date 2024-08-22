@@ -9,6 +9,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import CircularLoading from "src/shared/components/Loading";
 import "./detail.css";
 import useListenOnline from "src/shared/hooks/listen/useListenOnline";
+import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
 
 export const Detail = () => {
   const {
@@ -20,7 +21,8 @@ export const Detail = () => {
   } = useChatStore();
   const { online, timeOff } = useListenOnline(user.id);
 
-  const { currentUser } = useUserStore();
+  const { currentUserId } = useUserStore();
+  const { data: currentUser } = useUserInfo(currentUserId);
   const isShow = useInfoShowStore((state) => state.isShow);
 
   const handleBlock = async () => {

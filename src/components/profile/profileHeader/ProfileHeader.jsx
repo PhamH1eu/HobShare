@@ -113,9 +113,9 @@ const FileInput = styled.input`
 `;
 
 const ProfileHeader = () => {
-  const { currentUser } = useUserStore();
+  const { currentUserId } = useUserStore();
   const { userId } = useParams();
-  const isViewingOwnProfile = userId === currentUser.id;
+  const isViewingOwnProfile = userId === currentUserId;
   const { data: user } = useUserInfo(userId);
 
   const { open, handleClose, handleOpen } = useModal();
@@ -124,7 +124,7 @@ const ProfileHeader = () => {
 
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
-    await uploadAvatar(file, currentUser.id);
+    await uploadAvatar(file, user.id);
     window.location.reload();
   };
 
@@ -146,7 +146,7 @@ const ProfileHeader = () => {
                 <StyledAvatar
                   // @ts-ignore
                   isHovered={isHovered}
-                  src={currentUser.avatar}
+                  src={user.avatar}
                 />
                 <CameraIcon
                   // @ts-ignore

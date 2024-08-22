@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { useUserStore } from "src/store/userStore";
+import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
 
 const CenteredBox = styled(Box)({
   display: "flex",
@@ -40,7 +41,8 @@ const StyledButton = styled(Button)({
 const MAX_CHAR_COUNT = 100;
 
 const AddRequestModal = ({ open, handleClose }) => {
-  const { currentUser } = useUserStore();
+  const { currentUserId } = useUserStore();
+  const { data: currentUser } = useUserInfo(currentUserId);
   const [description, setDescription] = useState(
     `Xin chào, mình là ${currentUser.username} đây, kết bạn với mình nhé!`
   );

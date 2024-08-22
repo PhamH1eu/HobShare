@@ -22,6 +22,7 @@ import { useUserStore } from "src/store/userStore";
 import NotificationDialog from "./navbar_dialog/NotificationDialog";
 import MessengerDialog from "./navbar_dialog/MessengerDialog";
 import { useState } from "react";
+import useUserInfo from "../hooks/fetch/useUserInfo";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -71,7 +72,8 @@ const StyledMenu = styled(Menu)(({ theme }) => ({
 }));
 
 const NavBar = () => {
-  const { currentUser } = useUserStore();
+  const { currentUserId } = useUserStore();
+  const { data: currentUser } = useUserInfo(currentUserId);
   let location = useLocation();
   let checkMess = Boolean(location.pathname === "/messenger");
 

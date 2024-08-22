@@ -2,9 +2,12 @@ import { CommentSection } from "@pmhieu/react-comments-section";
 import { useUserStore } from "src/store/userStore";
 import "@pmhieu/react-comments-section/dist/index.css";
 import "./comment.css";
+import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
 
 const Comments = () => {
-  const { currentUser } = useUserStore();
+  const { currentUserId } = useUserStore();
+  const { data: currentUser } = useUserInfo(currentUserId);
+
   const data = [
     {
       userId: "userId",

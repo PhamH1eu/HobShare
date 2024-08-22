@@ -34,7 +34,7 @@ const ChatListFooter = styled(Typography)`
 
 const MessengerDialog = ({ handleClose }) => {
   const { chats } = useChatList();
-  const { currentUser } = useUserStore();
+  const { currentUserId } = useUserStore();
   const addChat = useChatDialogStore((state) => state.addChat);
 
   const handleSelect = async (chat) => {
@@ -54,7 +54,7 @@ const MessengerDialog = ({ handleClose }) => {
     userChats[chatIndex].isSeen = true;
 
     //update with seen status
-    ChatService.update(currentUser.id, {
+    ChatService.update(currentUserId, {
       chats: userChats,
     });
     addChat(chat);

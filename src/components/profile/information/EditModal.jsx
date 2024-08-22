@@ -8,6 +8,8 @@ import TextField from "@mui/material/TextField";
 import useEditableText from "src/shared/hooks/util/useEditableText";
 import { UserService } from "src/services/DatabaseService";
 import { useUserStore } from "src/store/userStore";
+import { useQueryClient } from "react-query";
+import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
 
 const Container = styled.div`
   padding: 20px;
@@ -55,7 +57,9 @@ const ButtonContainer = styled.div`
 `;
 
 const ProfileEdit = ({ handleClose }) => {
-  const { currentUser, fetchUserInfo } = useUserStore();
+  const queryClient = useQueryClient();
+  const { currentUserId } = useUserStore();
+  const { data: currentUser } = useUserInfo(currentUserId);
 
   const {
     value: bioText,
@@ -138,7 +142,7 @@ const ProfileEdit = ({ handleClose }) => {
       },
     });
     handleClose();
-    fetchUserInfo(currentUser.id);
+    queryClient.invalidateQueries(["user", currentUser.id]);
   };
 
   return (

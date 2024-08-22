@@ -6,6 +6,7 @@ import Divider from "@mui/material/Divider";
 
 import useModal from "src/shared/hooks/util/useModal";
 import NewModal from "./NewModal";
+import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
 
 const ChatInput = styled.div`
   display: flex;
@@ -79,7 +80,8 @@ const IconButton = styled.button`
 `;
 
 const NewPostInput = () => {
-  const { currentUser } = useUserStore();
+  const { currentUserId } = useUserStore();
+  const { data: currentUser } = useUserInfo(currentUserId);
   const { open, handleOpen, handleClose } = useModal();
 
   return (

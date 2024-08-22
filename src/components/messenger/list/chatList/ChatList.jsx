@@ -12,7 +12,7 @@ import "./chatList.css";
 export const ChatList = () => {
   const [addMode, setAddMode] = useState(false);
   const { chats } = useChatList();
-  const { currentUser } = useUserStore();
+  const { currentUserId } = useUserStore();
   const changeChat = useChatStore((state) => state.changeChat);
   const chatId = useChatStore((state) => state.chatId);
 
@@ -42,7 +42,7 @@ export const ChatList = () => {
     userChats[chatIndex].isSeen = true;
 
     //update with seen status
-    ChatService.update(currentUser.id, {
+    ChatService.update(currentUserId, {
       chats: userChats,
     });
     //pop up chat in screen

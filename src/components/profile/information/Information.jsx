@@ -80,9 +80,9 @@ const EditButton = styled.button`
 
 const Information = () => {
   const { open, handleOpen, handleClose } = useModal();
-  const { currentUser } = useUserStore();
+  const { currentUserId } = useUserStore();
   const { userId } = useParams();
-  const isViewingOwnProfile = userId === currentUser.id;
+  const isViewingOwnProfile = userId === currentUserId;
 
   const { data: userProfile } = useUserInfo(userId);
 

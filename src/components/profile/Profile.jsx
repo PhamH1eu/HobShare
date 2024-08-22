@@ -91,8 +91,8 @@ const posts = [
 
 const Profile = () => {
   const { userId } = useParams();
-  const { currentUser } = useUserStore();
-  const isViewingOwnProfile = userId === currentUser.id;
+  const { currentUserId } = useUserStore();
+  const isViewingOwnProfile = userId === currentUserId;
 
   const { isLoading } = useUserInfo(userId);
 

@@ -9,9 +9,13 @@ import CircularLoading from "src/shared/components/Loading";
 
 import useStatus from "./lib/status";
 
+import useUserInfo from "./shared/hooks/fetch/useUserInfo";
+
 const App = () => {
   useStatus();
-  const { currentUser, isLoading, isSignedUp } = useUserStore();
+  const { currentUserId, isSignedUp } = useUserStore();
+
+  const { data: currentUser, isLoading } = useUserInfo(currentUserId);
 
   useListenAuth();
 

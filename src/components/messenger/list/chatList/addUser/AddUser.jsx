@@ -6,10 +6,12 @@ import AddUserToChat from "src/services/AddUserToChat";
 import useChatList from "src/shared/hooks/listen/useChatList";
 import { ChatService } from "src/services/DatabaseService";
 import { useChatStore } from "src/store/chatStore";
+import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
 
 const AddUser = ({ setAddMode }) => {
   const [targetUser, setTargetUser] = useState(null);
-  const currentUser = useUserStore((state) => state.currentUser);
+  const currentUserId = useUserStore((state) => state.currentUserId);
+  const { data: currentUser } = useUserInfo(currentUserId);
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -41,7 +43,7 @@ const AddUser = ({ setAddMode }) => {
     userChats[chatIndex].isSeen = true;
 
     //update with seen status
-    ChatService.update(currentUser.id, {
+    ChatService.update(currentUserId, {
       chats: userChats,
     });
     //pop up chat in screen

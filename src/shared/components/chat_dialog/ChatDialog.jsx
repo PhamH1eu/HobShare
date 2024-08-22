@@ -26,6 +26,7 @@ import SendMessage from "src/services/SendMessage";
 import UpdateChat from "src/services/UpdateChat";
 import EmojiPicker from "emoji-picker-react";
 import { useInView } from "react-intersection-observer";
+import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
 
 const Wrapper = styled.div`
   width: 320px;
@@ -177,11 +178,12 @@ const ChatDialog = ({ chat }) => {
     }
   };
 
-  const { currentUser } = useUserStore();
+  const { currentUserId } = useUserStore();
+  const { data: currentUser } = useUserInfo(currentUserId);
   const { chatId, user } = chat;
 
   const isBlocking =
-    user.blocked.includes(currentUser.id) ||
+    user.blocked.includes(currentUserId) ||
     currentUser.blocked.includes(user.id);
 
   const [messages, setMessages] = useState([]);

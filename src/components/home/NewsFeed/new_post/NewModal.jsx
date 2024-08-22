@@ -18,6 +18,7 @@ import TagModal from "./TagModal";
 import { useUserStore } from "src/store/userStore";
 import { useRef, useState } from "react";
 import useFriendStore from "src/store/useFriendStore";
+import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
 
 const ModalContainer = styled(Box)`
   position: absolute;
@@ -138,7 +139,8 @@ const FriendWrapper = styled(Box)`
 `;
 
 const NewModal = ({ open, onClose }) => {
-  const { currentUser } = useUserStore();
+  const { currentUserId } = useUserStore();
+  const { data: currentUser } = useUserInfo(currentUserId);
   const { selectedFriends } = useFriendStore();
   const textRef = useRef(null);
 

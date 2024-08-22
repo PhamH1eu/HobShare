@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { useUserStore } from "./userStore";
+import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
 
 export const useChatStore = create((set) => ({
   chatId: null,
@@ -8,7 +9,8 @@ export const useChatStore = create((set) => ({
   isCurrentUserBlocked: false,
   isReceiverBlocked: false,
   changeChat: (chatId, user) => {
-    const currentUser = useUserStore.getState().currentUser;
+    const currentUserId = useUserStore.getState().currentUserId;
+    const { data: currentUser } = useUserInfo(currentUserId);
 
     // CHECK IF CURRENT USER IS BLOCKED
     if (user.blocked.includes(currentUser.id)) {

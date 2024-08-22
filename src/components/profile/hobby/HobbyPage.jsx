@@ -75,9 +75,9 @@ const HobbyCaption = styled.span`
 
 // Main Component
 const HobbiesPage = () => {
-  const { currentUser } = useUserStore();
+  const { currentUserId } = useUserStore();
   const { userId } = useParams();
-  const isViewingOwnProfile = userId === currentUser.id;
+  const isViewingOwnProfile = userId === currentUserId;
 
   const [hobbies, setHobbies] = useState([
     { id: 1, image: "/photos/photo01.jpg", caption: "Photography" },

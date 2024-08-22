@@ -9,11 +9,11 @@ const useChatList = () => {
   const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const { currentUser } = useUserStore();
+  const { currentUserId } = useUserStore();
 
   useEffect(() => {
     const unsub = onSnapshot(
-      doc(db, "userchats", currentUser.id),
+      doc(db, "userchats", currentUserId),
       async (res) => {
         setLoading(true);
         //chats of current user
@@ -38,13 +38,13 @@ const useChatList = () => {
     return () => {
       unsub();
     };
-  }, [currentUser]);
+  }, [currentUserId]);
 
   return { chats, loading };
 };
 
 async function getData(currentUser) {
-  const q = doc(db, "userchats", currentUser.id);
+  const q = doc(db, "userchats", currentUser);
   const querySnapshot = await getDoc(q);
   const items = querySnapshot.data().chats;
   //get user info of each chat, assign last message info to

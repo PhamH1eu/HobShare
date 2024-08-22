@@ -5,14 +5,14 @@ import { auth } from "src/lib/firebase";
 import { useUserStore } from "src/store/userStore";
 
 export const useListenAuth = () => {
-  const { fetchUserInfo } = useUserStore();
+  const { setUserId } = useUserStore();
   useEffect(() => {
     const unSub = onAuthStateChanged(auth, (user) => {
-      fetchUserInfo(user?.uid);
+      setUserId(user?.uid);
     });
 
     return () => {
       unSub();
     };
-  }, [fetchUserInfo]);
+  }, [setUserId]);
 };

@@ -22,6 +22,7 @@ import UpdateChat from "src/services/UpdateChat";
 import SendMessage from "src/services/SendMessage";
 import CircularLoading from "src/shared/components/Loading";
 import "./chat.css";
+import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
 
 export const Chat = () => {
   //local states
@@ -42,7 +43,8 @@ export const Chat = () => {
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
 
-  const { currentUser } = useUserStore();
+  const { currentUserId } = useUserStore();
+  const { data: currentUser } = useUserInfo(currentUserId);
   const { chatId, user, isCurrentUserBlocked, isReceiverBlocked, message } =
     useChatStore();
   const [messages, setMessages] = useState(message);

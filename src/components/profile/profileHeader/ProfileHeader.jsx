@@ -138,7 +138,6 @@ const ProfileHeader = () => {
               style={{ cursor: "pointer" }}
               htmlFor="avatar-upload"
               // @ts-ignore
-              isHovered={isHovered}
             >
               <StyledAvatar
                 // @ts-ignore

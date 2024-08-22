@@ -7,30 +7,38 @@ const Comments = () => {
   const { currentUser } = useUserStore();
   const data = [
     {
-      userId: "02b",
-      comId: "3",
+      userId: "userId",
+      comId: "1",
       fullName: "Lily",
-      userProfile: "https://www.linkedin.com/in/riya-negi-8879631a9/",
-      text: "I think you have a point🤔",
+      userProfile: "/profile/userId",
+      text: "I dont🤔",
       avatarUrl: "https://ui-avatars.com/api/name=Lily&background=random",
       replies: [
         {
           userId: "02c",
-          comId: "2",
-          fullName: "Lily",
+          comId: "4",
+          fullName: "Laa",
           userProfile: "https://www.linkedin.com/in/riya-negi-8879631a9/",
-          text: "I think you have a point🤔",
+          text: "I think you have a 🤔",
           avatarUrl: "https://ui-avatars.com/api/name=Lily&background=random",
-          replies: [],
         },
       ],
     },
     {
       userId: "02d",
-      comId: "4",
+      comId: "2",
       fullName: "Lily",
       userProfile: "https://www.linkedin.com/in/riya-negi-8879631a9/",
       text: "I think you have a point🤔",
+      avatarUrl: "https://ui-avatars.com/api/name=Lily&background=random",
+      replies: [],
+    },
+    {
+      userId: "02d",
+      comId: "3",
+      fullName: "Lily",
+      userProfile: "https://www.linkedin.com/in/riya-negi-8879631a9/",
+      text: "🤔",
       avatarUrl: "https://ui-avatars.com/api/name=Lily&background=random",
       replies: [],
     },
@@ -46,6 +54,7 @@ const Comments = () => {
       }}
       commentData={data}
       onSubmitAction={(data) => console.log("check submit, ", data)}
+      onReplyAction={(data) => console.log("check reply, ", data)}
       currentData={(data) => {
         console.log("curent data", data);
       }}

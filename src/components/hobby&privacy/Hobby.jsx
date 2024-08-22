@@ -91,11 +91,11 @@ const HobbyChoosingPage = () => {
       liked: [...liked],
       location: {
         ...location,
+        denyExposingLocation: deny,
         geohash: deny
           ? null
           : geohashForLocation([location.latitude, location.longitude]),
       },
-      denyExposingLocation: deny,
     });
     setSignedUp(false);
   };

@@ -86,7 +86,7 @@ const Tabs = () => {
       </StyledLink>
       <StyledLink to="/nearby">
         <MenuItem
-          className={`${currentUser.denyExposingLocation ? "disabled" : ""}`}
+          className={`${currentUser.location.denyExposingLocation ? "disabled" : ""}`}
           onClick={() => console.log("Location")}
         >
           <PinDropIcon className="location" />

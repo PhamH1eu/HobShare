@@ -7,6 +7,8 @@ import {
   updateDoc,
   collection,
   serverTimestamp,
+  arrayUnion,
+  arrayRemove,
 } from "firebase/firestore";
 
 class DatabaseService {
@@ -41,8 +43,34 @@ class DatabaseService {
     const docRef = doc(db, this.collection, id);
     return await updateDoc(docRef, { ...values, updatedAt: serverTimestamp() });
   };
+
+  // add a new value to an array field
+  union = async (id, field, values) => {
+    const docRef = doc(db, this.collection, id);
+    return await updateDoc(docRef, {
+      [field]: arrayUnion(values),
+      updatedAt: serverTimestamp(),
+    });
+  };
+
+  // remove a value from an array field
+  removeFromArray = async (id, field, values) => {
+    const docRef = doc(db, this.collection, id);
+    return await updateDoc(docRef, {
+      [field]: arrayRemove(values),
+      updatedAt: serverTimestamp(),
+    });
+  };
+
+  // delete a document by setting the deletedAt field
+  delete = async (id) => {
+    const docRef = doc(db, this.collection, id);
+    return await updateDoc(docRef, { deletedAt: serverTimestamp() });
+  };
 }
 
 export const UserService = new DatabaseService("users");
 
 export const ChatService = new DatabaseService("userchats");
+
+export const ActivitiesService = new DatabaseService("activities");

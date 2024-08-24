@@ -1,6 +1,11 @@
 import { useState } from "react";
 import styled from "styled-components";
 import { Button } from "@mui/material";
+import { UserService } from "src/services/DatabaseService";
+import { useUserStore } from "src/store/userStore";
+import { geohashForLocation } from "geofire-common";
+import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
+import { useQueryClient } from "react-query";
 
 const Container = styled.div`
   width: 50vw;
@@ -13,20 +18,29 @@ const Container = styled.div`
 `;
 
 const Privacy = () => {
+  const queryClient = useQueryClient();
+  const { currentUserId } = useUserStore();
+  const { data: currentUser } = useUserInfo(currentUserId);
+
   const [deny, setDeny] = useState(false);
-  const [location, setLocation] = useState({ latitude: null, longitude: null });
-  const getLocation = () => {
+  const [location, setLocation] = useState({
+    latitude: currentUser.location.latitude,
+    longitude: currentUser.location.longitude,
+  });
+
+  const getLocation = async () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
+          console.log(position);
           setLocation({
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
           });
           setDeny(false);
         },
-        // eslint-disable-next-line no-unused-vars
         (_error) => {
+          console.log(_error);
           setDeny(true);
         }
       );
@@ -35,9 +49,18 @@ const Privacy = () => {
     }
   };
 
-  const handleDeny = () => {
-    setDeny(true);
-  }
+  const save = async () => {
+    await UserService.update(currentUserId, {
+      location: {
+        ...location,
+        denyExposingLocation: deny,
+        geohash: deny
+          ? null
+          : geohashForLocation([location.latitude, location.longitude]),
+      },
+    });
+    queryClient.invalidateQueries(["user", currentUserId]);
+  };
 
   return (
     <Container>
@@ -49,9 +72,17 @@ const Privacy = () => {
           sách bảo mật của chúng tôi.
           <br />1 vài tính năng có thể không hiện hữu nếu bạn bỏ qua bước này.
         </p>
+        <p style={{ fontWeight: "600" }}>
+          {currentUser.location.denyExposingLocation
+            ? "Bạn đã từ chối cung cấp vị trí"
+            : `Vị trí hiện tại của bạn: ${location.latitude} - ${location.longitude}`}
+        </p>
         <div className="action">
           <Button variant="contained" className="button" onClick={getLocation}>
-            Đồng ý
+            Cập nhật vị trí
+          </Button>
+          <Button variant="contained" className="button" onClick={save}>
+            Lưu
           </Button>
         </div>
         <span>

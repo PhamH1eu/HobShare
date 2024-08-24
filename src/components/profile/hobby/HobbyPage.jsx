@@ -1,3 +1,4 @@
+// @ts-ignore
 import { useState } from "react";
 import {
   Grid,
@@ -5,19 +6,21 @@ import {
   CardMedia,
   Typography,
   IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Button,
-  TextField,
 } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import { Add, Delete } from "@mui/icons-material";
-import useModal from "src/shared/hooks/util/useModal";
 import styled from "styled-components";
 
 import { useUserStore } from "src/store/userStore";
+import useModal from "src/shared/hooks/util/useModal";
+import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
+
 import { useParams } from "react-router-dom";
+import { UserService } from "src/services/DatabaseService";
+import { useQueryClient } from "react-query";
+
+import AddHobbyModal from "./AddHobbyModal";
 
 const Container = styled.div`
   display: flex;
@@ -51,7 +54,7 @@ const AddHobbyButton = styled(Button)`
   }
 `;
 
-const SaveButton = styled(Button)`
+const SaveButton = styled(LoadingButton)`
   margin-left: auto;
   margin-top: 20px;
   background-color: #6ec924;
@@ -66,7 +69,12 @@ const HobbyCaption = styled.span`
   position: absolute;
   bottom: 20px;
   left: 0;
-  background-color: white;
+  background-color: ${(props) =>
+    // @ts-ignore
+    props.isGoingToDelete ? "red" : "white"};
+  color: ${(props) =>
+    // @ts-ignore
+    props.isGoingToDelete ? "white" : "black"};
   padding: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border-radius: 0 8px 8px 0px;
@@ -75,47 +83,61 @@ const HobbyCaption = styled.span`
 
 // Main Component
 const HobbiesPage = () => {
-  const { currentUserId } = useUserStore();
-  const { userId } = useParams();
-  const isViewingOwnProfile = userId === currentUserId;
-
-  const [hobbies, setHobbies] = useState([
-    { id: 1, image: "/photos/photo01.jpg", caption: "Photography" },
-    { id: 2, image: "/photos/photo06.jpg", caption: "Cycling" },
-  ]);
-  const [newHobby, setNewHobby] = useState({ image: "", caption: "" });
-
+  const queryClient = useQueryClient();
   const { open, handleOpen, handleClose } = useModal();
 
-  const handleAddHobby = () => {
-    setHobbies([...hobbies, { id: hobbies.length + 1, ...newHobby }]);
-    handleClose();
+  const { currentUserId } = useUserStore();
+  const { userId } = useParams();
+  const { data: currentUser } = useUserInfo(userId);
+  const isViewingOwnProfile = userId === currentUserId;
+
+  const [deletedAt, setDeletedAt] = useState([]);
+  const checkIsGoingToDelete = (index) => {
+    return deletedAt.includes(index);
+  };
+  const toggleImageSelection = (index) => {
+    if (deletedAt.includes(index)) {
+      setDeletedAt(deletedAt.filter((item) => item !== index));
+    } else {
+      setDeletedAt([...deletedAt, index]);
+    }
   };
 
-  const handleDeleteHobby = (image) => {
-    setHobbies(hobbies.filter((hobby) => hobby.image !== image));
+  const [loading, setLoading] = useState(false);
+  const saveHobbies = async () => {
+    setLoading(true);
+    const newHobbies = currentUser.favorite.filter(
+      (_, index) => !deletedAt.includes(index)
+    );
+    await UserService.update(currentUserId, { favorite: newHobbies });
+    queryClient.invalidateQueries(["user", currentUserId]);
+    setDeletedAt([]);
+    setLoading(false);
   };
 
   return (
     <Container>
       <HobbiesHeader>
         <Typography variant="h5">
-          {isViewingOwnProfile ? "Sở thích của bạn" : `Sở thích của nó`}
+          {isViewingOwnProfile
+            ? "Sở thích của bạn"
+            : `Sở thích của ${currentUser.username}`}
         </Typography>
         {isViewingOwnProfile && (
-          <AddHobbyButton
-            // @ts-ignore
-            startIcon={<Add color="white" />}
-            onClick={handleOpen}
-          >
-            Thêm Sở Thích
-          </AddHobbyButton>
+          // <AddHobbyButton
+          //   // @ts-ignore
+          //   startIcon={<Add color="white" />}
+          //   onClick={handleOpen}
+          // >
+          //   Thêm Sở Thích
+          // </AddHobbyButton>
+          <input type="text" />
         )}
       </HobbiesHeader>
 
       <HobbiesGrid container spacing={2}>
-        {hobbies.map((hobby) => (
-          <Grid item xs={12} sm={6} md={4} key={hobby.id}>
+        {currentUser.favorite.map((hobby, index) => (
+          <Grid item xs={12} sm={6} md={4} key={index}>
             <Card sx={{ position: "relative" }}>
               <CardMedia
                 component="img"
@@ -123,14 +145,20 @@ const HobbiesPage = () => {
                 image={hobby.image}
                 alt={hobby.caption}
               />
-              <HobbyCaption>
+              <HobbyCaption
+                // @ts-ignore
+                isGoingToDelete={checkIsGoingToDelete(index)}
+              >
                 {hobby.caption}
                 {isViewingOwnProfile && (
                   <IconButton
                     size="small"
-                    onClick={() => handleDeleteHobby(hobby.image)}
+                    onClick={() => toggleImageSelection(index)}
                   >
-                    <Delete />
+                    <Delete
+                      // @ts-ignore
+                      color={checkIsGoingToDelete(index) ? "white" : "black"}
+                    />
                   </IconButton>
                 )}
               </HobbyCaption>
@@ -139,40 +167,11 @@ const HobbiesPage = () => {
         ))}
       </HobbiesGrid>
 
-      {/* Add New Hobby Modal */}
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Thêm Sở Thích Mới</DialogTitle>
-        <DialogContent>
-          <TextField
-            margin="dense"
-            label="Caption"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={newHobby.caption}
-            onChange={(e) =>
-              setNewHobby({ ...newHobby, caption: e.target.value })
-            }
-          />
-          <TextField
-            margin="dense"
-            label="Image URL"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={newHobby.image}
-            onChange={(e) =>
-              setNewHobby({ ...newHobby, image: e.target.value })
-            }
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Hủy</Button>
-          <Button onClick={handleAddHobby}>Lưu</Button>
-        </DialogActions>
-      </Dialog>
+      <AddHobbyModal open={open} handleClose={handleClose} />
       {isViewingOwnProfile && (
-        <SaveButton onClick={() => console.log("saved")}>Lưu</SaveButton>
+        <SaveButton loading={loading} onClick={saveHobbies}>
+          Lưu
+        </SaveButton>
       )}
     </Container>
   );

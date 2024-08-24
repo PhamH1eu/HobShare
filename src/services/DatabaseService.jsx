@@ -84,3 +84,5 @@ export const UserService = new DatabaseService("users");
 export const ChatService = new DatabaseService("userchats");
 
 export const ActivitiesService = new DatabaseService("activities");
+
+export const PostService = new DatabaseService("posts");

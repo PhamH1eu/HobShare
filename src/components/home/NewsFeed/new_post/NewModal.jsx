@@ -4,23 +4,28 @@ import {
   Typography,
   Avatar,
   IconButton,
-  Button,
   TextField,
 } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import { Close } from "@mui/icons-material";
 import Cancel from "@mui/icons-material/Cancel";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import PlaceIcon from "@mui/icons-material/Place";
-import { styled } from "@mui/system";
+import { styled as MuiStyled } from "@mui/system";
+import styled from "styled-components";
 import TagModal from "./TagModal";
 
 import { useUserStore } from "src/store/userStore";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import useFriendStore from "src/store/useFriendStore";
 import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
 
-const ModalContainer = styled(Box)`
+import { PostService } from "src/services/DatabaseService";
+
+import upload from "src/shared/helper/upload";
+
+const ModalContainer = MuiStyled(Box)`
   position: absolute;
   top: 50%;
   left: 50%;
@@ -32,7 +37,7 @@ const ModalContainer = styled(Box)`
   padding: 16px;
 `;
 
-const Header = styled(Box)`
+const Header = MuiStyled(Box)`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -40,13 +45,13 @@ const Header = styled(Box)`
   padding-bottom: 8px;
 `;
 
-const Content = styled(Box)`
+const Content = MuiStyled(Box)`
   margin-top: 10px;
   max-height: 400px;
   overflow-y: auto;
 `;
 
-const Footer = styled(Box)`
+const Footer = MuiStyled(Box)`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -54,7 +59,7 @@ const Footer = styled(Box)`
   border-top: 1px solid #ddd;
   padding-top: 8px;
 `;
-const ActionRow = styled(Box)`
+const ActionRow = MuiStyled(Box)`
   display: flex;
   align-items: center;
   width: 100%;
@@ -64,7 +69,7 @@ const ActionRow = styled(Box)`
   margin-bottom: 8px;
 `;
 
-const IconWrapper = styled(Box)`
+const IconWrapper = MuiStyled(Box)`
   display: flex;
   align-items: center;
   margin-left: 8px;
@@ -80,7 +85,7 @@ const IconWrapper = styled(Box)`
   }
 `;
 
-const PostButton = styled(Button)`
+const PostButton = MuiStyled(LoadingButton)`
   width: 100%;
   padding: 10px;
   background-color: #6ec924;
@@ -94,7 +99,7 @@ const PostButton = styled(Button)`
   }
 `;
 
-const RemoveButton = styled(IconButton)`
+const RemoveButton = MuiStyled(IconButton)`
   position: absolute;
   top: 8px;
   right: 8px;
@@ -105,12 +110,12 @@ const RemoveButton = styled(IconButton)`
   }
 `;
 
-const StyledImage = styled("img")`
+const StyledImage = MuiStyled("img")`
   width: 100%;
   height: auto;
 `;
 
-const ImageContainer = styled(Box)`
+const ImageContainer = MuiStyled(Box)`
   position: relative;
   margin: 8px;
   back
@@ -124,13 +129,13 @@ const ImageContainer = styled(Box)`
   }
 `;
 
-const LocationText = styled(Typography)`
+const LocationText = MuiStyled(Typography)`
   margin: 12px;
   margin-left: 0;
   font-weight: bold;
 `;
 
-const FriendWrapper = styled(Box)`
+const FriendWrapper = MuiStyled(Box)`
   display: flex;
   align-items: center;
   gap: 8px;
@@ -138,34 +143,57 @@ const FriendWrapper = styled(Box)`
   margin-left: 0;
 `;
 
-const NewModal = ({ open, onClose }) => {
+const Hashtag = styled.span`
+  color: #27b4fc;
+  border: 1px solid #27b4fc;
+  padding: 4px;
+  border-radius: 16px;
+  font-weight: bold;
+  display: flex;
+`;
+
+const NewModal = ({ open, onClose, groupId, groupName }) => {
   const { currentUserId } = useUserStore();
   const { data: currentUser } = useUserInfo(currentUserId);
-  const { selectedFriends } = useFriendStore();
-  const textRef = useRef(null);
+  const [loading, setLoading] = useState(false);
 
-  const [selectedFile, setSelectedFile] = useState(null);
-  const handleFileChange = (event) => {
-    setSelectedFile(URL.createObjectURL(event.target.files[0]));
-  };
+  const [text, setText] = useState("");
+  const [hashtags, setHashtags] = useState([]);
+  const handleChange = (event) => {
+    const inputValue = event.target.value;
+    const lastChar = inputValue[inputValue.length - 1];
 
-  const handleRemoveFile = () => {
-    setSelectedFile(null);
-  };
+    if (lastChar === " ") {
+      const words = inputValue.trim().split(/\s+/); // Trim to remove trailing space
+      const lastWord = words[words.length - 1];
 
-  const post = () => {
-    const text = textRef.current.value;
-    if (!text && !selectedFile) {
-      return;
+      if (
+        lastWord.startsWith("#") &&
+        lastWord.length > 1 &&
+        hashtags.includes(lastWord) === false
+      ) {
+        setHashtags((prevHashtags) => [...prevHashtags, lastWord]);
+      }
+
+      setText(words.filter((word) => !word.startsWith("#")).join(" ") + " ");
+    } else {
+      setText(inputValue);
     }
   };
 
-  const [isTagging, setIsTagging] = useState(false);
-
-  const toggleTaggingModal = () => {
-    setIsTagging(!isTagging);
+  const { selectedFriends } = useFriendStore();
+  const [selectedFile, setSelectedFile] = useState(null);
+  const handleFileChange = (event) => {
+    setSelectedFile({
+      file: event.target.files[0],
+      url: URL.createObjectURL(event.target.files[0]),
+      type: event.target.files[0].type,
+    });
+    console.log(event.target.files[0].type);
   };
-
+  const handleRemoveFile = () => {
+    setSelectedFile(null);
+  };
   const [location, setLocation] = useState(null);
   const handleLocationClick = () => {
     if (!location) {
@@ -173,6 +201,44 @@ const NewModal = ({ open, onClose }) => {
     } else {
       setLocation(null);
     }
+  };
+
+  const post = async () => {
+    if (!text && !selectedFile) {
+      alert("Bạn chưa nhập nội dung bài viết");
+      return;
+    }
+    setLoading(true);
+    const res = selectedFile ? await upload(selectedFile.file) : null;
+    const data = {
+      authorId: currentUserId,
+      authorName: currentUser.username,
+      ...(text !== "" && { text: text }),
+      ...(selectedFile?.type.startsWith("image/") && { image: res }),
+      ...(selectedFile?.type.startsWith("video/") && { video: res }),
+      ...(location && { location: location }),
+      ...(selectedFriends.length > 0 && {
+        stayingWith: selectedFriends.map((friend) => {
+          return { id: friend.id, username: friend.username };
+        }),
+      }),
+      tags: hashtags,
+      ...(groupId && { groupId: groupId }),
+      ...(groupName && { groupName: groupName }),
+      priority: 0,
+    };
+    await PostService.create(data);
+    setText("");
+    setHashtags([]);
+    setSelectedFile(null);
+    setLocation(null);
+    setLoading(false);
+    onClose();
+  };
+
+  const [isTagging, setIsTagging] = useState(false);
+  const toggleTaggingModal = () => {
+    setIsTagging(!isTagging);
   };
 
   return (
@@ -200,7 +266,8 @@ const NewModal = ({ open, onClose }) => {
               </Typography>
             </Box>
             <TextField
-              inputRef={textRef}
+              value={text}
+              onChange={handleChange}
               variant="standard"
               multiline
               fullWidth
@@ -209,7 +276,7 @@ const NewModal = ({ open, onClose }) => {
             />
             {selectedFile && (
               <ImageContainer>
-                <StyledImage src={selectedFile} alt="Selected" />
+                <StyledImage src={selectedFile.url} alt="Selected" />
                 <RemoveButton onClick={handleRemoveFile}>
                   <Cancel
                     // @ts-ignore
@@ -219,6 +286,29 @@ const NewModal = ({ open, onClose }) => {
               </ImageContainer>
             )}
           </Content>
+          {hashtags.length > 0 && (
+            <Box sx={{ padding: "8px", display: "flex", gap: "8px" }}>
+              {hashtags.map((hashtag, index) => (
+                <Hashtag key={index}>
+                  {hashtag}
+                  <IconButton
+                    sx={{ padding: "4px" }}
+                    onClick={() => {
+                      setHashtags((prevHashtags) =>
+                        prevHashtags.filter((tag) => tag !== hashtag)
+                      );
+                    }}
+                  >
+                    <Close
+                      sx={{ fontSize: 14 }}
+                      // @ts-ignore
+                      color="blue"
+                    />
+                  </IconButton>
+                </Hashtag>
+              ))}
+            </Box>
+          )}
           {location && <LocationText>{location}</LocationText>}
           {selectedFriends.length > 0 && (
             <FriendWrapper>
@@ -245,7 +335,10 @@ const NewModal = ({ open, onClose }) => {
               </Typography>
               <IconWrapper sx={{ marginLeft: "auto" }}>
                 <IconButton>
-                  <label htmlFor="file-input" style={{ height: "24px" }}>
+                  <label
+                    htmlFor="file-input"
+                    style={{ height: "24px", cursor: "pointer" }}
+                  >
                     <PhotoLibraryIcon />
                   </label>
                 </IconButton>
@@ -268,7 +361,9 @@ const NewModal = ({ open, onClose }) => {
                 </IconButton>
               </IconWrapper>
             </ActionRow>
-            <PostButton onClick={post}>Đăng</PostButton>
+            <PostButton loading={loading} onClick={post}>
+              Đăng
+            </PostButton>
           </Footer>
         </ModalContainer>
       )}

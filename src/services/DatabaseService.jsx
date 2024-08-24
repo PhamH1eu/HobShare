@@ -9,6 +9,9 @@ import {
   serverTimestamp,
   arrayUnion,
   arrayRemove,
+  getDocs,
+  query,
+  where,
 } from "firebase/firestore";
 
 class DatabaseService {
@@ -17,6 +20,13 @@ class DatabaseService {
   constructor(collectionName) {
     this.collection = collectionName;
   }
+
+  query = async (field, operator, value) => {
+    const querySnapshot = await getDocs(
+      query(collection(db, this.collection), where(field, operator, value))
+    );
+    return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  };
 
   get = async (id) => {
     const docRef = doc(db, this.collection, id);

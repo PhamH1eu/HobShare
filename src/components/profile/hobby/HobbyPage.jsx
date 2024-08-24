@@ -124,14 +124,14 @@ const HobbiesPage = () => {
             : `Sở thích của ${currentUser.username}`}
         </Typography>
         {isViewingOwnProfile && (
-          // <AddHobbyButton
-          //   // @ts-ignore
-          //   startIcon={<Add color="white" />}
-          //   onClick={handleOpen}
-          // >
-          //   Thêm Sở Thích
-          // </AddHobbyButton>
-          <input type="text" />
+          <AddHobbyButton
+            // @ts-ignore
+            startIcon={<Add color="white" />}
+            onClick={handleOpen}
+          >
+            Thêm Sở Thích
+          </AddHobbyButton>
+          // <input type="text" />
         )}
       </HobbiesHeader>
 

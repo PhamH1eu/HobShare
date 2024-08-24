@@ -1,17 +1,7 @@
 import styled from "styled-components";
 import "./hobbies.css";
-
-const images = [
-  { src: "/photos/photo01.jpg", label: "Sample image 1" },
-  { src: "/photos/photo02.jpg", label: "Sample image 2" },
-  { src: "/photos/photo03.jpg", label: "Sample image 3" },
-  { src: "/photos/photo04.jpg", label: "Sample image 4" },
-  { src: "/photos/photo05.jpg", label: "Sample image 5" },
-  { src: "/photos/photo06.jpg", label: "Sample image 6" },
-  { src: "/photos/photo07.jpg", label: "Sample image 7" },
-  { src: "/photos/photo01.jpg", label: "Sample image 1" },
-  { src: "/photos/photo02.jpg", label: "Sample image 2" },
-];
+import { useUserStore } from "src/store/userStore";
+import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
 
 const HobbyWrapper = styled.div`
   border-radius: 5px;
@@ -46,14 +36,17 @@ const ImageWrapper = styled.div`
 `;
 
 const Hobbies = () => {
+  const { currentUserId } = useUserStore();
+  const { data: currentUser } = useUserInfo(currentUserId);
+
   return (
     <HobbyWrapper className="hobby-wrapper">
       <p>Hoạt động yêu thích</p>
       <ImageWrapper>
-        {images.map((obj) => (
-          <figure key={obj.src} className="image">
-            <img src={obj.src} alt={obj.label} />
-            <figcaption>{obj.label}</figcaption>
+        {currentUser.favorite.map((obj) => (
+          <figure key={obj.image} className="image">
+            <img src={obj.image} alt={obj.caption} />
+            <figcaption>{obj.caption}</figcaption>
           </figure>
         ))}
       </ImageWrapper>

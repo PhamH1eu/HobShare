@@ -62,7 +62,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const StyledMenu = styled(Menu)(({ theme }) => ({
+const StyledMenu = styled(Menu)(() => ({
   "& .MuiPaper-root": {
     borderRadius: 0,
   },

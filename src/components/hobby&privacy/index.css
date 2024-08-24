@@ -28,10 +28,9 @@
     }
 
     img {
-        max-width: 100%;
+        width: 100%;
         vertical-align: top;
         transition: transform .3s, box-shadow 0.3s;
-        ;
     }
 
     img:hover {

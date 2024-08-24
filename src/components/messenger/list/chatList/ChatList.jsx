@@ -8,11 +8,13 @@ import { ChatService } from "src/services/DatabaseService";
 import Avatar from "src/shared/components/Avatar";
 import SearchIcon from "@mui/icons-material/Search";
 import "./chatList.css";
+import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
 
 export const ChatList = () => {
   const [addMode, setAddMode] = useState(false);
   const { chats } = useChatList();
   const { currentUserId } = useUserStore();
+  const { data: currentUser } = useUserInfo(currentUserId);
   const changeChat = useChatStore((state) => state.changeChat);
   const chatId = useChatStore((state) => state.chatId);
 
@@ -47,7 +49,7 @@ export const ChatList = () => {
     });
     //pop up chat in screen
     if (chatId === chat.chatId) return;
-    changeChat(chat.chatId, chat.user);
+    changeChat(chat.chatId, chat.user, currentUser);
   };
 
   return (

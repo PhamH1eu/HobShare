@@ -14,6 +14,7 @@ import upload from "src/shared/helper/upload";
 import { ActivitiesService, UserService } from "src/services/DatabaseService";
 import { useUserStore } from "src/store/userStore";
 import { useQueryClient } from "react-query";
+import formatString from "src/shared/helper/formatString";
 
 const AddHobbyModal = ({ open, handleClose }) => {
   const queryClient = useQueryClient();
@@ -46,6 +47,7 @@ const AddHobbyModal = ({ open, handleClose }) => {
     const newHobby = {
       image: res,
       caption: caption,
+      formatted_capption: formatString(caption),
     };
     await UserService.union(currentUserId, "favorite", newHobby);
     await ActivitiesService.create(newHobby);

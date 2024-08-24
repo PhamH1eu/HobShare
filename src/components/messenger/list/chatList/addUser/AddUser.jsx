@@ -50,7 +50,7 @@ const AddUser = ({ setAddMode }) => {
     if (chatId === chat.chatId) {
       return;
     }
-    changeChat(chat.chatId, chat.user);
+    changeChat(chat.chatId, chat.user, currentUser);
   };
 
   const handleAddUser = async () => {

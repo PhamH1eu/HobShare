@@ -136,7 +136,7 @@ const HobbiesPage = () => {
       </HobbiesHeader>
 
       <HobbiesGrid container spacing={2}>
-        {currentUser.favorite.map((hobby, index) => (
+        {currentUser.favorite?.map((hobby, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
             <Card sx={{ position: "relative" }}>
               <CardMedia

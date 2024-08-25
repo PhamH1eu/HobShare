@@ -14,6 +14,8 @@ import BookmarksIcon from "@mui/icons-material/Bookmarks";
 import Divider from "@mui/material/Divider";
 import Share from "./Share";
 import useModal from "src/shared/hooks/util/useModal";
+import { timeDiff } from "src/shared/helper/timeDiff";
+import StyledLink from "src/shared/components/StyledLink";
 
 const PostWrapper = styled.div`
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
@@ -38,6 +40,12 @@ const ProfilePic = styled.img`
 const PostInfo = styled.div`
   display: flex;
   flex-direction: column;
+`;
+
+const PostTagging = styled.div`
+  display: flex;
+  gap: 5px;
+  margin-top: 5px;
 `;
 
 const PostAuthor = styled.span`
@@ -118,6 +126,20 @@ const LoadComments = styled.div`
   }
 `;
 
+const Hashtags = styled.div`
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  margin-left: 15px;
+`;
+
+const PostTag = styled.div`
+  background-color: #f0f2f5;
+  padding: 5px;
+  border-radius: 5px;
+  color: #27b4fc;
+`;
+
 const Post = ({ post }) => {
   const [like, setLike] = useState(false);
   const handleLike = () => {
@@ -135,10 +157,36 @@ const Post = ({ post }) => {
   return (
     <PostWrapper>
       <PostHeader>
-        <ProfilePic src={post.authorAvatar} />
+        <StyledLink to={`/profile/${post.authorId}`}>
+          <ProfilePic src={post.authorAvatar} />
+        </StyledLink>
         <PostInfo>
-          <PostAuthor>{post.authorName}</PostAuthor>
-          <PostTime>{post.time}</PostTime>
+          <PostTagging>
+            <StyledLink to={`/profile/${post.authorId}`}>
+              <PostAuthor>{post.authorName}</PostAuthor>
+            </StyledLink>
+            {post.stayingWith && (
+              <>
+                <div>cùng với</div>
+                {post.stayingWith.map((friend, index) => (
+                  <StyledLink to={`/profile/${friend.id}`}>
+                    <PostAuthor key={index}>
+                      {friend.username}{" "}
+                      {index !== post.stayingWith.length - 1 ? "," : ""}
+                    </PostAuthor>
+                  </StyledLink>
+                ))}
+              </>
+            )}
+            {post.location && <div>đang ở</div>}
+            <PostAuthor>{post.location}</PostAuthor>
+          </PostTagging>
+          <PostTime>
+            {timeDiff(
+              post.createdAt.seconds * 1000 +
+                post.createdAt.nanoseconds / 1000000
+            )}
+          </PostTime>
         </PostInfo>
         <Marked>
           <IconButton onClick={handleMarked}>
@@ -150,11 +198,20 @@ const Post = ({ post }) => {
         </Marked>
       </PostHeader>
       <PostContent>
-        <p style={{ padding: "10px", marginLeft: "5px" }}>{post.postContent}</p>
-        {post.postImage && <PostImage src={post.postImage} />}
-        {post.postVideo && (
+        <p style={{ padding: "10px", marginLeft: "5px" }}>{post.text}</p>
+        {post.tags && (
+          <Hashtags>
+            {post.tags.map((tag, index) => (
+              <StyledLink to={`tag/${tag}`}>
+                <PostTag key={index}>{tag}</PostTag>
+              </StyledLink>
+            ))}
+          </Hashtags>
+        )}
+        {post.image && <PostImage src={post.image} />}
+        {post.video && (
           <video controls style={{ width: "100%" }}>
-            <source src={post.postVideo} type="video/mp4" />
+            <source src={post.video} type="video/mp4" />
           </video>
         )}
       </PostContent>

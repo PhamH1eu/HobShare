@@ -32,8 +32,8 @@ const Wrapper = styled.div`
 
 const Main = styled.div`
   display: flex;
-  width: 70%;
   gap: 30px;
+  width: 100%;
 `;
 
 const Info = styled.div`
@@ -41,7 +41,9 @@ const Info = styled.div`
   bottom: 0;
 `;
 
-const MainContent = styled.div``;
+const MainContent = styled.div`
+  width: 100%;
+`;
 
 const TabsHeader = styled.div`
   width: 100%;
@@ -53,41 +55,20 @@ const TabsHeader = styled.div`
   }
 `;
 
-const posts = [
-  {
-    authorAvatar:
-      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
-    authorName: "Planet Rus",
-    time: "14 giờ",
-    postContent:
-      "Nghịch lý Uzbekistan: Xăng A95 25.000 vnđ/lít, A92 20500 đ/lít, diesel 22.000đ/lít. Giá taxi (yandex go): 6-7000 đ/km Buýt intercity 50 km: 12.000 đ Tàu điện ngầm: 3400 đ (vé thẻ) hay 4000 đ (vé giấy)...",
-    postVideo:
-      "https://firebasestorage.googleapis.com/v0/b/reactchat-3358f.appspot.com/o/images%2Fy2mate.com%20-%20GREEN%20GREEN%20WHATS%20YOUR%20PROBLEM_360p.mp4?alt=media&token=e1dbe288-1b84-40af-ac21-9fd78af70d69",
-    reactions: 864,
-  },
-  {
-    authorAvatar:
-      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
-    authorName: "Planet Rus",
-    time: "14 giờ",
-    postContent:
-      "Nghịch lý Uzbekistan: Xăng A95 25.000 vnđ/lít, A92 20500 đ/lít, diesel 22.000đ/lít. Giá taxi (yandex go): 6-7000 đ/km Buýt intercity 50 km: 12.000 đ Tàu điện ngầm: 3400 đ (vé thẻ) hay 4000 đ (vé giấy)...",
-    postImage:
-      "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AA1ocvNi.img?w=768&h=576&m=6",
-    reaction: 627,
-  },
-  {
-    authorAvatar:
-      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
-    authorName: "Planet Rus",
-    time: "14 giờ",
-    postContent:
-      "Nghịch lý Uzbekistan: Xăng A95 25.000 vnđ/lít, A92 20500 đ/lít, diesel 22.000đ/lít. Giá taxi (yandex go): 6-7000 đ/km Buýt intercity 50 km: 12.000 đ Tàu điện ngầm: 3400 đ (vé thẻ) hay 4000 đ (vé giấy)...",
-    postVideo:
-      "https://firebasestorage.googleapis.com/v0/b/reactchat-3358f.appspot.com/o/images%2Fy2mate.com%20-%20GREEN%20GREEN%20WHATS%20YOUR%20PROBLEM_360p.mp4?alt=media&token=e1dbe288-1b84-40af-ac21-9fd78af70d69",
-    reactions: 864,
-  },
-];
+const NoPosts = styled.div`
+  margin-top: 20px;
+  background-color: white;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  font-size: 20px;
+  font-weight: 600;
+`;
+
+const posts = [];
 
 const Profile = () => {
   const { userId } = useParams();
@@ -124,7 +105,7 @@ const Profile = () => {
             )}
           </TabList>
         </TabsHeader>
-        <TabPanel value="1" sx={{ display: "flex", placeContent: "center" }}>
+        <TabPanel value="1" sx={{ display: "flex", width: "70%" }}>
           <Main>
             <Info>
               <Information />
@@ -132,11 +113,15 @@ const Profile = () => {
             </Info>
             <MainContent>
               {isViewingOwnProfile && <NewPostInput />}
-              <div>
-                {posts.map((post, index) => (
-                  <Post key={index} post={post} />
-                ))}
-              </div>
+              {posts.length > 0 ? (
+                <div>
+                  {posts.map((post, index) => (
+                    <Post key={index} post={post} />
+                  ))}
+                </div>
+              ) : (
+                <NoPosts>Chưa có bài viết nào</NoPosts>
+              )}
             </MainContent>
           </Main>
         </TabPanel>

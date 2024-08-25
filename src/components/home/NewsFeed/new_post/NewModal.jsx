@@ -115,6 +115,11 @@ const StyledImage = MuiStyled("img")`
   height: auto;
 `;
 
+const StyledVideo = MuiStyled("video")`
+  width: 100%;
+  height: auto;
+`;
+
 const ImageContainer = MuiStyled(Box)`
   position: relative;
   margin: 8px;
@@ -213,6 +218,7 @@ const NewModal = ({ open, onClose, groupId, groupName }) => {
     const data = {
       authorId: currentUserId,
       authorName: currentUser.username,
+      authorAvatar: currentUser.avatar,
       ...(text !== "" && { text: text }),
       ...(selectedFile?.type.startsWith("image/") && { image: res }),
       ...(selectedFile?.type.startsWith("video/") && { video: res }),
@@ -276,7 +282,14 @@ const NewModal = ({ open, onClose, groupId, groupName }) => {
             />
             {selectedFile && (
               <ImageContainer>
-                <StyledImage src={selectedFile.url} alt="Selected" />
+                {selectedFile?.type.startsWith("image/") && (
+                  <StyledImage src={selectedFile.url} alt="Selected" />
+                )}
+                {selectedFile?.type.startsWith("video/") && (
+                  <StyledVideo controls>
+                    <source src={selectedFile.url} type="video/mp4" />
+                  </StyledVideo>
+                )}
                 <RemoveButton onClick={handleRemoveFile}>
                   <Cancel
                     // @ts-ignore

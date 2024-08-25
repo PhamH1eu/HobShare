@@ -28,6 +28,11 @@ class DatabaseService {
     return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   };
 
+  getAll = async () => {
+    const querySnapshot = await getDocs(collection(db, this.collection));
+    return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  };
+
   get = async (id) => {
     const docRef = doc(db, this.collection, id);
     return await getDoc(docRef);

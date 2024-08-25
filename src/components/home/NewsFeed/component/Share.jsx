@@ -101,7 +101,7 @@ const SendButton = styled.div`
   border-radius: 8px;
 `;
 
-const Share = ({ handleClose }) => {
+const Share = ({ post, handleClose }) => {
   const { currentUserId } = useUserStore();
   const { isLoading, data: chats } = useQueryChatlist(currentUserId);
   const { data: currentUser } = useUserInfo(currentUserId);

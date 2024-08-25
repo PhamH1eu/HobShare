@@ -6,13 +6,15 @@ import {
   Typography,
   Button,
   List,
-  ListItem,
   ListItemAvatar,
   ListItemText,
   Divider,
   Box,
+  ListItemButton,
 } from "@mui/material";
 import LayersClearIcon from "@mui/icons-material/LayersClear";
+import AllInboxIcon from "@mui/icons-material/AllInbox";
+
 import useModal from "src/shared/hooks/util/useModal";
 import AddNewCollectionModal from "./modal/AddNewCollection";
 
@@ -82,27 +84,34 @@ const SavedPage = () => {
     <Layout>
       <SidebarContainer>
         <Header variant="h5">Đã lưu</Header>
-        <ListItem button onClick={() => handleSelectCollection(null)}>
+        <ListItemButton onClick={() => handleSelectCollection(null)}>
           <ListItemAvatar>
-            <Avatar
-              variant="rounded"
-              src="https://mui.com/static/images/avatar/1.jpg"
-            />
+            <div
+              style={{
+                backgroundColor: "#6ec924",
+                width: "fit-content",
+                color: "white",
+                padding: "5px",
+                borderRadius: "4px",
+              }}
+            >
+              <AllInboxIcon />
+            </div>
           </ListItemAvatar>
           <StyledTextItem primary="Mục đã lưu" />
-        </ListItem>
+        </ListItemButton>
         <Divider />
         <Header variant="h6">Bộ sưu tập của tôi</Header>
 
         <List>
-          {items.map((item, index) => (
+          {collections.map((item, index) => (
             <React.Fragment key={index}>
-              <ListItem button onClick={() => handleSelectCollection(item)}>
+              <ListItemButton onClick={() => handleSelectCollection(item)}>
                 <ListItemAvatar>
                   <Avatar src={item.icon} variant="rounded" />
                 </ListItemAvatar>
                 <StyledTextItem primary={item.label} />
-              </ListItem>
+              </ListItemButton>
             </React.Fragment>
           ))}
         </List>

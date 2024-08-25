@@ -5,7 +5,10 @@ const useSinglePost = (id) => {
   const { data, isLoading } = useQuery(["posts", id], () =>
     PostService.get(id)
   );
-  const post = data?.data();
+  const post = {
+    ...data?.data(),
+    id: data?.id,
+  };
 
   return {
     post,

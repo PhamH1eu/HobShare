@@ -11,8 +11,9 @@ const PostPageContainer = styled.div`
   width: 100%;
   overflow-x: hidden;
 
-  div {
+  & > div {
     max-width: 600px;
+    width: 100%;
     height: fit-content;
   }
 `;

@@ -10,9 +10,16 @@ import {
 import { styled } from "@mui/system";
 import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
 import { Link } from "react-router-dom";
+import CircularLoading from "src/shared/components/Loading";
 
 import useModal from "src/shared/hooks/util/useModal";
 import SaveToCollectionModal from "./modal/SaveItemToCollection";
+
+import { useUserStore } from "src/store/userStore";
+import useSavedPosts from "src/shared/hooks/fetch/useSavedPost";
+import truncateString from "src/shared/helper/truncateString";
+import { SavedService } from "src/services/SubDatabaseService";
+import { useQueryClient } from "react-query";
 
 const ItemCard = styled(Card)`
   margin-bottom: 20px;
@@ -34,6 +41,20 @@ const StyledLink = styled(Link)`
   }
 `;
 
+const VideoWrapper = styled(Box)`
+  position: relative;
+  width: 140px;
+  height: 140px;
+  margin-right: 20px;
+
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+`;
+
 const items = [
   { icon: "https://mui.com/static/images/avatar/2.jpg", label: "Code" },
   { icon: "https://mui.com/static/images/avatar/3.jpg", label: "Giáo dục" },
@@ -46,35 +67,54 @@ const items = [
   { icon: "https://mui.com/static/images/avatar/7.jpg", label: "Ẩm thực" },
 ];
 
-const SavedItem = ({ title, type, avatarUrl, userName, postUrl }) => {
+const SavedItem = ({ title, type, id, avatarUrl, userName, video }) => {
+  const queryClient = useQueryClient();
   const { open, handleOpen, handleClose } = useModal();
+  const { currentUserId } = useUserStore();
+
+  const removeSavedItem = async () => {
+    await SavedService.removeSubCollection(`${currentUserId}/savedPosts/${id}`);
+    queryClient.invalidateQueries(["saved", currentUserId]);
+  };
 
   return (
     <ItemCard>
-      <Avatar
-        src={avatarUrl}
-        alt={userName}
-        sx={{ marginRight: "20px", height: "140px", width: "140px" }}
-        variant="rounded"
-      />
+      {video ? (
+        <VideoWrapper>
+          <video>
+            <source src={video} type="video/mp4" />
+          </video>
+        </VideoWrapper>
+      ) : (
+        <Avatar
+          src={avatarUrl}
+          alt={userName}
+          sx={{ marginRight: "20px", height: "140px", width: "140px" }}
+          variant="rounded"
+        />
+      )}
       <ItemContent>
-        <StyledLink to="/">
+        <StyledLink to={`/post/${id}`}>
           <Typography variant="h6" sx={{ fontWeight: "600" }}>
             {title}
           </Typography>
         </StyledLink>
         <Typography variant="body2" color="text.secondary">
-          {type} • Đã lưu từ {postUrl}
+          {type} • {userName}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Bài viết của {userName}
+          Đã lưu từ bài viết của {userName}
         </Typography>
       </ItemContent>
       <CardActions>
         <Button variant="contained" onClick={handleOpen}>
           Thêm vào bộ sưu tập
         </Button>
-        <Button variant="outlined" startIcon={<BookmarkRemoveIcon />}>
+        <Button
+          onClick={removeSavedItem}
+          variant="outlined"
+          startIcon={<BookmarkRemoveIcon />}
+        >
           Bỏ lưu
         </Button>
       </CardActions>
@@ -88,63 +128,30 @@ const SavedItem = ({ title, type, avatarUrl, userName, postUrl }) => {
   );
 };
 
-const savedItems = [
-  {
-    title: "Video của Gurshan Brar",
-    type: "Thước phim",
-    avatarUrl: "/path-to-avatar-1.jpg",
-    userName: "Gurshan Brar",
-    postUrl: "bài viết của Gurshan Brar",
-  },
-  {
-    title: "Hàng về @mọi người",
-    type: "Bài viết",
-    avatarUrl: "/path-to-avatar-2.jpg",
-    userName: "Võ Ánh",
-    postUrl: "bài viết của Võ Ánh",
-  },
-  {
-    title: "Chào ae cộng đồng Node.js Việt Nam",
-    type: "Bài viết",
-    avatarUrl: "/path-to-avatar-3.jpg",
-    userName: "Nguyễn Thế Huy",
-    postUrl: "bài viết của Nguyễn Thế Huy",
-  },
-  {
-    title: "Video của Gurshan Brar",
-    type: "Thước phim",
-    avatarUrl: "/path-to-avatar-1.jpg",
-    userName: "Gurshan Brar",
-    postUrl: "bài viết của Gurshan Brar",
-  },
-  {
-    title: "Hàng về @mọi người",
-    type: "Bài viết",
-    avatarUrl: "/path-to-avatar-2.jpg",
-    userName: "Võ Ánh",
-    postUrl: "bài viết của Võ Ánh",
-  },
-  {
-    title: "Chào ae cộng đồng Node.js Việt Nam",
-    type: "Bài viết",
-    avatarUrl: "/path-to-avatar-3.jpg",
-    userName: "Nguyễn Thế Huy",
-    postUrl: "bài viết của Nguyễn Thế Huy",
-  },
-];
-
 const SavedItemList = ({ currentCollection }) => {
+  const { currentUserId } = useUserStore();
+  const { posts, isLoading } = useSavedPosts(currentUserId);
+
+  if (isLoading) {
+    return (
+      <Box sx={{ marginTop: "20px" }}>
+        <CircularLoading />
+      </Box>
+    );
+  }
+
   // fetch saved items based on the current collection
   return (
     <Box sx={{ marginTop: "20px" }}>
-      {savedItems.map((item, index) => (
+      {posts.map((item, index) => (
         <SavedItem
           key={index}
-          title={item.title}
-          type={item.type}
-          avatarUrl={item.avatarUrl}
-          userName={item.userName}
-          postUrl={item.postUrl}
+          title={truncateString(item.text, 40)}
+          type="Bài viết"
+          id={item.id}
+          avatarUrl={item.image ? item.image : item.authorAvatar}
+          userName={item.authorName}
+          video={item.video}
         />
       ))}
     </Box>

@@ -1,13 +1,7 @@
 import { addDoc, serverTimestamp, collection } from "firebase/firestore";
 import { db } from "src/lib/firebase";
 import upload from "src/shared/helper/upload";
-
-function truncateString(str) {
-  if (str.length <= 20) {
-    return str;
-  }
-  return str.slice(0, 20) + "...";
-}
+import truncateString from "src/shared/helper/truncateString";
 
 export default async function SendMessage(
   currentUser,
@@ -37,7 +31,7 @@ export default async function SendMessage(
         postShared: {
           id: post.id,
           author: post.authorName,
-          ...(post.text && { text: truncateString(post.text) }),
+          ...(post.text && { text: truncateString(post.text, 20) }),
           ...(post.image && { img: post.image }),
           ...(post.video && { video: post.video }),
         },

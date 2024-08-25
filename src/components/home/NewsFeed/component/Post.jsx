@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import ShareIcon from "@mui/icons-material/Share";
@@ -11,11 +11,15 @@ import Comments from "./Comments";
 import Modal from "@mui/material/Modal";
 import { IconButton } from "@mui/material";
 import BookmarksIcon from "@mui/icons-material/Bookmarks";
+import CircularLoading from "src/shared/components/Loading";
 import Divider from "@mui/material/Divider";
 import Share from "./Share";
 import useModal from "src/shared/hooks/util/useModal";
 import { timeDiff } from "src/shared/helper/timeDiff";
 import StyledLink from "src/shared/components/StyledLink";
+
+import { SavedService } from "src/services/SubDatabaseService";
+import { useUserStore } from "src/store/userStore";
 
 const PostWrapper = styled.div`
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
@@ -141,13 +145,30 @@ const PostTag = styled.div`
 `;
 
 const Post = ({ post, initComt }) => {
+  const { currentUserId } = useUserStore();
   const [like, setLike] = useState(false);
   const handleLike = () => {
     setLike(!like);
   };
 
+  const [loading, setLoading] = useState(false);
   const [marked, setMarked] = useState(false);
-  const handleMarked = () => {
+  const pathToPostSaved = `${currentUserId}/savedPosts/${post.id}`;
+  useEffect(() => {
+    SavedService.checkExistSubCollection(pathToPostSaved).then((res) => {
+      if (res) {
+        setMarked(true);
+      }
+    });
+  }, []);
+  const handleMarked = async () => {
+    setLoading(true);
+    if (marked) {
+      await SavedService.removeSubCollection(pathToPostSaved);
+    } else {
+      await SavedService.createSubCollection(pathToPostSaved, post);
+    }
+    setLoading(false);
     setMarked(!marked);
   };
 
@@ -169,8 +190,8 @@ const Post = ({ post, initComt }) => {
               <>
                 <div>cùng với</div>
                 {post.stayingWith.map((friend, index) => (
-                  <StyledLink to={`/profile/${friend.id}`}>
-                    <PostAuthor key={index}>
+                  <StyledLink key={index} to={`/profile/${friend.id}`}>
+                    <PostAuthor>
                       {friend.username}{" "}
                       {index !== post.stayingWith.length - 1 ? "," : ""}
                     </PostAuthor>
@@ -189,12 +210,16 @@ const Post = ({ post, initComt }) => {
           </PostTime>
         </PostInfo>
         <Marked>
-          <IconButton onClick={handleMarked}>
-            <BookmarksIcon
-              // @ts-ignore
-              color={marked ? "primary" : "greyIcon"}
-            />
-          </IconButton>
+          {loading ? (
+            <CircularLoading />
+          ) : (
+            <IconButton onClick={handleMarked}>
+              <BookmarksIcon
+                // @ts-ignore
+                color={marked ? "primary" : "greyIcon"}
+              />
+            </IconButton>
+          )}
         </Marked>
       </PostHeader>
       <PostContent>
@@ -202,8 +227,8 @@ const Post = ({ post, initComt }) => {
         {post.tags && (
           <Hashtags>
             {post.tags.map((tag, index) => (
-              <StyledLink to={`tag/${tag}`}>
-                <PostTag key={index}>{tag}</PostTag>
+              <StyledLink key={index} to={`tag/${tag}`}>
+                <PostTag>{tag}</PostTag>
               </StyledLink>
             ))}
           </Hashtags>

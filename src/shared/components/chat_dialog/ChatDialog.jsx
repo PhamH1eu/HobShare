@@ -27,6 +27,8 @@ import UpdateChat from "src/services/UpdateChat";
 import EmojiPicker from "emoji-picker-react";
 import { useInView } from "react-intersection-observer";
 import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
+import { format } from "date-fns";
+import { vi } from "date-fns/locale/vi";
 
 const Wrapper = styled.div`
   width: 320px;
@@ -66,6 +68,13 @@ const MessageWithAvatar = MuiStyled(Box)`
     props.position === "right"
       ? "justify-content: flex-end;"
       : "justify-content: flex-start;"}
+
+  span {
+    display: block;
+    font-size: 12px;
+    color: #aaa;
+    margin-left: 5px;
+  }
 `;
 
 const MessageText = MuiStyled(Box)`
@@ -339,6 +348,17 @@ const ChatDialog = ({ chat }) => {
                         </Box>
                       </SharedMessage>
                     </StyledLink>
+                  )}
+                  {index == messages.length - 1 && (
+                    <span>
+                      {format(
+                        message.sendAt?.toDate() ?? new Date(),
+                        "HH:mm dd MMMM",
+                        {
+                          locale: vi,
+                        }
+                      )}
+                    </span>
                   )}
                 </div>
               </MessageWithAvatar>

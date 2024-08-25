@@ -26,6 +26,7 @@ import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
 import { Box } from "@mui/material";
 
 import { styled as MuiStyled } from "@mui/material";
+import { vi } from "date-fns/locale/vi";
 
 const SharedMessage = MuiStyled(Box)`
   color: #000;
@@ -234,7 +235,9 @@ export const Chat = () => {
 
                   {index == messages.length - 1 && (
                     <span>
-                      {format(mess.sendAt?.toDate() ?? new Date(), "dd MMM")}
+                      {format(mess.sendAt?.toDate() ?? new Date(), "HH:mm dd MMMM", {
+                        locale: vi,
+                      })}
                     </span>
                   )}
                 </div>

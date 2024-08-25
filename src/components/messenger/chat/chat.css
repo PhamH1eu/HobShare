@@ -102,6 +102,10 @@
             word-break: break-word;
           }
         }
+
+        .shared-message {
+          background-color: #99EA56;
+        }
       }
 
       img {
@@ -109,6 +113,10 @@
         height: 30px;
         border-radius: 50%;
         object-fit: cover;
+      }
+
+      .shared-message {
+        background-color: #f0f0f0;
       }
 
       .texts {
@@ -133,7 +141,7 @@
         p {
           padding: 20px;
           max-width: 350px;
-          background-color: rgba(240,240,240,255);
+          background-color: rgba(240, 240, 240, 255);
           border-radius: 40px;
           word-break: break-all;
         }
@@ -142,7 +150,7 @@
           font-size: 13px;
         }
       }
-  }
+    }
   }
 
   .bottom-wrapper {
@@ -214,8 +222,6 @@
       gap: 20px;
       margin-top: auto;
 
-
-
       .icons {
         display: flex;
         gap: 20px;
@@ -227,7 +233,7 @@
 
       & > input {
         flex: 1;
-        background-color: rgba(240,242,245,255);
+        background-color: rgba(240, 242, 245, 255);
         border: none;
         outline: none;
         padding: 20px;

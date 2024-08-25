@@ -2,14 +2,23 @@ import { addDoc, serverTimestamp, collection } from "firebase/firestore";
 import { db } from "src/lib/firebase";
 import upload from "src/shared/helper/upload";
 
+function truncateString(str) {
+  if (str.length <= 20) {
+    return str;
+  }
+  return str.slice(0, 20) + "...";
+}
+
 export default async function SendMessage(
   currentUser,
   chatId,
   text,
   imgList,
-  videoList
+  videoList,
+  post
 ) {
-  if (text === "" && imgList.length == 0 && videoList.length == 0) return;
+  if (text === "" && imgList.length == 0 && videoList.length == 0 && !post)
+    return;
 
   try {
     const [imgUrl, videoUrl] = await Promise.all([
@@ -24,6 +33,15 @@ export default async function SendMessage(
       sendAt: serverTimestamp(),
       ...(imgUrl.length > 0 && { img: imgUrl }),
       ...(videoUrl.length > 0 && { video: videoUrl }),
+      ...(post && {
+        postShared: {
+          id: post.id,
+          author: post.authorName,
+          ...(post.text && { text: truncateString(post.text) }),
+          ...(post.image && { img: post.image }),
+          ...(post.video && { video: post.video }),
+        },
+      }),
     });
   } catch (err) {
     console.error(err);

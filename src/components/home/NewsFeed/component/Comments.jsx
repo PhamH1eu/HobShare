@@ -61,6 +61,7 @@ const Comments = () => {
       currentData={(data) => {
         console.log("curent data", data);
       }}
+      
       titleStyle={{ display: "none" }}
       hrStyle={{ display: "none" }}
       submitBtnStyle={{ fontSize: "0.8rem", content: "123" }}

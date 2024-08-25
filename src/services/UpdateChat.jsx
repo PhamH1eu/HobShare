@@ -15,7 +15,7 @@ export default async function UpdateChat(currentUser, userId, chatId, text) {
       );
 
       userChatsData.chats[chatIndex].lastMessage =
-        text == "" ? "has sent an media" : text;
+        text == "" ? "đã gửi một phương tiện" : text;
       userChatsData.chats[chatIndex].isSeen =
         id === currentUser.id ? true : false;
       userChatsData.chats[chatIndex].updatedAt = Date.now();

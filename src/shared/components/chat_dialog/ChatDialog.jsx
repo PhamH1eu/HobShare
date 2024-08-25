@@ -80,6 +80,28 @@ const MessageText = MuiStyled(Box)`
   word-break: break-word;
 `;
 
+const SharedMessage = MuiStyled(Box)`
+  background-color: ${(props) =>
+    // @ts-ignore
+    props.position === "right" ? "#99EA56" : "#f0f0f0"};
+
+  color: #000;
+  border-radius: 12px;
+  word-break: break-word;
+  padding-bottom: 5px;
+
+  img, video {
+    border-radius: 12px 12px 0 0;
+    max-width: 100%;
+    height: auto;
+  }
+
+  div {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+`;
+
 const MediaMessage = styled(Box)`
   max-width: 100%;
   ${(props) =>
@@ -287,6 +309,37 @@ const ChatDialog = ({ chat }) => {
                       </video>
                     </MediaMessage>
                   ))}
+                  {message.postShared && (
+                    <StyledLink to={`/post/${message.postShared.id}`}>
+                      <SharedMessage
+                        // @ts-ignore
+                        position={position}
+                      >
+                        {message.postShared.img && (
+                          <img
+                            src={message.postShared.img}
+                            alt="Shared media"
+                          />
+                        )}
+                        {message.postShared.video && (
+                          <video controls>
+                            <source
+                              src={message.postShared.video}
+                              type="video/mp4"
+                            />
+                          </video>
+                        )}
+                        {message.postShared.text && (
+                          <Box fontSize="0.9rem" paddingTop="5px">
+                            {message.postShared.text}
+                          </Box>
+                        )}
+                        <Box fontWeight="bold" fontSize="1.05rem">
+                          {message.postShared.author}
+                        </Box>
+                      </SharedMessage>
+                    </StyledLink>
+                  )}
                 </div>
               </MessageWithAvatar>
             );

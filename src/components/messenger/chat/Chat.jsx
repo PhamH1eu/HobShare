@@ -23,6 +23,28 @@ import SendMessage from "src/services/SendMessage";
 import CircularLoading from "src/shared/components/Loading";
 import "./chat.css";
 import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
+import { Box } from "@mui/material";
+
+import { styled as MuiStyled } from "@mui/material";
+
+const SharedMessage = MuiStyled(Box)`
+  color: #000;
+  border-radius: 12px;
+  word-break: break-word;
+  padding-bottom: 5px;
+
+  img, video {
+    border-radius: 12px 12px 0 0 !important;
+    margin-top: 0 !important;
+    max-width: 100%;
+    height: auto;
+  }
+
+  div {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+`;
 
 export const Chat = () => {
   //local states
@@ -180,6 +202,36 @@ export const Chat = () => {
                     })}
 
                   {mess.text != "" && <p>{mess.text}</p>}
+
+                  {mess.postShared && (
+                    <StyledLink to={`/post/${mess.postShared.id}`}>
+                      <SharedMessage
+                        className="shared-message"
+                        // @ts-ignore
+                      >
+                        {mess.postShared.img && (
+                          <img src={mess.postShared.img} alt="Shared media" />
+                        )}
+                        {mess.postShared.video && (
+                          <video controls>
+                            <source
+                              src={mess.postShared.video}
+                              type="video/mp4"
+                            />
+                          </video>
+                        )}
+                        {mess.postShared.text && (
+                          <Box fontSize="0.9rem" paddingTop="5px">
+                            {mess.postShared.text}
+                          </Box>
+                        )}
+                        <Box fontWeight="bold" fontSize="1.05rem">
+                          {mess.postShared.author}
+                        </Box>
+                      </SharedMessage>
+                    </StyledLink>
+                  )}
+
                   {index == messages.length - 1 && (
                     <span>
                       {format(mess.sendAt?.toDate() ?? new Date(), "dd MMM")}

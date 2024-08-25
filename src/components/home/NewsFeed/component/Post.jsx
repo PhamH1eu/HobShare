@@ -140,7 +140,7 @@ const PostTag = styled.div`
   color: #27b4fc;
 `;
 
-const Post = ({ post }) => {
+const Post = ({ post, initComt }) => {
   const [like, setLike] = useState(false);
   const handleLike = () => {
     setLike(!like);
@@ -151,7 +151,7 @@ const Post = ({ post }) => {
     setMarked(!marked);
   };
 
-  const [showComment, setShowComment] = useState(false);
+  const [showComment, setShowComment] = useState(initComt ? initComt : false);
   const { open, handleOpen, handleClose } = useModal();
 
   return (

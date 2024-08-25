@@ -142,21 +142,10 @@ const Share = ({ post, handleClose }) => {
 
   const sendPost = async () => {
     const sendAsync = recipients.map((item) =>
-      SendMessage(
-        currentUser,
-        item.chatId,
-        "Hey i just share this with you",
-        [],
-        []
-      )
+      SendMessage(currentUser, item.chatId, "", [], [], post)
     );
     const updateAsync = recipients.map((item) =>
-      UpdateChat(
-        currentUser,
-        item.userId,
-        item.chatId,
-        "Hey i just share this with you"
-      )
+      UpdateChat(currentUser, item.userId, item.chatId, "")
     );
     await Promise.all(sendAsync);
     await Promise.all(updateAsync);

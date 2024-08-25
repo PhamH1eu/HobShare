@@ -9,9 +9,9 @@ import MemoriesPage from "./components/memories/Memories";
 import ChatHolder from "./shared/components/chat_dialog/ChatHolder";
 import MinimizedChatDialog from "./shared/components/chat_dialog/MinimizedChatDialog";
 import SearchScreen from "./components/search/SearchScreen";
+import PostPage from "./components/home/NewsFeed/PostPage";
 
 const Router = () => {
-
   let location = useLocation();
   let checkMess = Boolean(location.pathname === "/messenger");
   return (
@@ -25,6 +25,7 @@ const Router = () => {
         <Route path="/saved" element={<SavedPage />} />
         <Route path="/memories" element={<MemoriesPage />} />
         <Route path="/search/:id" element={<SearchScreen />} />
+        <Route path="/post/:postId" element={<PostPage />} />
       </Routes>
       {!checkMess && <ChatHolder />}
       {!checkMess && <MinimizedChatDialog />}

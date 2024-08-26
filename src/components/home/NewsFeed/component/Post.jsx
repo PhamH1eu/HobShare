@@ -153,7 +153,7 @@ const Post = ({ post, initComt }) => {
 
   const [loading, setLoading] = useState(false);
   const [marked, setMarked] = useState(false);
-  const pathToPostSaved = `${currentUserId}/savedPosts/${post.id}`;
+  const pathToPostSaved = `${currentUserId}/saved/${post.id}`;
   useEffect(() => {
     SavedService.checkExistSubCollection(pathToPostSaved).then((res) => {
       if (res) {

@@ -17,9 +17,15 @@ import AllInboxIcon from "@mui/icons-material/AllInbox";
 
 import useModal from "src/shared/hooks/util/useModal";
 import AddNewCollectionModal from "./modal/AddNewCollection";
+import useCollections from "src/shared/hooks/fetch/useCollections";
+import CircularLoading from "src/shared/components/Loading";
+import { SavedService } from "src/services/SubDatabaseService";
+import { useUserStore } from "src/store/userStore";
+import { LoadingButton } from "@mui/lab";
+import { useQueryClient } from "react-query";
 
 const SidebarContainer = styled.div`
-  width: 30vw;
+  width: 25vw;
   padding: 16px;
   border-radius: 8px;
   background-color: #ffffff;
@@ -42,23 +48,13 @@ const StyledButton = styled(Button)`
 
 const Content = styled(Box)`
   padding: 20px;
+  margin-left: 40px;
+  width: 68vw;
 `;
 
 const StyledTextItem = styled(ListItemText)`
   font-weight: 600 !important;
 `;
-
-const items = [
-  { icon: "https://mui.com/static/images/avatar/2.jpg", label: "Code" },
-  { icon: "https://mui.com/static/images/avatar/3.jpg", label: "Giáo dục" },
-  {
-    icon: "https://mui.com/static/images/avatar/4.jpg",
-    label: "TV & Phim ảnh",
-  },
-  { icon: "https://mui.com/static/images/avatar/5.jpg", label: "Âm nhạc" },
-  { icon: "https://mui.com/static/images/avatar/6.jpg", label: "Để xem sau" },
-  { icon: "https://mui.com/static/images/avatar/7.jpg", label: "Ẩm thực" },
-];
 
 const Layout = styled(Box)`
   display: flex;
@@ -69,16 +65,34 @@ const Layout = styled(Box)`
 `;
 
 const SavedPage = () => {
+  const queryClient = useQueryClient();
   const { open, handleOpen, handleClose } = useModal();
-  const [collections, setCollections] = useState(items);
-  const handleAddCollection = (newCollection) => {
-    setCollections([...collections, newCollection]);
-  };
+  const { currentUserId } = useUserStore();
 
+  const [loading, setLoading] = useState(false);
   const [currentCollection, setCurrentCollection] = useState(null);
   const handleSelectCollection = (collection) => {
     setCurrentCollection(collection);
   };
+
+  const handleClearCollection = async () => {
+    setLoading(true);
+    await Promise.all([
+      SavedService.removeCollection(
+        `${currentUserId}/${currentCollection.name}`
+      ),
+      SavedService.removeDataFromArray(
+        `${currentUserId}`,
+        "collections",
+        currentCollection
+      ),
+    ]);
+    queryClient.invalidateQueries("collections");
+    setLoading(false);
+    setCurrentCollection(null);
+  };
+
+  const { collections, isLoading } = useCollections();
 
   return (
     <Layout>
@@ -98,22 +112,29 @@ const SavedPage = () => {
               <AllInboxIcon />
             </div>
           </ListItemAvatar>
-          <StyledTextItem primary="Mục đã lưu" />
+          <StyledTextItem
+            primary="Mục đã lưu"
+            onClick={() => handleSelectCollection("saved")}
+          />
         </ListItemButton>
         <Divider />
         <Header variant="h6">Bộ sưu tập của tôi</Header>
 
         <List>
-          {collections.map((item, index) => (
-            <React.Fragment key={index}>
-              <ListItemButton onClick={() => handleSelectCollection(item)}>
-                <ListItemAvatar>
-                  <Avatar src={item.icon} variant="rounded" />
-                </ListItemAvatar>
-                <StyledTextItem primary={item.label} />
-              </ListItemButton>
-            </React.Fragment>
-          ))}
+          {isLoading ? (
+            <CircularLoading />
+          ) : (
+            collections.map((item, index) => (
+              <React.Fragment key={index}>
+                <ListItemButton onClick={() => handleSelectCollection(item)}>
+                  <ListItemAvatar>
+                    <Avatar src={item.avatar} variant="rounded" />
+                  </ListItemAvatar>
+                  <StyledTextItem primary={item.name} />
+                </ListItemButton>
+              </React.Fragment>
+            ))
+          )}
         </List>
 
         <StyledButton variant="outlined" onClick={handleOpen}>
@@ -123,11 +144,13 @@ const SavedPage = () => {
       <Content>
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <Typography sx={{ fontWeight: "600" }} variant="h5">
-            {currentCollection?.label || "Mục đã lưu"}
+            {currentCollection?.name || "Mục đã lưu"}
           </Typography>
           {currentCollection && (
-            <Button
+            <LoadingButton
               variant="contained"
+              loading={loading}
+              onClick={handleClearCollection}
               startIcon={
                 <LayersClearIcon
                   // @ts-ignore
@@ -136,16 +159,12 @@ const SavedPage = () => {
               }
             >
               Xoá{" "}
-            </Button>
+            </LoadingButton>
           )}
         </Box>
-        <SavedItemList currentCollection={currentCollection} />
+        <SavedItemList currentCollection={currentCollection?.name} />
       </Content>
-      <AddNewCollectionModal
-        open={open}
-        handleClose={handleClose}
-        handleAdd={handleAddCollection}
-      />
+      <AddNewCollectionModal open={open} handleClose={handleClose} />
     </Layout>
   );
 };

@@ -1,15 +1,21 @@
-import { useState } from 'react';
-import styled from 'styled-components';
-import { 
-  Modal, 
-  Box, 
-  Typography, 
-  TextField, 
-  Button, 
-  Avatar, 
-  IconButton 
-} from '@mui/material';
-import PhotoCamera from '@mui/icons-material/PhotoCamera';
+import { useState } from "react";
+import styled from "styled-components";
+import {
+  Modal,
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Avatar,
+  IconButton,
+} from "@mui/material";
+import PhotoCamera from "@mui/icons-material/PhotoCamera";
+
+import { SavedService } from "src/services/SubDatabaseService";
+import upload from "src/shared/helper/upload";
+import { useUserStore } from "src/store/userStore";
+import { LoadingButton } from "@mui/lab";
+import { useQueryClient } from "react-query";
 
 const ModalContainer = styled(Box)`
   position: absolute;
@@ -36,8 +42,12 @@ const AvatarContainer = styled.div`
   gap: 16px;
 `;
 
-const AddNewCollectionModal = ({ open, handleClose, handleAdd }) => {
-  const [collectionName, setCollectionName] = useState('');
+const AddNewCollectionModal = ({ open, handleClose }) => {
+  const { currentUserId } = useUserStore();
+  const queryClient = useQueryClient();
+
+  const [loading, setLoading] = useState(false);
+  const [collectionName, setCollectionName] = useState("");
   const [avatar, setAvatar] = useState(null);
 
   const handleNameChange = (event) => {
@@ -47,14 +57,29 @@ const AddNewCollectionModal = ({ open, handleClose, handleAdd }) => {
   const handleAvatarChange = (event) => {
     if (event.target.files && event.target.files[0]) {
       const reader = new FileReader();
-      reader.onload = (e) => setAvatar(e.target.result);
       reader.readAsDataURL(event.target.files[0]);
+      reader.onload = (e) =>
+        setAvatar({
+          file: event.target.files[0],
+          url: e.target.result,
+        });
     }
   };
 
-  const handleSave = () => {
-    handleAdd({ name: collectionName, avatar });
-    setCollectionName('');
+  const handleSave = async () => {
+    if (collectionName === "" || avatar === null) {
+      alert("Vui lòng điền đầy đủ thông tin");
+      return;
+    }
+    setLoading(true);
+    const res = await upload(avatar.file);
+    await SavedService.addDataToArray(`${currentUserId}`, "collections", {
+      name: collectionName,
+      avatar: res,
+    });
+    queryClient.invalidateQueries("collections");
+    setLoading(false);
+    setCollectionName("");
     setAvatar(null);
     handleClose();
   };
@@ -74,30 +99,38 @@ const AddNewCollectionModal = ({ open, handleClose, handleAdd }) => {
             onChange={handleNameChange}
           />
           <AvatarContainer>
-            <Avatar src={avatar} alt="Collection Avatar" />
-            <input 
-              accept="image/*" 
-              style={{ display: 'none' }} 
-              id="icon-button-file" 
-              type="file" 
-              onChange={handleAvatarChange} 
+            <Avatar src={avatar?.url} alt="Collection Avatar" />
+            <input
+              accept="image/*"
+              style={{ display: "none" }}
+              id="icon-button-file"
+              type="file"
+              onChange={handleAvatarChange}
             />
-            <label htmlFor="icon-button-file" style={{display: 'flex', alignItems: 'center'}}>
-              <IconButton color="primary" aria-label="upload picture" component="span">
+            <label
+              htmlFor="icon-button-file"
+              style={{ display: "flex", alignItems: "center" }}
+            >
+              <IconButton
+                color="primary"
+                aria-label="upload picture"
+                component="span"
+              >
                 <PhotoCamera />
               </IconButton>
               <Typography variant="h6">Chọn ảnh đại diện</Typography>
             </label>
           </AvatarContainer>
-          <Button
+          <LoadingButton
             variant="contained"
+            loading={loading}
             color="primary"
             onClick={handleSave}
             disabled={!collectionName} // Disable the button if the name is empty
             fullWidth
           >
             Lưu lại
-          </Button>
+          </LoadingButton>
         </FormContainer>
       </ModalContainer>
     </Modal>

@@ -1,9 +1,9 @@
 import { SavedService } from "src/services/SubDatabaseService";
 import { useQuery } from "react-query";
 
-const useSavedPosts = (id) => {
-  const { data: posts, isLoading } = useQuery(["saved", id], () =>
-    SavedService.getAllSubCollection(`${id}/savedPosts`)
+const useSavedPosts = (id, collection) => {
+  const { data: posts, isLoading } = useQuery([collection, id], () =>
+    SavedService.getAllSubCollection(`${id}/${collection}`)
   );
 
   return {

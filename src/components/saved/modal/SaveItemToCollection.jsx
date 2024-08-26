@@ -10,6 +10,11 @@ import {
   Button,
   Avatar,
 } from "@mui/material";
+import useCollections from "src/shared/hooks/fetch/useCollections";
+import CircularLoading from "src/shared/components/Loading";
+
+import { SavedService } from "src/services/SubDatabaseService";
+import { useUserStore } from "src/store/userStore";
 
 const ModalContainer = styled(Box)`
   position: absolute;
@@ -40,7 +45,10 @@ const CollectionText = styled(Typography)`
   margin-left: 8px;
 `;
 
-const SaveToCollectionModal = ({ open, handleClose, collections }) => {
+const SaveToCollectionModal = ({ open, handleClose, post }) => {
+  const { collections, isLoading } = useCollections();
+  const { currentUserId } = useUserStore();
+
   const [selectedCollections, setSelectedCollections] = React.useState([]);
 
   const handleCheckboxChange = (event) => {
@@ -54,45 +62,61 @@ const SaveToCollectionModal = ({ open, handleClose, collections }) => {
     }
   };
 
-  const handleSaveClick = () => {
+  const handleSaveClick = async () => {
+    if (selectedCollections.length === 0) return;
+
+    const parallelPromises = selectedCollections.map((collection) =>
+      SavedService.createSubCollection(
+        `${currentUserId}/${collection}/${post.id}`,
+        post
+      )
+    );
+
+    await Promise.all(parallelPromises);
     handleClose();
   };
 
   return (
     <Modal open={open} onClose={handleClose}>
       <ModalContainer>
-        <Typography variant="h6" gutterBottom>
-          Chọn bộ sưu tập
-        </Typography>
-        <FormGroup>
-          {collections.map((collection, index) => (
-            <CollectionItem key={index}>
-              <CollectionLabel>
-                <Avatar
-                  src={collection.icon}
-                  alt={collection.label}
-                  variant="rounded"
-                />
-                <CollectionText variant="body1">
-                  {collection.label}
-                </CollectionText>
-              </CollectionLabel>
-              <Checkbox
-                name={collection.label}
-                onChange={handleCheckboxChange}
-              />
-            </CollectionItem>
-          ))}
-        </FormGroup>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSaveClick}
-          style={{ marginTop: "16px" }}
-          fullWidth
-        >
-          Lưu lại
-        </Button>
+        {isLoading ? (
+          <CircularLoading />
+        ) : (
+          <>
+            <Typography variant="h6" gutterBottom>
+              Chọn bộ sưu tập
+            </Typography>
+            <FormGroup>
+              {collections.map((collection, index) => (
+                <CollectionItem key={index}>
+                  <CollectionLabel>
+                    <Avatar
+                      src={collection.avatar}
+                      alt={collection.name}
+                      variant="rounded"
+                    />
+                    <CollectionText variant="body1">
+                      {collection.name}
+                    </CollectionText>
+                  </CollectionLabel>
+                  <Checkbox
+                    name={collection.name}
+                    onChange={handleCheckboxChange}
+                  />
+                </CollectionItem>
+              ))}
+            </FormGroup>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSaveClick}
+              style={{ marginTop: "16px" }}
+              fullWidth
+            >
+              Lưu lại
+            </Button>
+          </>
+        )}
       </ModalContainer>
     </Modal>
   );

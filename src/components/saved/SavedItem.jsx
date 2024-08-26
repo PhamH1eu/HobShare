@@ -25,7 +25,7 @@ const ItemCard = styled(Card)`
   margin-bottom: 20px;
   display: flex;
   padding: 16px;
-  width: 65vw;
+  width: 100%;
 `;
 
 const ItemContent = styled(CardContent)`
@@ -55,55 +55,45 @@ const VideoWrapper = styled(Box)`
   }
 `;
 
-const items = [
-  { icon: "https://mui.com/static/images/avatar/2.jpg", label: "Code" },
-  { icon: "https://mui.com/static/images/avatar/3.jpg", label: "Giáo dục" },
-  {
-    icon: "https://mui.com/static/images/avatar/4.jpg",
-    label: "TV & Phim ảnh",
-  },
-  { icon: "https://mui.com/static/images/avatar/5.jpg", label: "Âm nhạc" },
-  { icon: "https://mui.com/static/images/avatar/6.jpg", label: "Để xem sau" },
-  { icon: "https://mui.com/static/images/avatar/7.jpg", label: "Ẩm thực" },
-];
-
-const SavedItem = ({ title, type, id, avatarUrl, userName, video }) => {
+const SavedItem = ({ post, type, currentCollection }) => {
   const queryClient = useQueryClient();
   const { open, handleOpen, handleClose } = useModal();
   const { currentUserId } = useUserStore();
 
   const removeSavedItem = async () => {
-    await SavedService.removeSubCollection(`${currentUserId}/savedPosts/${id}`);
-    queryClient.invalidateQueries(["saved", currentUserId]);
+    await SavedService.removeSubCollection(
+      `${currentUserId}/${currentCollection}/${post.id}`
+    );
+    queryClient.invalidateQueries([currentCollection, currentUserId]);
   };
 
   return (
     <ItemCard>
-      {video ? (
+      {post.video ? (
         <VideoWrapper>
           <video>
-            <source src={video} type="video/mp4" />
+            <source src={post.video} type="video/mp4" />
           </video>
         </VideoWrapper>
       ) : (
         <Avatar
-          src={avatarUrl}
-          alt={userName}
+          src={post.image ? post.image : post.authorAvatar}
+          alt={post.authorName}
           sx={{ marginRight: "20px", height: "140px", width: "140px" }}
           variant="rounded"
         />
       )}
       <ItemContent>
-        <StyledLink to={`/post/${id}`}>
+        <StyledLink to={`/post/${post.id}`}>
           <Typography variant="h6" sx={{ fontWeight: "600" }}>
-            {title}
+            {truncateString(post.text, 40)}
           </Typography>
         </StyledLink>
         <Typography variant="body2" color="text.secondary">
-          {type} • {userName}
+          {type} • {post.authorName}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Đã lưu từ bài viết của {userName}
+          Đã lưu từ bài viết của {post.authorName}
         </Typography>
       </ItemContent>
       <CardActions>
@@ -122,19 +112,28 @@ const SavedItem = ({ title, type, id, avatarUrl, userName, video }) => {
       <SaveToCollectionModal
         open={open}
         handleClose={handleClose}
-        collections={items}
+        post={post}
       />
     </ItemCard>
   );
 };
 
 const SavedItemList = ({ currentCollection }) => {
+  const validateCollection = currentCollection ? currentCollection : "saved";
   const { currentUserId } = useUserStore();
-  const { posts, isLoading } = useSavedPosts(currentUserId);
+  const { posts, isLoading } = useSavedPosts(currentUserId, validateCollection);
 
   if (isLoading) {
     return (
-      <Box sx={{ marginTop: "20px" }}>
+      <Box
+        sx={{
+          marginTop: "20px",
+          marginBottom: "20px",
+          display: "flex",
+          padding: "16px",
+          width: "65vw",
+        }}
+      >
         <CircularLoading />
       </Box>
     );
@@ -146,12 +145,9 @@ const SavedItemList = ({ currentCollection }) => {
       {posts.map((item, index) => (
         <SavedItem
           key={index}
-          title={truncateString(item.text, 40)}
+          post={item}
           type="Bài viết"
-          id={item.id}
-          avatarUrl={item.image ? item.image : item.authorAvatar}
-          userName={item.authorName}
-          video={item.video}
+          currentCollection={validateCollection}
         />
       ))}
     </Box>

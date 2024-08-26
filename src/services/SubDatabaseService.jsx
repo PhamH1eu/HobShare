@@ -31,10 +31,24 @@ class SubDatabaseService {
     return await deleteDoc(docRef);
   };
 
+  removeCollection = async (path) => {
+    const q = query(collection(db, this.collection, path));
+    const querySnapshot = await getDocs(q);
+    const parallel = querySnapshot.docs.map((doc) => deleteDoc(doc.ref));
+    await Promise.all(parallel);
+    return;
+  };
+
   checkExistSubCollection = async (path) => {
     const docRef = doc(db, this.collection, path);
     const docSnap = await getDoc(docRef);
     return docSnap.exists();
+  };
+
+  getDocument = async (path) => {
+    const docRef = doc(db, this.collection, path);
+    const docSnap = await getDoc(docRef);
+    return docSnap.data();
   };
 
   getAllSubCollection = async (path) => {
@@ -45,6 +59,20 @@ class SubDatabaseService {
       data.push(doc.data());
     });
     return data;
+  };
+
+  addDataToArray = async (path, data, value) => {
+    const docRef = doc(db, this.collection, path);
+    return await updateDoc(docRef, {
+      [data]: arrayUnion(value),
+    });
+  };
+
+  removeDataFromArray = async (path, data, value) => {
+    const docRef = doc(db, this.collection, path);
+    return await updateDoc(docRef, {
+      [data]: arrayRemove(value),
+    });
   };
 }
 

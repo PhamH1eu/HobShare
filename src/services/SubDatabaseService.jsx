@@ -11,6 +11,13 @@ import {
   query,
   deleteDoc,
   runTransaction,
+  serverTimestamp,
+  orderBy,
+  limit,
+  startAfter,
+  startAt,
+  endBefore,
+  DocumentSnapshot,
 } from "firebase/firestore";
 
 class SubDatabaseService {
@@ -21,7 +28,10 @@ class SubDatabaseService {
   }
 
   createSubCollection = async (path, data) => {
-    return await setDoc(doc(db, this.collection, path), data);
+    return await setDoc(doc(db, this.collection, path), {
+      ...data,
+      createdAt: serverTimestamp(),
+    });
   };
 
   updateSubCollection = async (path, data, value) => {
@@ -64,6 +74,35 @@ class SubDatabaseService {
 
   getAllSubCollection = async (path) => {
     const q = query(collection(db, this.collection, path));
+    const querySnapshot = await getDocs(q);
+    let data = [];
+    querySnapshot.forEach((doc) => {
+      data.push(doc.data());
+    });
+    return data;
+  };
+
+  getSubCollectionWithLimit = async (path, quantity) => {
+    const q = query(
+      collection(db, this.collection, path),
+      orderBy("createdAt", "desc"),
+      limit(quantity)
+    );
+    const querySnapshot = await getDocs(q);
+    let data = [];
+    querySnapshot.forEach((doc) => {
+      data.push(doc.data());
+    });
+    return data;
+  };
+
+  loadMoreSubCollection = async (path, quantity, lastDocTimestamp) => {
+    const q = query(
+      collection(db, this.collection, path),
+      orderBy("createdAt", "desc"),
+      startAfter(lastDocTimestamp),
+      limit(quantity)
+    );
     const querySnapshot = await getDocs(q);
     let data = [];
     querySnapshot.forEach((doc) => {

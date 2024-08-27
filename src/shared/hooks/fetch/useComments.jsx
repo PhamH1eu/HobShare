@@ -3,7 +3,7 @@ import { PostService } from "src/services/SubDatabaseService";
 
 const useComments = (postId) => {
   const { data: comments, isLoading } = useQuery(["comments", postId], () =>
-    PostService.getAllSubCollection(`${postId}/comments`)
+    PostService.getSubCollectionWithLimit(`${postId}/comments`, 2)
   );
 
   return {

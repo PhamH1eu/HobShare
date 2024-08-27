@@ -8,6 +8,7 @@ import { PostService } from "src/services/SubDatabaseService";
 import useComments from "src/shared/hooks/fetch/useComments";
 import CircularLoading from "src/shared/components/Loading";
 import { styled } from "styled-components";
+import { useEffect, useState } from "react";
 
 const LoadComments = styled.div`
   cursor: pointer;
@@ -19,7 +20,7 @@ const LoadComments = styled.div`
 
   &:hover {
     text-decoration: underline;
-    color: rgba(5, 97, 242, 255);
+    color: #08c4fc;
   }
 `;
 
@@ -27,7 +28,32 @@ const Comments = ({ postId }) => {
   const { currentUserId } = useUserStore();
   const { data: currentUser } = useUserInfo(currentUserId);
 
-  const { comments, isLoading } = useComments(postId);
+  const { comments: initialComments, isLoading } = useComments(postId);
+
+  const [comments, setTotalComments] = useState(
+    initialComments ? initialComments : []
+  );
+  const [lastDoc, setLastDoc] = useState(null);
+  const loadMore = async () => {
+    const moreComments = await PostService.loadMoreSubCollection(
+      `${postId}/comments`,
+      2,
+      lastDoc
+    );
+    if (moreComments.length < 2) {
+      setLastDoc(null);
+    } else {
+      setLastDoc(moreComments[moreComments.length - 1].createdAt);
+    }
+    setTotalComments([...comments, ...moreComments]);
+  };
+
+  useEffect(() => {
+    if (initialComments?.length > 0) {
+      setTotalComments(initialComments);
+      setLastDoc(initialComments[initialComments.length - 1].createdAt);
+    }
+  }, [initialComments]);
 
   const comment = async (data) => {
     const path = `${postId}/comments/${data.comId}`;
@@ -87,10 +113,8 @@ const Comments = ({ postId }) => {
 
   return (
     <>
-      {comments.length > 0 && (
-        <LoadComments onClick={() => console.log("load them di")}>
-          Xem thêm bình luận
-        </LoadComments>
+      {comments.length > 0 && lastDoc && (
+        <LoadComments onClick={loadMore}>Xem thêm bình luận</LoadComments>
       )}
       <CommentSection
         currentUser={{

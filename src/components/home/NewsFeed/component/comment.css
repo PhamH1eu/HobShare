@@ -27,3 +27,12 @@
         position: relative;
     }
 }
+
+.no-com {
+    align-self: center;
+    font-size: 1rem;
+    font-family: "Segoe UI", "Helvetica", "Arial", sans-serif;
+    font-weight: 600;
+    color: rgba(101, 103, 107, 255);
+    margin: 16px;
+}

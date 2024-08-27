@@ -4,74 +4,122 @@ import "@pmhieu/react-comments-section/dist/index.css";
 import "./comment.css";
 import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
 
-const Comments = () => {
+import { PostService } from "src/services/SubDatabaseService";
+import useComments from "src/shared/hooks/fetch/useComments";
+import CircularLoading from "src/shared/components/Loading";
+import { styled } from "styled-components";
+
+const LoadComments = styled.div`
+  cursor: pointer;
+  color: rgba(91, 98, 106, 255);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px;
+  padding-bottom: 0;
+
+  &:hover {
+    text-decoration: underline;
+    color: rgba(5, 97, 242, 255);
+  }
+`;
+
+const Comments = ({ postId }) => {
   const { currentUserId } = useUserStore();
   const { data: currentUser } = useUserInfo(currentUserId);
 
-  const data = [
-    {
-      userId: "userId",
-      comId: "1",
-      fullName: "Lily",
-      userProfile: "/profile/userId",
-      text: "I dont🤔",
-      avatarUrl: "https://ui-avatars.com/api/name=Lily&background=random",
-      replies: [
-        {
-          userId: "02c",
-          comId: "4",
-          fullName: "Laa",
-          userProfile: "https://www.linkedin.com/in/riya-negi-8879631a9/",
-          text: "I think you have a 🤔",
-          avatarUrl: "https://ui-avatars.com/api/name=Lily&background=random",
-        },
-      ],
-    },
-    {
-      userId: "02d",
-      comId: "2",
-      fullName: "Lily",
-      userProfile: "https://www.linkedin.com/in/riya-negi-8879631a9/",
-      text: "I think you have a point🤔",
-      avatarUrl: "https://ui-avatars.com/api/name=Lily&background=random",
-      replies: [],
-    },
-    {
-      userId: "02d",
-      comId: "3",
-      fullName: "Lily",
-      userProfile: "https://www.linkedin.com/in/riya-negi-8879631a9/",
-      text: "🤔",
-      avatarUrl: "https://ui-avatars.com/api/name=Lily&background=random",
-      replies: [],
-    },
-  ];
+  const { comments, isLoading } = useComments(postId);
+
+  const comment = async (data) => {
+    const path = `${postId}/comments/${data.comId}`;
+    await PostService.createSubCollection(path, data);
+  };
+
+  const reply = async (data) => {
+    if (data.parentOfRepliedCommentId === undefined) {
+      data.parentOfRepliedCommentId = data.repliedToCommentId;
+    }
+    const path = `${postId}/comments/${data.parentOfRepliedCommentId}`;
+    await PostService.addDataToArray(path, "replies", data);
+  };
+
+  const edit = async (data) => {
+    if (data.parentOfEditedCommentId === undefined) {
+      const path = `${postId}/comments/${data.comId}`;
+      await PostService.updateSubCollection(path, "text", data.text);
+    } else {
+      const currentComment = comments.filter(
+        (item) => item.comId === data.parentOfEditedCommentId
+      );
+      const path = `${postId}/comments/${data.parentOfEditedCommentId}`;
+      await PostService.updateSubCollection(
+        path,
+        "replies",
+        currentComment[0].replies
+      );
+    }
+  };
+
+  const deleteComment = async (data) => {
+    if (data.parentOfDeleteId) {
+      const commentBeforeDelete = await PostService.getAllSubCollection(
+        `${postId}/comments`
+      );
+      const parentOfRemovedComment = commentBeforeDelete.find(
+        (item) => item.comId === data.parentOfDeleteId
+      );
+      const commentToRemove = parentOfRemovedComment.replies.find(
+        (item) => item.comId === data.comIdToDelete
+      );
+      const path = `${postId}/comments/${data.parentOfDeleteId}`;
+      await PostService.removeDataFromArray(path, "replies", commentToRemove);
+    } else {
+      const commentToRemove = comments.find(
+        (item) => item.comId === data.comIdToDelete
+      );
+      const path = `${postId}/comments/${commentToRemove.comId}`;
+      await PostService.removeSubCollection(path);
+    }
+  };
+
+  if (isLoading) {
+    return <CircularLoading />;
+  }
 
   return (
-    <CommentSection
-      currentUser={{
-        currentUserId: "01a",
-        currentUserImg: currentUser.avatar,
-        currentUserProfile: `http://127.0.0.1:5173/profile/${currentUser.id}`,
-        currentUserFullName: currentUser.username,
-      }}
-      commentData={data}
-      onSubmitAction={(data) => console.log("check submit, ", data)}
-      onReplyAction={(data) => console.log("check reply, ", data)}
-      currentData={(data) => {
-        console.log("curent data", data);
-      }}
-      
-      titleStyle={{ display: "none" }}
-      hrStyle={{ display: "none" }}
-      submitBtnStyle={{ fontSize: "0.8rem", content: "123" }}
-      cancelBtnStyle={{ fontSize: "0.8rem" }}
-      logIn={{
-        loginLink: "",
-        signupLink: "",
-      }}
-    />
+    <>
+      {comments.length > 0 && (
+        <LoadComments onClick={() => console.log("load them di")}>
+          Xem thêm bình luận
+        </LoadComments>
+      )}
+      <CommentSection
+        currentUser={{
+          currentUserId: currentUserId,
+          currentUserImg: currentUser.avatar,
+          currentUserProfile: `http://127.0.0.1:5173/profile/${currentUserId}`,
+          currentUserFullName: currentUser.username,
+        }}
+        commentData={comments}
+        onSubmitAction={comment}
+        onReplyAction={reply}
+        onEditAction={edit}
+        onDeleteAction={deleteComment}
+        titleStyle={{ display: "none" }}
+        hrStyle={{ display: "none" }}
+        submitBtnStyle={{ fontSize: "0.8rem", content: "123" }}
+        cancelBtnStyle={{ fontSize: "0.8rem" }}
+        logIn={{
+          loginLink: "",
+          signupLink: "",
+        }}
+        customNoComment={() => customNoComment()}
+      />
+    </>
   );
 };
+
+const customNoComment = () => (
+  <div className="no-com">Chưa có bình luận nào ở đây !</div>
+);
 
 export default Comments;

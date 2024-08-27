@@ -116,20 +116,6 @@ const Marked = styled.div`
   margin-bottom: 5px;
 `;
 
-const LoadComments = styled.div`
-  cursor: pointer;
-  color: rgba(91, 98, 106, 255);
-  font-size: 14px;
-  font-weight: 500;
-  padding: 10px;
-  padding-bottom: 0;
-
-  &:hover {
-    text-decoration: underline;
-    color: rgba(5, 97, 242, 255);
-  }
-`;
-
 const Hashtags = styled.div`
   display: flex;
   gap: 10px;
@@ -285,12 +271,7 @@ const Post = ({ post, initComt }) => {
       </PostFooter>
       <Divider flexItem variant="middle" color="#bdbdbd" />
       {showComment && (
-        <>
-          <LoadComments onClick={() => console.log("load them di")}>
-            Xem thêm bình luận
-          </LoadComments>
-          <Comments />
-        </>
+          <Comments postId={post.id} />
       )}
       <Modal
         open={open}

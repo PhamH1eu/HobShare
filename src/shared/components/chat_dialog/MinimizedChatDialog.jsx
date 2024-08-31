@@ -119,11 +119,11 @@ const ChatMinimezed = ({ chat }) => {
       // @ts-ignore
       if (message.senderId === currentUserId) {
         // @ts-ignore
-        setMessageToShow("Bạn: " + message.text);
+        setMessageToShow("Bạn " + (message.text || "đã gửi một phương tiện"));
         setOpen(false);
       } else {
         // @ts-ignore
-        setMessageToShow(message.senderName + ": " + message.text);
+        setMessageToShow(message.senderName + ": " + (message.text || "đã gửi một phương tiện"));
         setOpen(true);
       }
     }

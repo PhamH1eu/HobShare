@@ -9,7 +9,6 @@ export default async function UpdateChat(currentUserId, userId, chatId, text) {
 
     if (userChatsSnapshot.exists()) {
       const userChatsData = userChatsSnapshot.data();
-      console.log("🚀 ~ userIDs.forEach ~ userChatsData:", userChatsData);
       //get chat from a list of chats of a user
       const chatIndex = userChatsData.chats.findIndex(
         (c) => c.chatId === chatId

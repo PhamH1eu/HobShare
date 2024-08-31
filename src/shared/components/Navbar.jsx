@@ -23,6 +23,7 @@ import NotificationDialog from "./navbar_dialog/NotificationDialog";
 import MessengerDialog from "./navbar_dialog/MessengerDialog";
 import { useState } from "react";
 import useUserInfo from "../hooks/fetch/useUserInfo";
+import useChatList from "../hooks/listen/useChatList";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -187,6 +188,9 @@ const NavBar = () => {
     if (inputValue.length > 0) navigate(`/search/${inputValue}`);
   };
 
+  const { chats } = useChatList();
+  const unreadChats = chats.filter((chat) => !chat.isSeen).length;
+
   return (
     <Box>
       <AppBar
@@ -233,7 +237,11 @@ const NavBar = () => {
                 style={{ backgroundColor: "rgba(228,230,235,255)" }}
                 onClick={handleMessengerOpen}
               >
-                <Badge badgeContent={""} color="error">
+                <Badge
+                  invisible={unreadChats === 0}
+                  badgeContent={unreadChats}
+                  color="error"
+                >
                   <SmsIcon
                     // @ts-ignore
                     color="black"

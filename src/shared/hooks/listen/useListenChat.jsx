@@ -100,3 +100,23 @@ export const loadMoreMessages = async (
   });
   setLoading(false);
 };
+
+export const useListenChatNotify = (chatId, setMessage) => {
+  useEffect(() => {
+    const q = query(
+      collection(db, `chats/${chatId}/messages`),
+      orderBy("sendAt", "desc"),
+      limit(1)
+    );
+    const unSub = onSnapshot(q, (querySnapshot) => {
+      if (querySnapshot.docs.length === 0) {
+        return;
+      }
+      setMessage(querySnapshot.docs[0].data());
+    });
+
+    return () => {
+      unSub();
+    };
+  }, [chatId]);
+};

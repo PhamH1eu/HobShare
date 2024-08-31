@@ -1,8 +1,8 @@
 import { ChatService } from "src/services/DatabaseService";
 
-export default async function UpdateChat(currentUser, userId, chatId, text) {
+export default async function UpdateChat(currentUserId, userId, chatId, text) {
   //ID của 2 user trong chat
-  const userIDs = [currentUser.id, userId];
+  const userIDs = [currentUserId, userId];
   //update lại last message, isSeen, updatedAt trong userchats của 2 user
   userIDs.forEach(async (id) => {
     const userChatsSnapshot = await ChatService.get(id);
@@ -17,7 +17,7 @@ export default async function UpdateChat(currentUser, userId, chatId, text) {
       userChatsData.chats[chatIndex].lastMessage =
         text == "" ? "đã gửi một phương tiện" : text;
       userChatsData.chats[chatIndex].isSeen =
-        id === currentUser.id ? true : false;
+        id === currentUserId ? true : false;
       userChatsData.chats[chatIndex].updatedAt = Date.now();
 
       await ChatService.update(id, {

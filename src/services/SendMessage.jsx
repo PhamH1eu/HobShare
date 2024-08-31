@@ -23,6 +23,7 @@ export default async function SendMessage(
     await addDoc(collection(db, `chats/${chatId}/messages`), {
       senderId: currentUser.id,
       senderAvatar: currentUser.avatar,
+      senderName: currentUser.username,
       text,
       sendAt: serverTimestamp(),
       ...(imgUrl.length > 0 && { img: imgUrl }),

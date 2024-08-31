@@ -23,7 +23,7 @@ const upload = async (file) => {
             break;
         }
       },
-      (_error) => reject("Error uploading file"),
+      (error) => reject("Error uploading file" + error.message),
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           resolve(downloadURL);

@@ -146,7 +146,7 @@ const Post = ({ post, initComt }) => {
         setMarked(true);
       }
     });
-  }, []);
+  }, [pathToPostSaved]);
   const handleMarked = async () => {
     setLoading(true);
     if (marked) {

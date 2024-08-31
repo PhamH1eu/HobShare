@@ -196,7 +196,7 @@ const ChatDialog = ({ chat }) => {
     await Promise.all([
       //pass video list
       SendMessage(currentUser, chatId, text, imgList, videoList),
-      UpdateChat(currentUser, user.id, chatId, text),
+      UpdateChat(currentUserId, user.id, chatId, text),
     ]);
     setImgList([]);
     setVideoList([]);

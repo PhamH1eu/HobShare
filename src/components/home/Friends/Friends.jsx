@@ -6,6 +6,8 @@ import styled from "styled-components";
 import useChatList from "src/shared/hooks/listen/useChatList";
 
 import Contact from "./Contact";
+import { useChatDialogStore } from "src/store/chatDialogStore";
+import { useEffect } from "react";
 
 const groupChats = [];
 
@@ -68,7 +70,19 @@ const SearchBar = styled.div`
 `;
 
 const Friends = () => {
+  const minimizedChats = useChatDialogStore((state) => state.minimizedChats);
+  const addChat = useChatDialogStore((state) => state.addChat);
+
   const { chats } = useChatList();
+  useEffect(() => {
+    if (
+      chats[0] &&
+      !chats[0].isSeen &&
+      !minimizedChats.some((item) => item.chatId === chats[0].chatId)
+    ) {
+      addChat(chats[0]);
+    }
+  }, [chats]);
 
   return (
     <ContactList>

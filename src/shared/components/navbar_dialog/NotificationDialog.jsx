@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 import StyledLink from "../StyledLink";
+import InfiniteScroll from "react-infinite-scroller";
 import {
   Box,
   Typography,
@@ -21,6 +22,15 @@ import ThumbUpAlt from "@mui/icons-material/ThumbUpAlt";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import { MoreVert } from "@mui/icons-material";
 import { Check } from "@mui/icons-material";
+
+import { useUserStore } from "src/store/userStore";
+
+import { timeDiff } from "src/shared/helper/timeDiff";
+import CircularLoading from "../Loading";
+import useNotifications from "src/shared/hooks/fetch/useNotifications";
+import { NotificationService } from "src/services/SubDatabaseService";
+import { useQueryClient } from "react-query";
+import { increment } from "firebase/firestore";
 
 const Container = styled(Box)`
   width: 360px;
@@ -92,116 +102,210 @@ const AddFriendIcon = styled(PersonAdd)`
   font-size: 24px;
 `;
 
-const noti = [
-  {
-    sourceName: "Nik Nguyen",
-    content: "đã phản hồi bình luận của bạn",
-    sourceImage: "https://via.placeholder.com/40",
-    createdAt: "2 ngày",
-    isRead: false,
-    type: "comment",
-    url: "/post/2cqvyhc2En5b0nPoNaEE",
-  },
-  {
-    sourceName: "Nik Nguyen",
-    content: "đã gửi lời mời kết bạn",
-    sourceImage: "https://via.placeholder.com/40",
-    createdAt: "2 ngày",
-    isRead: true,
-    type: "add",
-    url: "/profile/id",
-  },
-  {
-    sourceName: "Nik Nguyen",
-    content: "đã thích bài viết của bạn",
-    sourceImage: "https://via.placeholder.com/40",
-    createdAt: "2 ngày",
-    isRead: true,
-    type: "like",
-    url: "/post/id",
-  },
-  {
-    sourceName: "Nik Nguyen",
-    content: "đã thích bình luận của bạn",
-    sourceImage: "https://via.placeholder.com/40",
-    createdAt: "2 ngày",
-    url: "/post/id",
-    isRead: false,
-    type: "like",
-  },
-  {
-    sourceName: "Nik Nguyen",
-    content: "đã phản hồi bình luận của bạn",
-    sourceImage: "https://via.placeholder.com/40",
-    createdAt: "2 ngày",
-    isRead: false,
-    type: "comment",
-    url: "/post/2cqvyhc2En5b0nPoNaEE",
-  },
-  {
-    sourceName: "Nik Nguyen",
-    content: "đã gửi lời mời kết bạn",
-    sourceImage: "https://via.placeholder.com/40",
-    createdAt: "2 ngày",
-    isRead: true,
-    type: "add",
-    url: "/profile/id",
-  },
-  {
-    sourceName: "Nik Nguyen",
-    content: "đã thích bài viết của bạn",
-    sourceImage: "https://via.placeholder.com/40",
-    createdAt: "2 ngày",
-    isRead: true,
-    type: "like",
-    url: "/post/id",
-  },
-  {
-    sourceName: "Nik Nguyen",
-    content: "đã thích bình luận của bạn",
-    sourceImage: "https://via.placeholder.com/40",
-    createdAt: "2 ngày",
-    url: "/post/id",
-    isRead: false,
-    type: "like",
-  },
-  {
-    sourceName: "Nik Nguyen",
-    content: "đã phản hồi bình luận của bạn",
-    sourceImage: "https://via.placeholder.com/40",
-    createdAt: "2 ngày",
-    isRead: false,
-    type: "comment",
-    url: "/post/2cqvyhc2En5b0nPoNaEE",
-  },
-  {
-    sourceName: "Nik Nguyen",
-    content: "đã gửi lời mời kết bạn",
-    sourceImage: "https://via.placeholder.com/40",
-    createdAt: "2 ngày",
-    isRead: true,
-    type: "add",
-    url: "/profile/id",
-  },
-  {
-    sourceName: "Nik Nguyen",
-    content: "đã thích bài viết của bạn",
-    sourceImage: "https://via.placeholder.com/40",
-    createdAt: "2 ngày",
-    isRead: true,
-    type: "like",
-    url: "/post/id",
-  },
-  {
-    sourceName: "Nik Nguyen",
-    content: "đã thích bình luận của bạn",
-    sourceImage: "https://via.placeholder.com/40",
-    createdAt: "2 ngày",
-    url: "/post/id",
-    isRead: false,
-    type: "like",
-  },
-];
+const NotificationDialog = ({
+  handleNotiClose,
+  setLoadingNoti,
+  unreadNotis,
+}) => {
+  const { currentUserId } = useUserStore();
+  const queryClient = useQueryClient();
+  const [value, setValue] = useState("1");
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const handleMenuClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+  const read = async (item) => {
+    handleNotiClose();
+    handleMenuClose();
+    setLoadingNoti(true);
+
+    if (unreadNotis === 0) {
+      setLoadingNoti(false);
+      return;
+    }
+
+    if (item) {
+      const updateStatus = NotificationService.updateSubCollection(
+        `${currentUserId}/notifications/${item.id}`,
+        "isRead",
+        true
+      );
+      const updateCount = await NotificationService.updateSubCollection(
+        `${currentUserId}`,
+        "unreadNotis",
+        increment(-1)
+      );
+      await Promise.all([updateStatus, updateCount]);
+    } else {
+      const updatePromise = noti.map((item) => {
+        return NotificationService.updateSubCollection(
+          `${currentUserId}/notifications/${item.id}`,
+          "isRead",
+          true
+        );
+      });
+      const updateCount = await NotificationService.updateSubCollection(
+        `${currentUserId}`,
+        "unreadNotis",
+        0
+      );
+      Promise.all([...updatePromise, updateCount]);
+    }
+
+    setLoadingNoti(false);
+    queryClient.invalidateQueries("notifications");
+  };
+
+  const { notis } = useNotifications();
+
+  if (notis.isLoading) {
+    return <CircularLoading />;
+  }
+
+  const noti = notis.data.pages
+    .map((page) =>
+      page.docs.map((doc) => {
+        return { ...doc.data(), id: doc.id };
+      })
+    )
+    .flat();
+
+  const loadMore = () => {
+    //time out
+    setTimeout(() => {
+      notis.fetchNextPage();
+    }, 3000);
+  };
+
+  const renderListNoti = (noti) => {
+    return noti.map((item, index) => (
+      <StyledLink key={index} to={item.url} onClick={() => read(item)}>
+        <StyledListItem alignItems="flex-start">
+          <ListItemAvatar>
+            <AvatarWrapper>
+              <Avatar src={item.sourceImage} sx={{ width: 54, height: 54 }} />
+              {renderIcon(item.type)}
+            </AvatarWrapper>
+          </ListItemAvatar>
+          <ListItemText
+            primary={
+              <Typography variant="body2">
+                <strong>{item.sourceName}</strong>
+                <span
+                  style={{
+                    color: item.isRead ? "#65676b" : "black",
+                    marginLeft: "4px",
+                    fontWeight: item.isRead ? "normal" : "600",
+                  }}
+                >
+                  {item.content}
+                </span>
+              </Typography>
+            }
+            secondary={
+              <DynamicTag isRead={item.isRead}>
+                {timeDiff(
+                  item.createdAt.seconds * 1000 +
+                    item.createdAt.nanoseconds / 1000000
+                )}
+              </DynamicTag>
+            }
+          />
+          {!item.isRead && (
+            <div
+              style={{
+                backgroundColor: "#6ec924",
+                width: "10px",
+                height: "10px",
+                borderRadius: "50%",
+                marginLeft: "auto",
+                position: "absolute",
+                right: "20px",
+                top: "50%",
+              }}
+            ></div>
+          )}
+        </StyledListItem>
+      </StyledLink>
+    ));
+  };
+
+  return (
+    <TabContext value={value}>
+      <Container>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <NotificationHeader>Thông báo</NotificationHeader>
+          <IconButton onClick={handleMenuClick}>
+            <MoreVert />
+          </IconButton>
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+          >
+            <MenuItem onClick={() => read()}>
+              <ListItemIcon>
+                <Check style={{ color: "#6ec924" }} />
+              </ListItemIcon>
+              <Typography variant="inherit">
+                Đánh dấu tất cả là đã đọc
+              </Typography>
+            </MenuItem>
+          </Menu>
+        </div>
+        <TabList onChange={handleChange}>
+          <CustomTab label="Tất cả" value="1" />
+          <CustomTab label="Chưa đọc" value="2" />
+        </TabList>
+        <TabPanel value="1" sx={{ padding: 0 }}>
+          <InfiniteScroll
+            loadMore={loadMore}
+            hasMore={notis.hasNextPage}
+            loader={<CircularLoading key={0} />}
+            useWindow={false}
+          >
+            <List>{renderListNoti(noti)}</List>
+          </InfiniteScroll>
+        </TabPanel>
+        <TabPanel value="2" sx={{ padding: 0 }}>
+          <InfiniteScroll
+            loadMore={loadMore}
+            hasMore={notis.hasNextPage}
+            loader={<CircularLoading key={0} />}
+            useWindow={false}
+          >
+            <List>
+              {renderListNoti(
+                noti.filter(
+                  (item) =>
+                    !(
+                      // @ts-ignore
+                      item.isRead
+                    )
+                )
+              )}
+            </List>
+          </InfiniteScroll>
+        </TabPanel>
+      </Container>
+    </TabContext>
+  );
+};
 
 const renderIcon = (type) => {
   switch (type) {
@@ -229,157 +333,6 @@ const DynamicTag = ({ isRead, children }) => {
       </Typography>
     );
   }
-};
-
-const NotificationDialog = () => {
-  const [value, setValue] = useState("1");
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
-  const [anchorEl, setAnchorEl] = useState(null);
-  const handleMenuClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-  const read = () => {
-    noti.forEach((item) => (item.isRead = true));
-    handleMenuClose();
-  };
-
-  return (
-    <TabContext value={value}>
-      <Container>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <NotificationHeader>Thông báo</NotificationHeader>
-          <IconButton onClick={handleMenuClick}>
-            <MoreVert />
-          </IconButton>
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleMenuClose}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "left",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-          >
-            <MenuItem onClick={read}>
-              <ListItemIcon>
-                <Check style={{ color: "#6ec924" }} />
-              </ListItemIcon>
-              <Typography variant="inherit">
-                Đánh dấu tất cả là đã đọc
-              </Typography>
-            </MenuItem>
-          </Menu>
-        </div>
-        <TabList onChange={handleChange}>
-          <CustomTab label="Tất cả" value="1" />
-          <CustomTab label="Chưa đọc" value="2" />
-        </TabList>
-        <TabPanel value="1" sx={{ padding: 0 }}>
-          <List>
-            {noti.map((item, index) => (
-              <StyledLink key={index} to={item.url}>
-                <StyledListItem alignItems="flex-start">
-                  <ListItemAvatar>
-                    <AvatarWrapper>
-                      <Avatar
-                        src={item.sourceImage}
-                        sx={{ width: 54, height: 54 }}
-                      />
-                      {renderIcon(item.type)}
-                    </AvatarWrapper>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={
-                      <Typography variant="body2">
-                        <strong>{item.sourceName}</strong> {item.content}
-                      </Typography>
-                    }
-                    secondary={
-                      <DynamicTag isRead={item.isRead}>
-                        {item.createdAt}
-                      </DynamicTag>
-                    }
-                  />
-                  {!item.isRead && (
-                    <div
-                      style={{
-                        backgroundColor: "#6ec924",
-                        width: "10px",
-                        height: "10px",
-                        borderRadius: "50%",
-                        marginLeft: "auto",
-                        position: "absolute",
-                        right: "20px",
-                        top: "50%",
-                      }}
-                    ></div>
-                  )}
-                </StyledListItem>
-              </StyledLink>
-            ))}
-          </List>
-        </TabPanel>
-        <TabPanel value="2" sx={{ padding: 0 }}>
-          <List>
-            {noti
-              .filter((item) => !item.isRead)
-              .map((item, index) => (
-                <StyledLink key={index} to={item.url}>
-                  <StyledListItem alignItems="flex-start">
-                    <ListItemAvatar>
-                      <AvatarWrapper>
-                        <Avatar
-                          src={item.sourceImage}
-                          sx={{ width: 54, height: 54 }}
-                        />
-                        {renderIcon(item.type)}
-                      </AvatarWrapper>
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={
-                        <Typography variant="body2">
-                          <strong>{item.sourceName}</strong> {item.content}
-                        </Typography>
-                      }
-                      secondary={
-                        <DynamicTag isRead={item.isRead}>
-                          {item.createdAt}
-                        </DynamicTag>
-                      }
-                    />
-                    {!item.isRead && (
-                      <div
-                        style={{
-                          backgroundColor: "#6ec924",
-                          width: "10px",
-                          height: "10px",
-                          borderRadius: "50%",
-                          marginLeft: "auto",
-                          position: "absolute",
-                          right: "20px",
-                          top: "50%",
-                        }}
-                      ></div>
-                    )}
-                  </StyledListItem>
-                </StyledLink>
-              ))}
-          </List>
-        </TabPanel>
-      </Container>
-    </TabContext>
-  );
 };
 
 export default NotificationDialog;

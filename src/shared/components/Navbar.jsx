@@ -24,6 +24,8 @@ import MessengerDialog from "./navbar_dialog/MessengerDialog";
 import { useState } from "react";
 import useUserInfo from "../hooks/fetch/useUserInfo";
 import useChatList from "../hooks/listen/useChatList";
+import useListenNotifications from "../hooks/listen/useListenNotifications";
+import CircularLoading from "./Loading";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -98,6 +100,9 @@ const NavBar = () => {
     handleOpen: handleMessengerOpen,
     handleClose: handleMessengerClose,
   } = useDialog();
+  const [unreadNotis, setUnreadNotis] = useState(0);
+  const [loadingNoti, setLoadingNoti] = useState(false);
+  useListenNotifications(currentUserId, setUnreadNotis);
 
   const renderNoti = (
     <Menu
@@ -114,7 +119,11 @@ const NavBar = () => {
       open={isNotiOpen}
       onClose={handleNotiClose}
     >
-      <NotificationDialog />
+      <NotificationDialog
+        handleNotiClose={handleNotiClose}
+        setLoadingNoti={setLoadingNoti}
+        unreadNotis={unreadNotis}
+      />
     </Menu>
   );
 
@@ -251,11 +260,13 @@ const NavBar = () => {
             )}
             <IconButton
               size="large"
-              aria-label="show 17 new notifications"
               style={{ backgroundColor: "rgba(228,230,235,255)" }}
               onClick={handleNotiOpen}
             >
-              <Badge badgeContent={17} color="error">
+              <Badge
+                badgeContent={loadingNoti ? "..." : unreadNotis}
+                color="error"
+              >
                 <NotificationsIcon
                   // @ts-ignore
                   color="black"

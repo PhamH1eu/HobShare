@@ -271,7 +271,7 @@ const Post = ({ post, initComt }) => {
       </PostFooter>
       <Divider flexItem variant="middle" color="#bdbdbd" />
       {showComment && (
-          <Comments postId={post.id} />
+          <Comments postId={post.id} authorId={post.authorId}/>
       )}
       <Modal
         open={open}

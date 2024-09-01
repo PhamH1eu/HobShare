@@ -5,10 +5,12 @@ import "./comment.css";
 import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
 
 import { PostService } from "src/services/SubDatabaseService";
+import { NotificationService } from "src/services/SubDatabaseService";
 import useComments from "src/shared/hooks/fetch/useComments";
 import CircularLoading from "src/shared/components/Loading";
 import { styled } from "styled-components";
 import { useEffect, useState } from "react";
+import { increment } from "firebase/firestore";
 
 const LoadComments = styled.div`
   cursor: pointer;
@@ -24,7 +26,7 @@ const LoadComments = styled.div`
   }
 `;
 
-const Comments = ({ postId }) => {
+const Comments = ({ postId, authorId }) => {
   const { currentUserId } = useUserStore();
   const { data: currentUser } = useUserInfo(currentUserId);
 
@@ -58,14 +60,62 @@ const Comments = ({ postId }) => {
   const comment = async (data) => {
     const path = `${postId}/comments/${data.comId}`;
     await PostService.createSubCollection(path, data);
+    if (authorId !== currentUserId) {
+      await NotificationService.createSubCollection(
+        `${authorId}/notifications/${data.comId}`,
+        {
+          sourceName: currentUser.username,
+          sourceImage: currentUser.avatar,
+          content: "đã bình luận về bài viết của bạn",
+          isRead: false,
+          type: "comment",
+          url: `/post/${postId}`,
+        }
+      );
+      await NotificationService.updateSubCollection(
+        `${authorId}`,
+        "unreadNotis",
+        increment(1)
+      );
+    }
   };
 
   const reply = async (data) => {
+    var repliedUserId = currentUserId;
+    if (data.parentOfRepliedCommentId === undefined) {
+      const repliedComment = comments.find(
+        (item) => item.comId === data.repliedToCommentId
+      );
+      repliedUserId = repliedComment.userId;
+    } else {
+      const repliedComment = comments.find(
+        (item) => item.comId === data.parentOfRepliedCommentId
+      );
+      repliedUserId = repliedComment.replies.find(
+        (item) => item.comId === data.repliedToCommentId
+      ).userId;
+    }
     if (data.parentOfRepliedCommentId === undefined) {
       data.parentOfRepliedCommentId = data.repliedToCommentId;
     }
     const path = `${postId}/comments/${data.parentOfRepliedCommentId}`;
     await PostService.addDataToArray(path, "replies", data);
+    await NotificationService.createSubCollection(
+      `${repliedUserId}/notifications/${data.comId}`,
+      {
+        sourceName: currentUser.username,
+        sourceImage: currentUser.avatar,
+        content: "đã phản hồi bình luận của bạn",
+        isRead: false,
+        type: "comment",
+        url: `/post/${postId}`,
+      }
+    );
+    await NotificationService.updateSubCollection(
+      `${authorId}`,
+      "unreadNotis",
+      increment(1)
+    );
   };
 
   const edit = async (data) => {

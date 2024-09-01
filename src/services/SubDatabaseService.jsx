@@ -24,7 +24,7 @@ class SubDatabaseService {
     this.collection = collectionName;
   }
 
-  createSubCollection = async (path, data) => {
+  createSubCollection = async (path, data, id) => {
     return await setDoc(doc(db, this.collection, path), {
       ...data,
       createdAt: serverTimestamp(),
@@ -126,3 +126,6 @@ class SubDatabaseService {
 export const SavedService = new SubDatabaseService("saved");
 
 export const PostService = new SubDatabaseService("posts");
+
+export const NotificationService = new SubDatabaseService("notifications");
+

@@ -24,8 +24,7 @@ import MessengerDialog from "./navbar_dialog/MessengerDialog";
 import { useState } from "react";
 import useUserInfo from "../hooks/fetch/useUserInfo";
 import useChatList from "../hooks/listen/useChatList";
-import useListenNotifications from "../hooks/listen/useListenNotifications";
-import CircularLoading from "./Loading";
+import useListenNotifications, { useListenFirstNoti } from "../hooks/listen/useListenNotifications";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -103,6 +102,7 @@ const NavBar = () => {
   const [unreadNotis, setUnreadNotis] = useState(0);
   const [loadingNoti, setLoadingNoti] = useState(false);
   useListenNotifications(currentUserId, setUnreadNotis);
+  useListenFirstNoti(currentUserId);
 
   const renderNoti = (
     <Menu

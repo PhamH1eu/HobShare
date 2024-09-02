@@ -178,10 +178,8 @@ const NotificationDialog = ({
     .flat();
 
   const loadMore = () => {
-    //time out
-    setTimeout(() => {
-      notis.fetchNextPage();
-    }, 3000);
+    if (notis.isLoading) return;
+    notis.fetchNextPage();
   };
 
   const renderListNoti = (noti) => {
@@ -273,34 +271,44 @@ const NotificationDialog = ({
           <CustomTab label="Chưa đọc" value="2" />
         </TabList>
         <TabPanel value="1" sx={{ padding: 0 }}>
-          <InfiniteScroll
-            loadMore={loadMore}
-            hasMore={notis.hasNextPage}
-            loader={<CircularLoading key={0} />}
-            useWindow={false}
+          <div
+            style={{ height: "550px", overflowY: "auto", overflowX: "hidden" }}
           >
-            <List>{renderListNoti(noti)}</List>
-          </InfiniteScroll>
+            <InfiniteScroll
+              loadMore={loadMore}
+              hasMore={notis.hasNextPage}
+              loader={<CircularLoading key={0} />}
+              useWindow={false}
+              threshold={100}
+            >
+              <List>{renderListNoti(noti)}</List>
+            </InfiniteScroll>
+          </div>
         </TabPanel>
         <TabPanel value="2" sx={{ padding: 0 }}>
-          <InfiniteScroll
-            loadMore={loadMore}
-            hasMore={notis.hasNextPage}
-            loader={<CircularLoading key={0} />}
-            useWindow={false}
+          <div
+            style={{ height: "550px", overflowY: "auto", overflowX: "hidden" }}
           >
-            <List>
-              {renderListNoti(
-                noti.filter(
-                  (item) =>
-                    !(
-                      // @ts-ignore
-                      item.isRead
-                    )
-                )
-              )}
-            </List>
-          </InfiniteScroll>
+            <InfiniteScroll
+              loadMore={loadMore}
+              hasMore={notis.hasNextPage}
+              loader={<CircularLoading key={0} />}
+              useWindow={false}
+              threshold={100}
+            >
+              <List>
+                {renderListNoti(
+                  noti.filter(
+                    (item) =>
+                      !(
+                        // @ts-ignore
+                        item.isRead
+                      )
+                  )
+                )}
+              </List>
+            </InfiniteScroll>
+          </div>
         </TabPanel>
       </Container>
     </TabContext>

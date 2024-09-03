@@ -10,6 +10,7 @@ import ChatHolder from "./shared/components/chat_dialog/ChatHolder";
 import MinimizedChatDialog from "./shared/components/chat_dialog/MinimizedChatDialog";
 import SearchScreen from "./components/search/SearchScreen";
 import PostPage from "./components/home/NewsFeed/PostPage";
+import Activities from "./components/activities/Activities";
 
 const Router = () => {
   let location = useLocation();
@@ -26,6 +27,7 @@ const Router = () => {
         <Route path="/memories" element={<MemoriesPage />} />
         <Route path="/search/:id" element={<SearchScreen />} />
         <Route path="/post/:postId" element={<PostPage />} />
+        <Route path="/activities" element={<Activities />} />
       </Routes>
       {!checkMess && <ChatHolder />}
       {!checkMess && <MinimizedChatDialog />}

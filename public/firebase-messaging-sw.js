@@ -1,7 +1,7 @@
 // @ts-nocheck
 //public/firebase-messaging-sw.js
-importScripts('https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js');
-importScripts('https://www.gstatic.com/firebasejs/10.12.5/firebase-messaging.js');
+importScripts('https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/10.13.1/firebase-messaging-compat.js');
 
 self.addEventListener('fetch', () => {
   const urlParams = new URLSearchParams(location.search);

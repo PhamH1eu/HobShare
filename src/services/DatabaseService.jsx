@@ -63,7 +63,7 @@ class DatabaseService {
   union = async (id, field, values) => {
     const docRef = doc(db, this.collection, id);
     return await updateDoc(docRef, {
-      [field]: arrayUnion(values),
+      [field]: arrayUnion(...values),
       updatedAt: serverTimestamp(),
     });
   };

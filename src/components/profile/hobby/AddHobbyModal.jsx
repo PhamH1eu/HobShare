@@ -49,7 +49,7 @@ const AddHobbyModal = ({ open, handleClose }) => {
       caption: caption,
       formatted_capption: formatString(caption),
     };
-    await UserService.union(currentUserId, "favorite", newHobby);
+    await UserService.union(currentUserId, "favorite", [newHobby]);
     await ActivitiesService.create(newHobby);
     queryClient.invalidateQueries(["user", currentUserId]);
     setCaption("");

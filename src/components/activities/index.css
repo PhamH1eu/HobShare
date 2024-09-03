@@ -1,0 +1,87 @@
+.activity {
+    margin-top: 64px;
+    overflow-x: hidden;
+    .top {
+        display: flex;
+        margin: 20px;
+        padding-left: 20px;
+        flex-wrap: wrap;
+        gap: 20px;
+
+        .button {
+            color: black;
+            background-color: white;
+            border-radius: 16px;
+            padding: 8px 10px;
+            font-weight: normal;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+        }
+        
+        button {
+            margin-left: auto;
+            margin-right: 10px;
+            background-color: #6ec924 !important;
+            color: white;
+        }
+    }
+
+    img {
+        width: 100%;
+        vertical-align: top;
+        transition: transform .3s, box-shadow 0.3s;
+    }
+
+    img:hover {
+        transform: scale(1.15);
+        -webkit-filter: brightness(60%);
+        filter: brightness(60%);
+        cursor: pointer;
+    }
+
+    figure.selected {
+        box-shadow: 8.0px 16.0px 16.0px hsl(0deg 0% 0% / 0.25);
+        transform: scale(1.02);
+    }
+
+    figure button {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        z-index: 1;
+        background-color: rgb(205, 64, 87);
+        padding: 6px;
+
+        svg {
+            color: white !important;
+        }
+    }
+
+    .image {
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+    .image figcaption {
+        display: none;
+        position: fixed;
+        bottom: 10px;
+        color: black;
+        background-color: white;
+        border-radius: 16px;
+        margin: 10px;
+        padding: 6px 10px;
+        font-weight: normal;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .image:hover>figcaption {
+        display: block;
+    }
+
+    .selected figcaption {
+        display: block;
+    }
+}

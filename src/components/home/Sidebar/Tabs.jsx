@@ -4,6 +4,7 @@ import styled from "styled-components";
 import PeopleIcon from "@mui/icons-material/People";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import Diversity2Icon from "@mui/icons-material/Diversity2";
+import WallpaperIcon from "@mui/icons-material/Wallpaper";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -88,7 +89,9 @@ const Tabs = () => {
       </StyledLink>
       <StyledLink to="/nearby">
         <MenuItem
-          className={`${currentUser.location.denyExposingLocation ? "disabled" : ""}`}
+          className={`${
+            currentUser.location.denyExposingLocation ? "disabled" : ""
+          }`}
           onClick={() => console.log("Location")}
         >
           <PinDropIcon className="location" />
@@ -98,7 +101,7 @@ const Tabs = () => {
       <StyledLink to="/group">
         <MenuItem>
           <Diversity2Icon className="group" />
-          <span>Nhóm</span>
+          <span>Diễn đàn</span>
         </MenuItem>
       </StyledLink>
       <StyledLink to="/saved">
@@ -116,6 +119,14 @@ const Tabs = () => {
             <span>Xem Thêm</span>
           </MenuItem>
         </AccordionSummary>
+        <AccordionDetails>
+          <StyledLink to="/activities">
+            <MenuItem>
+              <WallpaperIcon color="primary" />
+              <span>Hoạt động</span>
+            </MenuItem>
+          </StyledLink>
+        </AccordionDetails>
         <AccordionDetails>
           <StyledLink to="/memories">
             <MenuItem>

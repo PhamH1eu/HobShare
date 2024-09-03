@@ -15,12 +15,26 @@ import useUserInfo from "./shared/hooks/fetch/useUserInfo";
 
 import { generateToken, messaging } from "./lib/firebase";
 import { onMessage } from "firebase/messaging";
+import toast from "react-hot-toast";
+import { NotifiComponent } from "./shared/components/noti/NotifiComponent";
 
 const App = () => {
   useEffect(() => {
     generateToken();
     onMessage(messaging, (payload) => {
       console.log("Message received. ", payload);
+      toast((t) => (
+        <NotifiComponent
+          message={{
+            url: "/post/2",
+            content: "This is a notificatio21312123121321321233213213213n",
+            createdAt: 0,
+            sourceName: "Source Name",
+            sourceImage: "https://via.placeholder.com/150",
+          }}
+          t={t}
+        />
+      ));
     });
   }, []);
 

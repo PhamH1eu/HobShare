@@ -54,7 +54,7 @@ const tag = [
 const NewRecommend = () => {
   return (
     <SidebarWrapper>
-      <h3>Trending topics</h3>
+      <h3>Xu hướng</h3>
       {tag.map((t, index) => (
         <Hashtag key={index}>
           <span>{t.tag}</span>

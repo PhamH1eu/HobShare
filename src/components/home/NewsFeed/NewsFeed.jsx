@@ -28,6 +28,7 @@ const NewsFeed = () => {
       ) : (
         <div>
           {posts.map((post, index) => (
+            // @ts-ignore
             <Post key={index} post={post} />
           ))}
         </div>

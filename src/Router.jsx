@@ -11,6 +11,7 @@ import MinimizedChatDialog from "./shared/components/chat_dialog/MinimizedChatDi
 import SearchScreen from "./components/search/SearchScreen";
 import PostPage from "./components/home/NewsFeed/PostPage";
 import Activities from "./components/activities/Activities";
+import GroupWithSidebar from "./components/group/Group";
 
 const Router = () => {
   let location = useLocation();
@@ -28,6 +29,7 @@ const Router = () => {
         <Route path="/search/:id" element={<SearchScreen />} />
         <Route path="/post/:postId" element={<PostPage />} />
         <Route path="/activities" element={<Activities />} />
+        <Route path="/group" element={<GroupWithSidebar />} />
       </Routes>
       {!checkMess && <ChatHolder />}
       {!checkMess && <MinimizedChatDialog />}

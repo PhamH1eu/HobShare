@@ -101,7 +101,7 @@ const Tabs = () => {
       <StyledLink to="/group">
         <MenuItem>
           <Diversity2Icon className="group" />
-          <span>Diễn đàn</span>
+          <span>Nhóm</span>
         </MenuItem>
       </StyledLink>
       <StyledLink to="/saved">

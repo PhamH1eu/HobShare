@@ -1,0 +1,38 @@
+.my-swiper-button-prev,
+.my-swiper-button-next {
+    background-color: #fff;
+    opacity: 1;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+    padding: 4px;
+
+    svg {
+        font-size: 36px;
+        color: #007aff;
+    }
+}
+
+
+.my-swiper-button-prev {
+    left: 20px;
+    z-index: 10;
+    position: relative;
+}
+
+.my-swiper-button-next {
+    right: 20px;
+    z-index: 10;
+    position: relative;
+}
+
+.my-swiper-button-prev:hover,
+.my-swiper-button-next:hover {
+    background-color: #f5f5f5;
+}
+
+.swiper-button-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

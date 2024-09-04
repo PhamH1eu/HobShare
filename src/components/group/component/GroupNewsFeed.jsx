@@ -7,8 +7,10 @@ const GroupNewsFeed = () => {
   const { posts, isLoading } = usePosts();
 
   return (
-    <>
-      <Typography variant="h6">Hoạt động gần đây</Typography>
+    <div style={{ padding: "0 200px", display: "flex", flexDirection: "column" }}>
+      <Typography variant="h6" sx={{ fontSize: "0.95rem", color: "#656b7c" }}>
+        Hoạt động gần đây
+      </Typography>
       {isLoading ? (
         <CircularLoading />
       ) : (
@@ -19,7 +21,7 @@ const GroupNewsFeed = () => {
           ))}
         </div>
       )}
-    </>
+    </div>
   );
 };
 

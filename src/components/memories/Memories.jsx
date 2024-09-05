@@ -3,6 +3,9 @@ import { Box, Typography, Paper, Divider, Avatar, Button } from "@mui/material";
 import { Sidebar } from "./Sidebar";
 import PeopleIcon from "@mui/icons-material/People";
 import ReplyIcon from "@mui/icons-material/Reply";
+import usePosts from "src/shared/hooks/fetch/usePosts";
+import Post from "../home/NewsFeed/component/Post";
+import CircularLoading from "src/shared/components/Loading";
 const Container = styled(Box)`
   margin-top: 64px;
   display: flex;
@@ -17,7 +20,6 @@ const Content = styled(Box)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
   height: 100vh;
 `;
 
@@ -34,36 +36,18 @@ const Card = styled(Paper)`
 
 const MemoryCard = styled(Paper)`
   max-width: 600px;
+  min-width: 600px;
   max-height: 700px;
-  margin-bottom: 20px;
-  padding: 10px;
-  background-color: white;
-  border-radius: 12px;
+  padding: 0px;
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
 `;
 
-const memories = [
-  {
-    id: 1,
-    title: "Kỷ niệm 1",
-    description: "Mô tả kỷ niệm 1",
-    image: "memories_1.png",
-  },
-  {
-    id: 2,
-    title: "Kỷ niệm 2",
-    description: "Mô tả kỷ niệm 2",
-    image: "memories_2.png",
-  },
-  {
-    id: 3,
-    title: "Kỷ niệm 3",
-    description: "Mô tả kỷ niệm 3",
-    image: "memories_3.png",
-  },
-];
-
 function MemoriesPage() {
-  const hasMemories = memories.length > 0;
+  const { posts, isLoading } = usePosts();
+  const hasMemories = posts.length > 0;
+
   return (
     <Container>
       <Sidebar />
@@ -87,57 +71,23 @@ function MemoriesPage() {
               ? "Chúng tôi hy vọng bạn thích ôn lại và chia sẻ kỷ niệm trên HobShare, từ các kỷ niệm gần đây nhất đến những kỷ niệm ngày xa xưa."
               : "Hôm nay không có Kỷ niệm nào để xem hay chia sẻ, nhưng chúng tôi sẽ thông báo cho bạn khi bạn có khoảnh khắc để ôn lại."}
           </Typography>
+          <Typography variant="overline" display="block" gutterBottom>
+            Vào ngày này
+          </Typography>
+          <Typography variant="h6" gutterBottom>
+            2 năm trước
+          </Typography>
         </Card>
 
-        {memories.map((memory, index) => (
-          <MemoryCard key={index}>
-            <Typography variant="overline" display="block" gutterBottom>
-              Vào ngày này
-            </Typography>
-            <Typography variant="h6" gutterBottom>
-              2 năm trước
-            </Typography>
-            <Divider
-              sx={{
-                backgroundColor: "rgba(255, 255, 255, 0.12)",
-                marginBottom: "10px",
-              }}
-            />
-            <Box display="flex" alignItems="center" marginBottom="10px">
-              <Avatar sx={{ marginRight: "10px" }}>
-                <PeopleIcon />
-              </Avatar>
-              <div>
-                <Typography variant="body2" sx={{fontWeight: '600'}}>Nguyen Ha Minh</Typography>
-                <Typography variant="body2">October 13, 2019</Typography>
-              </div>
-            </Box>
-            <Typography variant="body2" gutterBottom>
-              Just a little cave diving/cliff jumping/zip lining adventure
-              💦🤘🇲🇽
-            </Typography>
-            <div
-              style={{
-                borderRadius: "5px",
-                overflow: "hidden",
-                height: "400px",
-              }}
-            >
-              <img
-                src="/photos/photo04.jpg"
-                alt="Memory"
-                style={{ width: "100%" }}
-              />
-            </div>
-            <Button
-              variant="outlined"
-              endIcon={<ReplyIcon color="primary" />}
-              sx={{ marginTop: "10px", width: "100%" }}
-            >
-              Share
-            </Button>
-          </MemoryCard>
-        ))}
+        {isLoading ? (
+          <CircularLoading />
+        ) : (
+          posts.map((post, index) => (
+            <MemoryCard key={index}>
+              <Post post={post} initComt={undefined} />
+            </MemoryCard>
+          ))
+        )}
       </Content>
     </Container>
   );

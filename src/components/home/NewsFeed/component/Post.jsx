@@ -188,12 +188,14 @@ const Post = ({ post, initComt }) => {
             {post.location && <div>đang ở</div>}
             <PostAuthor>{post.location}</PostAuthor>
           </PostTagging>
-          <PostTime>
-            {timeDiff(
-              post.createdAt.seconds * 1000 +
-                post.createdAt.nanoseconds / 1000000
-            )}
-          </PostTime>
+          <StyledLink to={`/post/${post.id}`}>
+            <PostTime>
+              {timeDiff(
+                post.createdAt.seconds * 1000 +
+                  post.createdAt.nanoseconds / 1000000
+              )}
+            </PostTime>
+          </StyledLink>
         </PostInfo>
         <Marked>
           {loading ? (

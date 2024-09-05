@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { styled } from "@mui/system";
 import {
   Box,
@@ -13,6 +13,7 @@ import { Home, Explore } from "@mui/icons-material";
 
 import GroupNewsFeed from "./component/GroupNewsFeed";
 import GroupRecommend from "./component/GroupRecommend";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = styled(Box)(({ theme }) => ({
   width: "340px",
@@ -130,6 +131,7 @@ const groups = [
 ];
 
 const GroupWithSidebar = () => {
+  const navigate = useNavigate();
   const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
@@ -172,7 +174,12 @@ const GroupWithSidebar = () => {
             {...a11yProps(1)}
           />
         </Tabs>
-        <CustomButton variant="contained">+ Tạo nhóm mới</CustomButton>
+        <CustomButton
+          onClick={() => navigate("/group/create")}
+          variant="contained"
+        >
+          + Tạo nhóm mới
+        </CustomButton>
         <Divider sx={{ marginY: 2 }} />
         <Typography
           sx={{ fontWeight: "600", fontSize: "1.2rem" }}

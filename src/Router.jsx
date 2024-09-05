@@ -12,6 +12,7 @@ import SearchScreen from "./components/search/SearchScreen";
 import PostPage from "./components/home/NewsFeed/PostPage";
 import Activities from "./components/activities/Activities";
 import GroupWithSidebar from "./components/group/Group";
+import GroupCreationPage from "./components/group/create/CreateGroup";
 
 const Router = () => {
   let location = useLocation();
@@ -30,6 +31,7 @@ const Router = () => {
         <Route path="/post/:postId" element={<PostPage />} />
         <Route path="/activities" element={<Activities />} />
         <Route path="/group" element={<GroupWithSidebar />} />
+        <Route path="/group/create" element={<GroupCreationPage />} />
       </Routes>
       {!checkMess && <ChatHolder />}
       {!checkMess && <MinimizedChatDialog />}

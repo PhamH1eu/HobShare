@@ -50,7 +50,7 @@ const Wallpaper = styled.img`
 const IconWrapper = MuiStyled(IconButton)`
   position: absolute;
   top: 30%;
-  left: 50%;
+  left: 48%;
   width: 50px;
   height: 50px;
   padding-bottom: 4px;
@@ -77,7 +77,7 @@ const AvatarWrapper = styled.div`
   position: relative;
 `;
 
-const StyledAvatar = styled(Avatar)`
+const StyledAvatar = MuiStyled(Avatar)`
   width: 140px;
   height: 140px;
   transition: filter 0.3s ease-in-out;
@@ -127,7 +127,7 @@ const Friends = styled.p`
   font-weight: 600;
 `;
 
-const CameraIcon = styled(CameraAltIcon)`
+const CameraIcon = MuiStyled(CameraAltIcon)`
   position: absolute;
   top: 50%;
   left: 50%;

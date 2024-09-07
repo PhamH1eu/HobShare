@@ -93,7 +93,6 @@ const SelectedUsersBox = styled(Box)({
 
 const FriendSuggestions = ({ selectedUsers, setSelectedUsers }) => {
   const { chats } = useChatList();
-  console.log("🚀 ~ FriendSuggestions ~ chats:", chats);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
   const [inputValue, setInputValue] = useState("");

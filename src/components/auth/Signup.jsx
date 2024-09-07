@@ -38,7 +38,7 @@ const Input = styled.input`
 
 const Title = styled.h1`
   font-size: 3rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 `;
 
 const Link = styled.a`

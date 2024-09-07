@@ -44,7 +44,7 @@ const App = () => {
   const { data: currentUser, isLoading } = useUserInfo(currentUserId);
   useListenAuth();
 
-  if (isLoading && currentUserId) return <CircularLoading />;
+  if (isLoading) return <CircularLoading />;
 
   return (
     <div className="container">

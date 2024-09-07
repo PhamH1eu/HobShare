@@ -24,8 +24,8 @@ const Privacy = () => {
 
   const [deny, setDeny] = useState(false);
   const [location, setLocation] = useState({
-    latitude: currentUser.location.latitude,
-    longitude: currentUser.location.longitude,
+    latitude: currentUser.location?.latitude,
+    longitude: currentUser.location?.longitude,
   });
 
   const getLocation = async () => {

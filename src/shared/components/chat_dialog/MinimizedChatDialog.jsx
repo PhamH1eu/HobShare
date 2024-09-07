@@ -28,7 +28,7 @@ const Wrapper = styled.div`
   flex-direction: column-reverse;
 `;
 
-const AvatarWrapper = styled(Box)(() => ({
+const AvatarWrapper = MuiStyled(Box)(() => ({
   position: "relative",
   boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.3)",
   borderRadius: "50%",
@@ -38,7 +38,7 @@ const AvatarWrapper = styled(Box)(() => ({
   },
 }));
 
-const CloseButton = styled(IconButton)(() => ({
+const CloseButton = MuiStyled(IconButton)(() => ({
   position: "absolute",
   top: 0,
   right: 0,
@@ -87,19 +87,7 @@ const CustomWidthTooltip = MuiStyled(({ className, ...props }) => (
   },
 });
 
-// const IconButtonStyle = MuiStyled(IconButton)(({ theme }) => ({
-//   backgroundColor: "white",
-//   boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.3)",
-//   width: "50px",
-//   height: "50px",
-
-//   "&:hover": {
-//     backgroundColor: theme.palette.grey[300],
-//   },
-// }));
-
 const ChatMinimezed = ({ chat }) => {
-  console.log("🚀 ~ ChatMinimezed ~ chat:", chat);
   const { currentUserId } = useUserStore();
   const { maximizeChat, removeMinimizedChat } = useChatDialogStore();
   const [message, setMessage] = useState();

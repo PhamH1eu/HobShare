@@ -5,9 +5,10 @@ import { LoadingButton } from "@mui/lab";
 import { auth } from "../../lib/firebase";
 import { useUserStore } from "../../store/userStore";
 import { UserService, ChatService } from "../../services/DatabaseService";
-import uploadAvatar from "src/shared/helper/uploadAvatar";
+import uploadSpecificImage from "src/shared/helper/uploadAvatar";
 
 import styled from "styled-components";
+import { useQueryClient } from "react-query";
 
 const Form = styled.form`
   color: #1b1b1b;
@@ -88,9 +89,12 @@ const Signup = () => {
 
   const setUserId = useUserStore((state) => state.setUserId);
   const setSignedUp = useUserStore((state) => state.setSignedUp);
+  const queryClient = useQueryClient();
+  const [loading, setLoading] = useState(false);
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const formData = new FormData(e.target);
       // @ts-ignore
@@ -110,13 +114,31 @@ const Signup = () => {
       //write to firebase
       const res = await mutationSignUp.mutateAsync({ email, password });
 
-      const avatarUrl = await uploadAvatar(avatar.file, res.user.uid);
+      const avatarUrl = await uploadSpecificImage(
+        avatar.file,
+        res.user.uid,
+        "avatar.jpg"
+      );
+
+      const imageUrl = `/background.png`;
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const wallpaper = new File([blob], "/background.png", {
+        type: blob.type,
+      });
+
+      const wallpaperUrl = await uploadSpecificImage(
+        wallpaper,
+        res.user.uid,
+        "wallpaper.jpg"
+      );
 
       await UserService.create(
         {
           username,
           email,
           avatar: avatarUrl,
+          wallpaper: wallpaperUrl,
           id: res.user.uid,
           blocked: [],
         },
@@ -131,12 +153,14 @@ const Signup = () => {
         res.user.uid
       );
 
-      toast.success("User created successfully");
       setUserId(res.user.uid);
       setSignedUp(true);
+      queryClient.refetchQueries("user");
+      toast.success("Tạo tài khoản thành công");
     } catch (error) {
       toast.error(error.message);
     }
+    setLoading(false);
   };
   return (
     <Form className="signup" onSubmit={handleRegister}>
@@ -168,7 +192,7 @@ const Signup = () => {
       <Link href="#">Already have an Account?</Link>
       <LoadingButton
         type="submit"
-        loading={mutationSignUp.isLoading}
+        loading={mutationSignUp.isLoading || loading}
         variant="outlined"
       >
         Sign Up

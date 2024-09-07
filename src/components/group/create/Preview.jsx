@@ -36,8 +36,7 @@ const WallpaperWrapper = styled(Box)({
   backgroundSize: "cover",
   backgroundPosition: "center",
   position: "relative",
-  marginBottom: "20px",
-  borderRadius: "5px",
+  borderRadius: "5px 5px 0 0",
 });
 
 const StyledButtonWrapper = styled(Box)({
@@ -63,7 +62,7 @@ const StyledButton = styled(IconButton)({
 });
 
 const Container = styled(Box)({
-  borderRadius: "8px",
+  borderRadius: "0 0 8px 8px",
   boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
 });
 
@@ -117,7 +116,7 @@ const GroupComponent = ({ name, members }) => {
     <Container>
       <Header>
         <GroupName>{name === "" ? "Tên nhóm" : name}</GroupName>
-        <PrivacyText>{members.length} thành viên</PrivacyText>
+        <PrivacyText>{members.length + 1} thành viên</PrivacyText>
       </Header>
       <Divider sx={{ marginY: 1 }} />
 
@@ -139,8 +138,8 @@ const GroupComponent = ({ name, members }) => {
         <VisibilityContainer>
           <VisibilityTitle>Giới thiệu</VisibilityTitle>
           <VisibilityItem>
-            Đây là một nhóm dành cho những người yêu thích công nghệ và chia sẻ
-            kiến thức.
+            Đây là một nhóm dành cho những người yêu thích các hoạt động ngoài
+            trời
           </VisibilityItem>
         </VisibilityContainer>
       </div>
@@ -148,10 +147,7 @@ const GroupComponent = ({ name, members }) => {
   );
 };
 
-const Preview = ({ name, members }) => {
-  const [wallpaper, setWallpaper] = useState(
-    "https://www.facebook.com/images/groups/groups-default-cover-photo-2x.png"
-  );
+const Preview = ({ name, members, wallpaper, setWallpaper }) => {
   const handleWallpaperChange = (event) => {
     const file = event.target.files[0];
     if (file) {

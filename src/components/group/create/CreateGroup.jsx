@@ -1,11 +1,5 @@
-import {
-  Grid,
-  TextField,
-  Button,
-  Avatar,
-  Typography,
-  IconButton,
-} from "@mui/material";
+import { Grid, TextField, Avatar, Typography, IconButton } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import { styled } from "@mui/material/styles";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useUserStore } from "src/store/userStore";
@@ -30,7 +24,7 @@ const HeaderText = styled(Typography)(({ theme }) => ({
   fontWeight: "bold",
 }));
 
-const CreateButton = styled(Button)(({ theme }) => ({
+const CreateButton = styled(LoadingButton)(({ theme }) => ({
   width: "100%",
   marginTop: "auto",
 }));
@@ -48,8 +42,20 @@ const GroupCreationPage = () => {
   const { currentUserId } = useUserStore();
   const { data: currentUser } = useUserInfo(currentUserId);
 
+  const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
-  const [members, setMembers] = useState([currentUser]);
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [wallpaper, setWallpaper] = useState(
+    "https://www.facebook.com/images/groups/groups-default-cover-photo-2x.png"
+  );
+
+  const createGroup = () => {
+    setLoading(true);
+    // get group id
+    const id = "123";
+    setLoading(false);
+    navigate(`/group/${id}`);
+  };
 
   return (
     <Grid container sx={{ marginTop: "64px", overflowX: "hidden" }}>
@@ -86,8 +92,16 @@ const GroupCreationPage = () => {
             margin="normal"
             onChange={(e) => setName(e.target.value)}
           />
-          <FriendSuggestions />
-          <CreateButton variant="contained" color="primary" disabled>
+          <FriendSuggestions
+            selectedUsers={selectedUsers}
+            setSelectedUsers={setSelectedUsers}
+          />
+          <CreateButton
+            variant="contained"
+            color="primary"
+            onClick={createGroup}
+            disabled={name === ""}
+          >
             Tạo
           </CreateButton>
         </LeftPanel>
@@ -95,7 +109,12 @@ const GroupCreationPage = () => {
 
       {/* Right Side */}
       <Grid item xs={8}>
-        <Preview name={name} members={members} />
+        <Preview
+          name={name}
+          members={selectedUsers}
+          wallpaper={wallpaper}
+          setWallpaper={setWallpaper}
+        />
       </Grid>
     </Grid>
   );

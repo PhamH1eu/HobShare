@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import StackGrid, { transitions, easings } from "react-stack-grid";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { IconButton } from "@mui/material";
@@ -15,6 +15,7 @@ import useModal from "src/shared/hooks/util/useModal";
 
 import "./index.css";
 import CircularLoading from "src/shared/components/Loading";
+import { useQueryClient } from "react-query";
 
 const style = {
   position: "absolute",
@@ -46,7 +47,7 @@ const HobbyChoosingPage = () => {
 
   const [location, setLocation] = useState({ latitude: null, longitude: null });
   const [deny, setDeny] = useState(false);
-  const getLocation = () => {
+  useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -64,10 +65,11 @@ const HobbyChoosingPage = () => {
     } else {
       setDeny(true);
     }
-  };
+  }, []);
 
-  const writeHobby = () => {
-    UserService.update(currentUserId, {
+  const queryClient = useQueryClient();
+  const writeHobby = async () => {
+    await UserService.update(currentUserId, {
       favorite: [...liked],
       location: {
         ...location,
@@ -77,6 +79,7 @@ const HobbyChoosingPage = () => {
           : geohashForLocation([location.latitude, location.longitude]),
       },
     });
+    queryClient.invalidateQueries("user");
     setSignedUp(false);
   };
 
@@ -94,13 +97,7 @@ const HobbyChoosingPage = () => {
               {item.caption}
             </div>
           ))}
-          <button
-            className="button"
-            onClick={() => {
-              handleOpen();
-              getLocation();
-            }}
-          >
+          <button className="button" onClick={handleOpen}>
             Tiếp tục
           </button>
         </div>

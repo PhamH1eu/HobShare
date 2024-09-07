@@ -87,10 +87,12 @@ const Tabs = () => {
           <span>Bạn bè</span>
         </MenuItem>
       </StyledLink>
-      <StyledLink to="/nearby">
+      <StyledLink
+        to={currentUser.location?.denyExposingLocation ? "" : "/nearby"}
+      >
         <MenuItem
           className={`${
-            currentUser.location.denyExposingLocation ? "disabled" : ""
+            currentUser.location?.denyExposingLocation ? "disabled" : ""
           }`}
           onClick={() => console.log("Location")}
         >

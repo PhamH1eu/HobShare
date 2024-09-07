@@ -4,12 +4,14 @@ import styled from "styled-components";
 import { useUserStore } from "src/store/userStore";
 import useModal from "src/shared/hooks/util/useModal";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import { IconButton } from "@mui/material";
+import { styled as MuiStyled } from "@mui/material";
 import AddRequestModal from "./AddRequestModal";
 
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import Avatar from "@mui/material/Avatar";
 import { useState } from "react";
-import uploadAvatar from "src/shared/helper/uploadAvatar";
+import uploadSpecificImage from "src/shared/helper/uploadAvatar";
 
 import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
 
@@ -29,11 +31,43 @@ const WallImage = styled.div`
   position: relative;
 `;
 
+const WallpaperWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  border-radius: 0 0 10px 10px;
+  overflow: hidden;
+  transition: filter 0.3s ease-in-out;
+  z-index: 1;
+`;
+
 const Wallpaper = styled.img`
   width: 100%;
   height: 80%;
   object-fit: cover;
   border-radius: 0 0 10px 10px;
+`;
+
+const IconWrapper = MuiStyled(IconButton)`
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  width: 50px;
+  height: 50px;
+  padding-bottom: 4px;
+  background-color: rgba(0, 0, 0, 0.5);
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+  opacity: ${({
+    // @ts-ignore
+    isHovered,
+  }) => (isHovered ? 1 : 0)};
+
+  svg {
+    cursor: pointer;
+    font-size: 40px;
+    color: white;
+  }
 `;
 
 const AvatarWrapper = styled.div`
@@ -121,17 +155,52 @@ const ProfileHeader = () => {
   const { open, handleClose, handleOpen } = useModal();
 
   const [isHovered, setIsHovered] = useState(false);
+  const [isWallpaperHovered, setIsWallpaperHovered] = useState(false);
 
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
-    await uploadAvatar(file, user.id);
+    await uploadSpecificImage(file, user.id, "avatar.jpg");
+    window.location.reload();
+  };
+
+  const handleWallpaperUpload = async (event) => {
+    const file = event.target.files[0];
+    await uploadSpecificImage(file, user.id, "wallpaper.jpg");
     window.location.reload();
   };
 
   return (
     <HeaderWrapper>
       <WallImage>
-        <Wallpaper src="/background.png" />
+        {isViewingOwnProfile ? (
+          <WallpaperWrapper
+            onMouseEnter={() => setIsWallpaperHovered(true)}
+            onMouseLeave={() => setIsWallpaperHovered(false)}
+          >
+            <Wallpaper
+              src={user.wallpaper || "/background.png"}
+              // @ts-ignore
+              isHovered={isWallpaperHovered}
+            />
+            <IconWrapper
+              className="wallpaper-camera-icon"
+              // @ts-ignore
+              isHovered={isWallpaperHovered}
+            >
+              <label htmlFor="wallpaper-upload">
+                <CameraAltIcon />
+              </label>
+            </IconWrapper>
+            <FileInput
+              type="file"
+              accept="image/*"
+              onChange={handleWallpaperUpload}
+              id="wallpaper-upload"
+            />
+          </WallpaperWrapper>
+        ) : (
+          <Wallpaper src={user.wallpaper || "/background.png"} />
+        )}
         <InfoWrapper>
           {isViewingOwnProfile ? (
             <AvatarWrapper

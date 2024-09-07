@@ -57,7 +57,7 @@ const Login = () => {
       const { email, password } = Object.fromEntries(formData);
       //validate data
       if (!email || !password) {
-        throw new Error("Please fill in all fields");
+        throw new Error("Vui lòng nhập đầy đủ thông tin");
       }
 
       //write to firebase

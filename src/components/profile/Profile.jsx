@@ -116,7 +116,7 @@ const Profile = () => {
               {posts.length > 0 ? (
                 <div>
                   {posts.map((post, index) => (
-                    <Post key={index} post={post} />
+                    <Post key={index} post={post} initComt={undefined} />
                   ))}
                 </div>
               ) : (

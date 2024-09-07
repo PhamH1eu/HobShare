@@ -43,7 +43,7 @@ const Hobbies = () => {
     <HobbyWrapper className="hobby-wrapper">
       <p>Hoạt động yêu thích</p>
       <ImageWrapper>
-        {currentUser.favorite.map((obj) => (
+        {currentUser.favorite?.map((obj) => (
           <figure key={obj.image} className="image">
             <img src={obj.image} alt={obj.caption} />
             <figcaption>{obj.caption}</figcaption>

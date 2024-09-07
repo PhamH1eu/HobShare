@@ -2,8 +2,8 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 import { storage } from "../../lib/firebase";
 
-const uploadAvatar = async (file, uid) => {
-  const storageRef = ref(storage, `users/${uid}/avatar.jpg`);
+const uploadSpecificImage = async (file, uid, name) => {
+  const storageRef = ref(storage, `users/${uid}/${name}`);
 
   const uploadTask = uploadBytesResumable(storageRef, file);
 
@@ -33,4 +33,4 @@ const uploadAvatar = async (file, uid) => {
   });
 };
 
-export default uploadAvatar;
+export default uploadSpecificImage;

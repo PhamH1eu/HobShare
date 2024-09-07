@@ -25,6 +25,7 @@ import { useState } from "react";
 import useUserInfo from "../hooks/fetch/useUserInfo";
 import useChatList from "../hooks/listen/useChatList";
 import useListenNotifications from "../hooks/listen/useListenNotifications";
+import { useQueryClient } from "react-query";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -146,13 +147,17 @@ const NavBar = () => {
     </StyledMenu>
   );
 
+  const queryClient = useQueryClient();
   const resetChat = useChatStore((state) => state.resetChat);
+  const setUserId = useUserStore((state) => state.setUserId);
   const navigate = useNavigate();
   const logout = async () => {
     set(ref(database, "/status/" + currentUser.id), {
       state: "offline",
       last_changed: serverTimestamp(),
     });
+    setUserId(null);
+    queryClient.clear();
     await auth.signOut();
     resetChat();
     navigate("/");

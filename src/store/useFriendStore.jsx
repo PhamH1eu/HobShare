@@ -1,4 +1,4 @@
-import create from "zustand";
+import { create } from "zustand";
 
 const useFriendStore = create((set) => ({
   selectedFriends: [],

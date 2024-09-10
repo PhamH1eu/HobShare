@@ -12,6 +12,7 @@ import {
   getDocs,
   query,
   where,
+  deleteDoc,
 } from "firebase/firestore";
 
 class DatabaseService {
@@ -80,7 +81,7 @@ class DatabaseService {
   // delete a document by setting the deletedAt field
   delete = async (id) => {
     const docRef = doc(db, this.collection, id);
-    return await updateDoc(docRef, { deletedAt: serverTimestamp() });
+    return await deleteDoc(docRef);
   };
 }
 

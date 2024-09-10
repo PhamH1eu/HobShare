@@ -9,17 +9,23 @@ import SentimentVerySatisfiedIcon from "@mui/icons-material/SentimentVerySatisfi
 import Comments from "./Comments";
 
 import Modal from "@mui/material/Modal";
-import { IconButton } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import BookmarksIcon from "@mui/icons-material/Bookmarks";
+import BackspaceIcon from "@mui/icons-material/Backspace";
 import CircularLoading from "src/shared/components/Loading";
 import Divider from "@mui/material/Divider";
 import Share from "./Share";
 import useModal from "src/shared/hooks/util/useModal";
 import { timeDiff } from "src/shared/helper/timeDiff";
 import StyledLink from "src/shared/components/StyledLink";
+import { LoadingButton } from "@mui/lab";
+import { styled as MuiStyled } from "@mui/material";
 
 import { SavedService } from "src/services/SubDatabaseService";
 import { useUserStore } from "src/store/userStore";
+import { PostService } from "src/services/DatabaseService";
+import { useQueryClient } from "react-query";
+import { useLocation } from "react-router-dom";
 
 const PostWrapper = styled.div`
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
@@ -61,8 +67,6 @@ const PostTime = styled.span`
   font-size: 14px;
   font-weight: 500;
 `;
-
-const PostContent = styled.div``;
 
 const PostImage = styled.img`
   width: 100%;
@@ -116,6 +120,10 @@ const Marked = styled.div`
   margin-bottom: 5px;
 `;
 
+const DeleteButton = styled.div`
+  margin-bottom: 5px;
+`;
+
 const Hashtags = styled.div`
   display: flex;
   gap: 10px;
@@ -130,7 +138,69 @@ const PostTag = styled.div`
   color: #27b4fc;
 `;
 
+const ModalTitle = styled.h2`
+  margin: 0;
+  font-size: 1.2rem;
+  text-align: center;
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  margin-top: 8px;
+`;
+
+const YesButton = MuiStyled(LoadingButton)`
+  background-color: #6ec924;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #5cad1b;
+  }
+`;
+
+const NoButton = MuiStyled(LoadingButton)`
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #d32f2f;
+  }
+`;
+
+const GroupHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  p {
+    font-weight: bold;
+    color: #999;
+    font-size: 14px;
+  }  
+  p:hover {
+    text-decoration: underline;
+  }
+    span:hover {
+    text-decoration: underline;
+  }
+}
+`;
+
 const Post = ({ post, initComt }) => {
+  const queryClient = useQueryClient();
   const { currentUserId } = useUserStore();
   const [like, setLike] = useState(false);
   const handleLike = () => {
@@ -157,24 +227,123 @@ const Post = ({ post, initComt }) => {
     setLoading(false);
     setMarked(!marked);
   };
+  const handleDeletePost = async () => {
+    setLoading(true);
+    await PostService.delete(post.id);
+    queryClient.invalidateQueries("posts");
+    setLoading(false);
+    handleCloseDeleteModal();
+  };
 
   const [showComment, setShowComment] = useState(initComt ? initComt : false);
   const { open, handleOpen, handleClose } = useModal();
+  const {
+    open: openDeleteModal,
+    handleOpen: handleOpenDeleteModal,
+    handleClose: handleCloseDeleteModal,
+  } = useModal();
+
+  const location = useLocation();
+  const isNotGroupPath = !location.pathname.startsWith("/group/");
 
   return (
     <PostWrapper>
       <PostHeader>
-        <StyledLink to={`/profile/${post.authorId}`}>
-          <ProfilePic src={post.authorAvatar} />
-        </StyledLink>
-        <PostInfo>
-          <PostTagging>
-            <StyledLink to={`/profile/${post.authorId}`}>
-              <PostAuthor>{post.authorName}</PostAuthor>
+        {post.groupId && !isNotGroupPath ? (
+          <StyledLink to={`/group/${post.groupId}`}>
+            <ProfilePic src={post.groupAvatar} />
+          </StyledLink>
+        ) : (
+          <StyledLink to={`/profile/${post.authorId}`}>
+            <ProfilePic src={post.authorAvatar} />
+          </StyledLink>
+        )}
+        {post.groupId && !isNotGroupPath ? (
+          <PostInfo>
+            <PostTagging>
+              <StyledLink to={`/group/${post.groupId}`}>
+                <PostAuthor>1234</PostAuthor>
+              </StyledLink>
+            </PostTagging>
+            <GroupHeader>
+              <StyledLink to={`/profile/${post.authorId}`}>
+                <p>{post.authorName}</p>
+              </StyledLink>
+              <span>·</span>
+              <StyledLink to={`/post/${post.id}`}>
+                <PostTime>
+                  {timeDiff(
+                    post.createdAt.seconds * 1000 +
+                      post.createdAt.nanoseconds / 1000000
+                  )}
+                </PostTime>
+              </StyledLink>
+            </GroupHeader>
+          </PostInfo>
+        ) : (
+          <PostInfo>
+            <PostTagging>
+              <StyledLink to={`/profile/${post.authorId}`}>
+                <PostAuthor>{post.authorName}</PostAuthor>
+              </StyledLink>
+              {post.stayingWith && (
+                <>
+                  <div>cùng với</div>
+                  {post.stayingWith.map((friend, index) => (
+                    <StyledLink key={index} to={`/profile/${friend.id}`}>
+                      <PostAuthor>
+                        {friend.username}{" "}
+                        {index !== post.stayingWith.length - 1 ? "," : ""}
+                      </PostAuthor>
+                    </StyledLink>
+                  ))}
+                </>
+              )}
+              {post.location && <div>đang ở</div>}
+              <PostAuthor>{post.location}</PostAuthor>
+            </PostTagging>
+            <StyledLink to={`/post/${post.id}`}>
+              <PostTime>
+                {timeDiff(
+                  post.createdAt.seconds * 1000 +
+                    post.createdAt.nanoseconds / 1000000
+                )}
+              </PostTime>
             </StyledLink>
+          </PostInfo>
+        )}
+        <Marked>
+          {loading ? (
+            <CircularLoading />
+          ) : (
+            <IconButton onClick={handleMarked}>
+              <BookmarksIcon
+                // @ts-ignore
+                color={marked ? "primary" : "greyIcon"}
+              />
+            </IconButton>
+          )}
+        </Marked>
+        {currentUserId === post.authorId && (
+          <DeleteButton>
+            <IconButton onClick={handleOpenDeleteModal}>
+              <BackspaceIcon
+                // @ts-ignore
+                color="greyIcon"
+              />
+            </IconButton>
+          </DeleteButton>
+        )}
+      </PostHeader>
+      <div>
+        <p style={{ padding: "10px", marginLeft: "5px" }}>{post.text}</p>
+        {post.groupId && !isNotGroupPath && (
+          <PostTagging>
             {post.stayingWith && (
               <>
-                <div>cùng với</div>
+                <div style={{ marginLeft: "16px", marginBottom: "4px" }}>
+                  —— cùng với
+                </div>
                 {post.stayingWith.map((friend, index) => (
                   <StyledLink key={index} to={`/profile/${friend.id}`}>
                     <PostAuthor>
@@ -188,30 +357,7 @@ const Post = ({ post, initComt }) => {
             {post.location && <div>đang ở</div>}
             <PostAuthor>{post.location}</PostAuthor>
           </PostTagging>
-          <StyledLink to={`/post/${post.id}`}>
-            <PostTime>
-              {timeDiff(
-                post.createdAt.seconds * 1000 +
-                  post.createdAt.nanoseconds / 1000000
-              )}
-            </PostTime>
-          </StyledLink>
-        </PostInfo>
-        <Marked>
-          {loading ? (
-            <CircularLoading />
-          ) : (
-            <IconButton onClick={handleMarked}>
-              <BookmarksIcon
-                // @ts-ignore
-                color={marked ? "primary" : "greyIcon"}
-              />
-            </IconButton>
-          )}
-        </Marked>
-      </PostHeader>
-      <PostContent>
-        <p style={{ padding: "10px", marginLeft: "5px" }}>{post.text}</p>
+        )}
         {post.tags && (
           <Hashtags>
             {post.tags.map((tag, index) => (
@@ -227,7 +373,7 @@ const Post = ({ post, initComt }) => {
             <source src={post.video} type="video/mp4" />
           </video>
         )}
-      </PostContent>
+      </div>
       <PostFooter>
         <PostReactions>
           <ThumbUpAltIcon style={{ fontSize: "1.25rem" }} color="primary" />
@@ -272,9 +418,7 @@ const Post = ({ post, initComt }) => {
         </PostActions>
       </PostFooter>
       <Divider flexItem variant="middle" color="#bdbdbd" />
-      {showComment && (
-          <Comments postId={post.id} authorId={post.authorId}/>
-      )}
+      {showComment && <Comments postId={post.id} authorId={post.authorId} />}
       <Modal
         open={open}
         onClose={handleClose}
@@ -282,6 +426,35 @@ const Post = ({ post, initComt }) => {
         aria-describedby="modal-modal-description"
       >
         <Share post={post} handleClose={handleClose} />
+      </Modal>
+      <Modal
+        open={openDeleteModal}
+        onClose={handleCloseDeleteModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "45%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 320,
+            bgcolor: "background.paper",
+            border: "none",
+            borderRadius: "8px",
+            boxShadow: 24,
+            padding: "12px",
+          }}
+        >
+          <ModalTitle>Bạn có chắc chắn muốn xoá bài viết này không?</ModalTitle>
+          <ButtonGroup>
+            <YesButton loading={loading} onClick={handleDeletePost}>
+              Xoá
+            </YesButton>
+            <NoButton onClick={handleCloseDeleteModal}>Huỷ</NoButton>
+          </ButtonGroup>
+        </Box>
       </Modal>
     </PostWrapper>
   );

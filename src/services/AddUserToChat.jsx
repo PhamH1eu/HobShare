@@ -17,6 +17,7 @@ export default async function AddUserToChat(targetUser, currentUser) {
 
     await setDoc(newChatRef, {
       createdAt: serverTimestamp(),
+      participants: [targetUser.id, currentUser.id],
     });
 
     await updateDoc(doc(userChatRef, targetUser.id), {

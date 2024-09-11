@@ -181,9 +181,6 @@ const ChatMinimezed = ({ chat }) => {
 const MinimizedChatDialog = () => {
   const { minimizedChats } = useChatDialogStore();
 
-  // const [messages, setMessages] = useState([]);
-  // const chatId = openChats[0].chatId;
-
   return (
     <Wrapper>
       <Box display="flex" flexDirection="column" alignItems="center" gap={2}>

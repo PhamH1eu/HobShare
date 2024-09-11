@@ -68,12 +68,20 @@ export const Chat = () => {
 
   const { currentUserId } = useUserStore();
   const { data: currentUser } = useUserInfo(currentUserId);
-  const { chatId, user, isCurrentUserBlocked, isReceiverBlocked, message } =
-    useChatStore();
-  const [messages, setMessages] = useState(message);
+  const {
+    chatId,
+    user,
+    isCurrentUserBlocked,
+    isReceiverBlocked,
+    setMessages: setMessageStore,
+  } = useChatStore();
+  const [messages, setMessages] = useState([]);
   useEffect(() => {
-    setMessages(message);
-  }, [message]);
+    setMessages([]);
+  }, [chatId])
+  useEffect(() => {
+    setMessageStore(messages);
+  }, [messages]);
   useEffect(() => {
     if (inView) scrollDown();
   }, [messages, inView, scrollDown]);
@@ -121,14 +129,14 @@ export const Chat = () => {
   }
 
   const handleSend = async () => {
+    setImgList([]);
+    setVideoList([]);
+    setText("");
     await Promise.all([
       //pass video list
       SendMessage(currentUser, chatId, text, imgList, videoList),
       UpdateChat(currentUserId, user.id, chatId, text),
     ]);
-    setImgList([]);
-    setVideoList([]);
-    setText("");
   };
 
   const handleKeyPress = (e) => {
@@ -235,9 +243,13 @@ export const Chat = () => {
 
                   {index == messages.length - 1 && (
                     <span>
-                      {format(mess.sendAt?.toDate() ?? new Date(), "HH:mm dd MMMM", {
-                        locale: vi,
-                      })}
+                      {format(
+                        mess.sendAt?.toDate() ?? new Date(),
+                        "HH:mm dd MMMM",
+                        {
+                          locale: vi,
+                        }
+                      )}
                     </span>
                   )}
                 </div>

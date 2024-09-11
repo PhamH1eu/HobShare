@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
-import { onSnapshot, doc, getDoc, collection, query } from "firebase/firestore";
+import {
+  onSnapshot,
+  collection,
+  query,
+  getDocs,
+} from "firebase/firestore";
 import { db } from "src/lib/firebase";
 import { useUserStore } from "src/store/userStore";
 import { UserService } from "src/services/DatabaseService";
@@ -14,30 +19,27 @@ const useChatList = () => {
   useEffect(() => {
     const q = query(collection(db, "userchats", currentUserId, "chat"));
 
-    const unsub = onSnapshot(
-      q,
-      async (querySnapshot) => {
-        setLoading(true);
-        var items = [];
-        querySnapshot.docs.reverse().forEach((doc) => {
-          items.push(doc.data());
-        });        
-        //get user info of each chat, assign last message info to
-        const promises = items.map(async (item) => {
-          const userDoc = await UserService.get(item.receiverId);
-          const user = userDoc.data();
+    const unsub = onSnapshot(q, async (querySnapshot) => {
+      setLoading(true);
+      var items = [];
+      querySnapshot.docs.forEach((doc) => {
+        items.push(doc.data());
+      });
+      //get user info of each chat, assign last message info to
+      const promises = items.map(async (item) => {
+        const userDoc = await UserService.get(item.receiverId);
+        const user = userDoc.data();
 
-          return {
-            ...item,
-            user,
-          };
-        });
-        //query all user info
-        const chatData = await Promise.all(promises);
-        setChats(chatData.sort((a, b) => b.updatedAt - a.updatedAt));
-        setLoading(false);
-      }
-    );
+        return {
+          ...item,
+          user,
+        };
+      });
+      //query all user info
+      const chatData = await Promise.all(promises);
+      setChats(chatData.sort((a, b) => b.updatedAt - a.updatedAt));
+      setLoading(false);
+    });
 
     return () => {
       unsub();
@@ -47,10 +49,13 @@ const useChatList = () => {
   return { chats, loading };
 };
 
-async function getData(currentUser) {
-  const q = doc(db, "userchats", currentUser);
-  const querySnapshot = await getDoc(q);
-  const items = querySnapshot.data().chats;
+async function getData(currentUserId) {
+  const q = collection(db, "userchats", currentUserId, "chat");
+  const querySnapshot = await getDocs(q);
+  var items = [];
+  querySnapshot.docs.forEach((doc) => {
+    items.push(doc.data());
+  });
   //get user info of each chat, assign last message info to
   const promises = items.map(async (item) => {
     const userDoc = await UserService.get(item.receiverId);
@@ -66,8 +71,10 @@ async function getData(currentUser) {
   return chatData.sort((a, b) => b.updatedAt - a.updatedAt);
 }
 
-export const useQueryChatlist = (currentUser) => {
-  const { isLoading, data } = useQuery('chatlist', () => getData(currentUser));
+export const useQueryChatlist = (currentUserId) => {
+  const { isLoading, data } = useQuery("chatlist", () =>
+    getData(currentUserId)
+  );
 
   return { isLoading, data };
 };

@@ -21,6 +21,8 @@ export default async function AddUserToChat(targetUser, currentUser) {
       chatId: newChatRef.id,
       lastMessage: "",
       receiverId: currentUser.id,
+      receiverName: currentUser.username,
+      receiverAvatar: currentUser.avatar,
       createdAt: Date.now(),
     });
 
@@ -28,6 +30,8 @@ export default async function AddUserToChat(targetUser, currentUser) {
       chatId: newChatRef.id,
       lastMessage: "",
       receiverId: targetUser.id,
+      receiverName: targetUser.username,
+      receiverAvatar: targetUser.avatar,
       createdAt: Date.now(),
     });
   } catch (error) {

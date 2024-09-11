@@ -97,6 +97,10 @@ const VisibilityContainer = styled(Box)({
   padding: "16px",
   borderRadius: "5px",
   boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.1)",
+  width: "60%",
+  maxHeight: "200px",
+  overflowY: "auto",
+  overflowX: "hidden",
 });
 
 const VisibilityTitle = styled(Typography)({
@@ -107,11 +111,12 @@ const VisibilityTitle = styled(Typography)({
 
 const VisibilityItem = styled(Typography)({
   fontSize: "14px",
+  wordWrap: "break-word",
   color: "#333",
   marginBottom: "4px",
 });
 
-const GroupComponent = ({ name, members }) => {
+const GroupComponent = ({ name, description, members }) => {
   return (
     <Container>
       <Header>
@@ -137,17 +142,14 @@ const GroupComponent = ({ name, members }) => {
         <NewPostInput />
         <VisibilityContainer>
           <VisibilityTitle>Giới thiệu</VisibilityTitle>
-          <VisibilityItem>
-            Đây là một nhóm dành cho những người yêu thích các hoạt động ngoài
-            trời
-          </VisibilityItem>
+          <VisibilityItem>{description}</VisibilityItem>
         </VisibilityContainer>
       </div>
     </Container>
   );
 };
 
-const Preview = ({ name, members, wallpaper, setWallpaper }) => {
+const Preview = ({ name, description, members, wallpaper, setWallpaper }) => {
   const handleWallpaperChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -181,7 +183,11 @@ const Preview = ({ name, members, wallpaper, setWallpaper }) => {
               </StyledButton>
             </StyledButtonWrapper>
           </WallpaperWrapper>
-          <GroupComponent name={name} members={members} />
+          <GroupComponent
+            name={name}
+            description={description}
+            members={members}
+          />
         </CardContent>
       </PreviewCard>
     </RightPanel>

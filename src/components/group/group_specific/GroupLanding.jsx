@@ -6,8 +6,9 @@ import { useUserStore } from "src/store/userStore";
 import ProfileHeader from "./profileHeader/ProfileHeader";
 import NewPostInput from "src/components/home/NewsFeed/new_post/NewPostInput";
 import Post from "src/components/home/NewsFeed/component/Post";
+import Description from "./information/Description";
 import Information from "./information/Information";
-import Friends from "./friends/Friends";
+import Members from "./members/Members";
 
 import styled from "styled-components";
 import Tab from "@mui/material/Tab";
@@ -16,6 +17,7 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
 import CircularLoading from "src/shared/components/Loading";
+import usePosts from "src/shared/hooks/fetch/usePosts";
 
 const Wrapper = styled.div`
   display: flex;
@@ -40,6 +42,7 @@ const Info = styled.div`
 
 const MainContent = styled.div`
   width: 100%;
+  margin-left: 32px;
 `;
 
 const TabsHeader = styled.div`
@@ -52,14 +55,13 @@ const TabsHeader = styled.div`
   }
 `;
 
-const posts = [];
-
 const GroupLanding = () => {
   const { groupId } = useParams();
   const { currentUserId } = useUserStore();
   const isViewingOwnProfile = groupId === currentUserId;
 
   const { isLoading } = useUserInfo(groupId);
+  const { posts, isLoading: isPostLoading } = usePosts();
 
   const [value, setValue] = useState("2");
 
@@ -67,7 +69,7 @@ const GroupLanding = () => {
     setValue(newValue);
   };
 
-  if (isLoading) {
+  if (isLoading || isPostLoading) {
     return (
       <Wrapper>
         <CircularLoading />
@@ -80,7 +82,7 @@ const GroupLanding = () => {
       <Wrapper>
         <ProfileHeader />
         <TabsHeader>
-          <TabList onChange={handleChange} aria-label="lab API tabs example">
+          <TabList onChange={handleChange}>
             <Tab label="Giới thiệu" value="1" sx={{ fontWeight: "600" }} />
             <Tab label="Diễn đàn" value="2" sx={{ fontWeight: "600" }} />
             <Tab label="Thành viên" value="3" sx={{ fontWeight: "600" }} />
@@ -91,10 +93,10 @@ const GroupLanding = () => {
             <Information />
           </Main>
         </TabPanel>
-        <TabPanel value="2" sx={{ padding: 0 }}>
+        <TabPanel value="2" sx={{ padding: 0, width: "70%" }}>
           <Main>
             <MainContent>
-              {isViewingOwnProfile && <NewPostInput />}
+              {isViewingOwnProfile && <NewPostInput groupId={groupId} groupName={undefined} />}
               <div>
                 {posts.map((post, index) => (
                   <Post key={index} post={post} initComt={undefined} />
@@ -102,12 +104,14 @@ const GroupLanding = () => {
               </div>
             </MainContent>
             <Info>
-              <Information />
+              <div style={{ width: "25vw", position: "sticky", top: "32px" }}>
+                <Description />
+              </div>
             </Info>
           </Main>
         </TabPanel>
         <TabPanel value="3" sx={{ padding: 0 }}>
-          <Friends />
+          <Members />
         </TabPanel>
       </Wrapper>
     </TabContext>

@@ -5,7 +5,7 @@ import StyledLink from "../StyledLink";
 import useChatList from "src/shared/hooks/listen/useChatList";
 import { useUserStore } from "src/store/userStore";
 import { useChatDialogStore } from "src/store/chatDialogStore";
-import { ChatService } from "src/services/DatabaseService";
+import { ChatService } from "src/services/SubDatabaseService";
 
 import MessItem from "./MessItem";
 
@@ -38,25 +38,9 @@ const MessengerDialog = ({ handleClose }) => {
   const addChat = useChatDialogStore((state) => state.addChat);
 
   const handleSelect = async (chat) => {
-    //get {chat id, lastMessage, isSeen} from chat list
-    const userChats = chats.map((item) => {
-      // eslint-disable-next-line no-unused-vars
-      const { user, ...rest } = item;
-      return rest;
-    });
-
-    //get index of selected chat in list
-    const chatIndex = userChats.findIndex(
-      (item) => item.chatId === chat.chatId
-    );
-
-    //seen message
-    userChats[chatIndex].isSeen = true;
-
     //update with seen status
-    ChatService.update(currentUserId, {
-      chats: userChats,
-    });
+    const path =  `${currentUserId}/chat/${chat.chatId}`;
+    await ChatService.updateSubCollection(path, "isSeen", true);
     addChat(chat);
     handleClose();
   };

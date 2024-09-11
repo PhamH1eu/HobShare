@@ -3,7 +3,7 @@ import AddUser from "./addUser/AddUser";
 import useChatList from "src/shared/hooks/listen/useChatList";
 import { useUserStore } from "src/store/userStore";
 import { useChatStore } from "src/store/chatStore";
-import { ChatService } from "src/services/DatabaseService";
+import { ChatService } from "src/services/SubDatabaseService";
 
 import Avatar from "src/shared/components/Avatar";
 import SearchIcon from "@mui/icons-material/Search";
@@ -28,24 +28,10 @@ export const ChatList = () => {
   );
 
   const handleSelect = async (chat) => {
-    //get {chat id, lastMessage, isSeen} from chat list
-    const userChats = chats.map((item) => {
-      // eslint-disable-next-line no-unused-vars
-      const { user, ...rest } = item;
-      return rest;
-    });
-
-    //get index of selected chat in list
-    const chatIndex = userChats.findIndex(
-      (item) => item.chatId === chat.chatId
-    );
-
-    //seen message
-    userChats[chatIndex].isSeen = true;
-
     //update with seen status
-    ChatService.update(currentUserId, {
-      chats: userChats,
+    const path =  `${currentUserId}/chat/${chat.chatId}`;
+    await ChatService.updateDocument(path, {
+      isSeen: true
     });
     //pop up chat in screen
     if (chatId === chat.chatId) return;

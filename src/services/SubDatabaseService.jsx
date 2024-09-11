@@ -44,6 +44,12 @@ class SubDatabaseService {
     });
   };
 
+  updateDocument = async  (path, obj) => {
+    const docRef = doc(db, this.collection, path);
+
+    await updateDoc(docRef, obj)
+  };
+
   removeSubCollection = async (path) => {
     const docRef = doc(db, this.collection, path);
     return await deleteDoc(docRef);
@@ -129,3 +135,4 @@ export const PostService = new SubDatabaseService("posts");
 
 export const NotificationService = new SubDatabaseService("notifications");
 
+export const ChatService = new SubDatabaseService("userchats");

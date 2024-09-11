@@ -4,7 +4,7 @@ import { useUserStore } from "src/store/userStore";
 import SearchUser from "src/services/SearchUser";
 import AddUserToChat from "src/services/AddUserToChat";
 import useChatList from "src/shared/hooks/listen/useChatList";
-import { ChatService } from "src/services/DatabaseService";
+import { ChatService } from "src/services/SubDatabaseService";
 import { useChatStore } from "src/store/chatStore";
 import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
 
@@ -27,25 +27,9 @@ const AddUser = ({ setAddMode }) => {
   const changeChat = useChatStore((state) => state.changeChat);
 
   const handleSelect = async (chat) => {
-    //get {chat id, lastMessage, isSeen} from chat list
-    const userChats = chats.map((item) => {
-      // eslint-disable-next-line no-unused-vars
-      const { user, ...rest } = item;
-      return rest;
-    });
-
-    //get index of selected chat in list
-    const chatIndex = userChats.findIndex(
-      (item) => item.chatId === chat.chatId
-    );
-
-    //seen message
-    userChats[chatIndex].isSeen = true;
-
     //update with seen status
-    ChatService.update(currentUserId, {
-      chats: userChats,
-    });
+    const path =  `${currentUserId}/chat/${chat.chatId}`;
+    await ChatService.updateSubCollection(path, "isSeen", true);
     //pop up chat in screen
     if (chatId === chat.chatId) {
       return;

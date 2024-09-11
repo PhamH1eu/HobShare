@@ -147,7 +147,6 @@ const Signup = () => {
 
       await ChatService.create(
         {
-          chats: [],
           id: res.user.uid,
         },
         res.user.uid

@@ -10,15 +10,7 @@ import {
 import { styled } from "@mui/material/styles";
 import useChatList from "src/shared/hooks/listen/useChatList";
 
-const suggestions = [
-  { name: "Nguyen Trung Hieu", mutualFriends: 19, avatar: "link-to-avatar-1" },
-  { name: "Thụ Nhân", mutualFriends: 51, avatar: "link-to-avatar-2" },
-  { name: "Tuấn Anh-nichan", mutualFriends: 44, avatar: "link-to-avatar-3" },
-  { name: "Thu Hieu", mutualFriends: 5, avatar: "link-to-avatar-4" },
-  { name: "Nguyễn Đăng Hải", mutualFriends: 69, avatar: "link-to-avatar-5" },
-];
-
-const StyledChip = styled(Chip)(({ theme }) => ({
+const StyledChip = styled(Chip)(() => ({
   backgroundColor: "#dff5cc", // Light green background
   color: "#6ec924", // Green text color
   height: "36px",
@@ -118,7 +110,7 @@ const FriendSuggestions = ({ selectedUsers, setSelectedUsers }) => {
 
   return (
     <ClickAwayListener onClickAway={handleClickAway}>
-      <Box position="relative" width="100%">
+      <Box position="relative" width="100%" marginTop="12px">
         {/* Custom Input with Selected Users */}
         <CustomInputWrapper>
           {selectedUsers.length > 0 || inputValue ? (

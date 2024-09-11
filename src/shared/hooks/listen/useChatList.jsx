@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { onSnapshot, doc, getDoc } from "firebase/firestore";
+import { onSnapshot, doc, getDoc, collection, query } from "firebase/firestore";
 import { db } from "src/lib/firebase";
 import { useUserStore } from "src/store/userStore";
 import { UserService } from "src/services/DatabaseService";
@@ -12,12 +12,16 @@ const useChatList = () => {
   const { currentUserId } = useUserStore();
 
   useEffect(() => {
+    const q = query(collection(db, "userchats", currentUserId, "chat"));
+
     const unsub = onSnapshot(
-      doc(db, "userchats", currentUserId),
-      async (res) => {
+      q,
+      async (querySnapshot) => {
         setLoading(true);
-        //chats of current user
-        const items = res.data().chats;
+        var items = [];
+        querySnapshot.docs.reverse().forEach((doc) => {
+          items.push(doc.data());
+        });        
         //get user info of each chat, assign last message info to
         const promises = items.map(async (item) => {
           const userDoc = await UserService.get(item.receiverId);

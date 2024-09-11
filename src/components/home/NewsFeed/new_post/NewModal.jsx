@@ -277,7 +277,7 @@ const NewModal = ({ open, onClose, groupId, groupName }) => {
               variant="standard"
               multiline
               fullWidth
-              placeholder="Phạm ơi, bạn đang nghĩ gì thế?"
+              placeholder={currentUser.username + " ơi, bạn đang nghĩ gì thế?"}
               sx={{ marginTop: 2, fontSize: "20px", border: "none" }}
             />
             {selectedFile && (

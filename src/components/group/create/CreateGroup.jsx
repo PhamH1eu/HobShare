@@ -20,11 +20,11 @@ const LeftPanel = styled("div")(({ theme }) => ({
   flexDirection: "column",
 }));
 
-const HeaderText = styled(Typography)(({ theme }) => ({
+const HeaderText = styled(Typography)(() => ({
   fontWeight: "bold",
 }));
 
-const CreateButton = styled(LoadingButton)(({ theme }) => ({
+const CreateButton = styled(LoadingButton)(() => ({
   width: "100%",
   marginTop: "auto",
 }));
@@ -44,6 +44,7 @@ const GroupCreationPage = () => {
 
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [wallpaper, setWallpaper] = useState(
     "https://www.facebook.com/images/groups/groups-default-cover-photo-2x.png"
@@ -92,6 +93,13 @@ const GroupCreationPage = () => {
             margin="normal"
             onChange={(e) => setName(e.target.value)}
           />
+          <TextField
+            fullWidth
+            label="Mô tả"
+            variant="outlined"
+            margin="normal"
+            onChange={(e) => setDescription(e.target.value)}
+          />
           <FriendSuggestions
             selectedUsers={selectedUsers}
             setSelectedUsers={setSelectedUsers}
@@ -111,6 +119,7 @@ const GroupCreationPage = () => {
       <Grid item xs={8}>
         <Preview
           name={name}
+          description={description}
           members={selectedUsers}
           wallpaper={wallpaper}
           setWallpaper={setWallpaper}

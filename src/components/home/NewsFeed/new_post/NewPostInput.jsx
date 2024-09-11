@@ -79,7 +79,7 @@ const IconButton = styled.button`
   }
 `;
 
-const NewPostInput = () => {
+const NewPostInput = ({groupId, groupName}) => {
   const { currentUserId } = useUserStore();
   const { data: currentUser } = useUserInfo(currentUserId);
   const { open, handleOpen, handleClose } = useModal();
@@ -90,7 +90,7 @@ const NewPostInput = () => {
         <img src={currentUser.avatar} alt="User Avatar" />
         <input
           type="text"
-          value={""}
+          readOnly
           placeholder={`${currentUser.username} ơi, bạn đang nghĩ gì thế?`}
           onClick={handleOpen}
         />
@@ -106,7 +106,7 @@ const NewPostInput = () => {
           <span>Cảm xúc/hoạt động</span>
         </IconButton>
       </Actions>
-      <NewModal open={open} onClose={handleClose} />
+      <NewModal open={open} onClose={handleClose} groupId={groupId} groupName={groupName} />
     </ChatInput>
   );
 };

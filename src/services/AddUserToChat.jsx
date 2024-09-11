@@ -4,13 +4,10 @@ import {
   setDoc,
   doc,
   serverTimestamp,
-  updateDoc,
-  arrayUnion,
 } from "firebase/firestore";
 
 export default async function AddUserToChat(targetUser, currentUser) {
   const chatRef = collection(db, "chats");
-  const userChatRef = collection(db, "userchats");
 
   try {
     const newChatRef = doc(chatRef);
@@ -20,22 +17,18 @@ export default async function AddUserToChat(targetUser, currentUser) {
       participants: [targetUser.id, currentUser.id],
     });
 
-    await updateDoc(doc(userChatRef, targetUser.id), {
-      chats: arrayUnion({
-        chatId: newChatRef.id,
-        lastMessage: "",
-        receiverId: currentUser.id,
-        createdAt: Date.now(),
-      }),
+    await setDoc(doc(db, "userchats", targetUser.id, "chat", newChatRef.id), {
+      chatId: newChatRef.id,
+      lastMessage: "",
+      receiverId: currentUser.id,
+      createdAt: Date.now(),
     });
 
-    await updateDoc(doc(userChatRef, currentUser.id), {
-      chats: arrayUnion({
-        chatId: newChatRef.id,
-        lastMessage: "",
-        receiverId: targetUser.id,
-        createdAt: Date.now(),
-      }),
+    await setDoc(doc(db, "userchats", currentUser.id, "chat", newChatRef.id), {
+      chatId: newChatRef.id,
+      lastMessage: "",
+      receiverId: targetUser.id,
+      createdAt: Date.now(),
     });
   } catch (error) {
     console.log(error);

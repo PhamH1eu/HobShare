@@ -6,11 +6,9 @@ import { useUserStore } from "src/store/userStore";
 import { IconButton } from "@mui/material";
 import { styled as MuiStyled } from "@mui/material";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
-import AddRequestModal from "./AddRequestModal";
 import AvatarRow from "./AvatarRow";
 
 import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
-import useModal from "src/shared/hooks/util/useModal";
 import uploadSpecificImage from "src/shared/helper/uploadAvatar";
 
 const HeaderWrapper = styled.div`
@@ -98,8 +96,6 @@ const ProfileHeader = () => {
   const isViewingOwnProfile = groupId === currentUserId;
   const { data: user } = useUserInfo(groupId);
 
-  const { open, handleClose, handleOpen } = useModal();
-
   const [isWallpaperHovered, setIsWallpaperHovered] = useState(false);
 
   const handleWallpaperUpload = async (event) => {
@@ -148,7 +144,6 @@ const ProfileHeader = () => {
         </InfoWrapper>
       </WallImage>
       <AvatarRow />
-      <AddRequestModal open={open} handleClose={handleClose} />
     </HeaderWrapper>
   );
 };

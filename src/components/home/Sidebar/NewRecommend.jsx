@@ -1,3 +1,4 @@
+import StyledLink from "src/shared/components/StyledLink";
 import styled from "styled-components";
 
 const SidebarWrapper = styled.div`
@@ -48,7 +49,7 @@ const tag = [
   {
     tag: "#react",
     count: 4,
-  }
+  },
 ];
 
 const NewRecommend = () => {
@@ -56,10 +57,12 @@ const NewRecommend = () => {
     <SidebarWrapper>
       <h3>Xu hướng</h3>
       {tag.map((t, index) => (
-        <Hashtag key={index}>
-          <span>{t.tag}</span>
-          <p>{t.count} posts</p>
-        </Hashtag>
+        <StyledLink to={`/hashtag/${t.tag.replace("#", "")}`}>
+          <Hashtag key={index}>
+            <span>{t.tag}</span>
+            <p>{t.count} posts</p>
+          </Hashtag>
+        </StyledLink>
       ))}
     </SidebarWrapper>
   );

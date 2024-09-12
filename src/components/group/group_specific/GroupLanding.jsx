@@ -18,6 +18,7 @@ import TabPanel from "@mui/lab/TabPanel";
 import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
 import CircularLoading from "src/shared/components/Loading";
 import usePosts from "src/shared/hooks/fetch/usePosts";
+import Requests from "./request/Requests";
 
 const Wrapper = styled.div`
   display: flex;
@@ -86,6 +87,7 @@ const GroupLanding = () => {
             <Tab label="Giới thiệu" value="1" sx={{ fontWeight: "600" }} />
             <Tab label="Diễn đàn" value="2" sx={{ fontWeight: "600" }} />
             <Tab label="Thành viên" value="3" sx={{ fontWeight: "600" }} />
+            <Tab label="Phê duyệt" value="4" sx={{ fontWeight: "600" }} />
           </TabList>
         </TabsHeader>
         <TabPanel value="1" sx={{ display: "flex", width: "70%" }}>
@@ -112,6 +114,9 @@ const GroupLanding = () => {
         </TabPanel>
         <TabPanel value="3" sx={{ padding: 0 }}>
           <Members />
+        </TabPanel>
+        <TabPanel value="4" sx={{ padding: 0 }}>
+          <Requests />
         </TabPanel>
       </Wrapper>
     </TabContext>

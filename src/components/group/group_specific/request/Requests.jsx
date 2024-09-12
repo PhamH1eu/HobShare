@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { Avatar, Box } from "@mui/material";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import HowToRegIcon from '@mui/icons-material/HowToReg';
 
 const Container = styled.div`
   width: 600px;
@@ -101,7 +101,7 @@ const friendsList = [
   },
 ];
 
-function FriendsTabPanel() {
+function RequestTabPanel() {
   return (
     <Box>
       {friendsList.map((friend, index) => (
@@ -113,11 +113,11 @@ function FriendsTabPanel() {
               <CommonFriends>{friend.mutualFriends} bạn chung</CommonFriends>
             </FriendInfo>
             <AddFriend>
-              <PersonAddIcon
+              <HowToRegIcon
                 // @ts-ignore
                 color="white"
               />
-              Thêm bạn bè
+              Chấp nhận
             </AddFriend>
             <KickButton>Xoá</KickButton>
           </FriendDetails>
@@ -127,20 +127,18 @@ function FriendsTabPanel() {
   );
 }
 
-const Members = () => {
+const Requests = () => {
   return (
     <Container>
       <Header>
-        <p>Thành viên</p>
+        <p>Yêu cầu tham gia nhóm</p>
         <span> · </span>
         <span>99287</span>
       </Header>
-      <Role>Quản trị viên</Role>
-      <FriendsTabPanel></FriendsTabPanel>
-      <Role>Thành viên</Role>
-      <FriendsTabPanel></FriendsTabPanel>
+      <Role>Gần đây</Role>
+      <RequestTabPanel></RequestTabPanel>
     </Container>
   );
 };
 
-export default Members;
+export default Requests;

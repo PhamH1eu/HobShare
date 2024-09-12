@@ -361,7 +361,7 @@ const Post = ({ post, initComt }) => {
         {post.tags && (
           <Hashtags>
             {post.tags.map((tag, index) => (
-              <StyledLink key={index} to={`tag/${tag}`}>
+              <StyledLink key={index} to={`/hashtag/${tag.replace("#", "")}`}>
                 <PostTag>{tag}</PostTag>
               </StyledLink>
             ))}

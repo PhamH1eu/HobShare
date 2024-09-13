@@ -54,15 +54,25 @@ const GroupCreationPage = () => {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [wallpaper, setWallpaper] = useState({
     file: null,
-    url: "https://www.facebook.com/images/groups/groups-default-cover-photo-2x.png",
+    url: null,
   });
 
   const createGroup = async () => {
     setLoading(true);
     const uid = uuidv4();
-    const wallpaperurl = wallpaper.file
-      ? await uploadSpecificImage(wallpaper.file, uid, "wallpaper.jpg")
-      : wallpaper.url;
+
+    const imageUrl = `/wallpapergroup.jpg`;
+    const response = await fetch(imageUrl);
+    const blob = await response.blob();
+    const wallpaperFileLocal = new File([blob], "/wallpaper.jpg", {
+      type: blob.type,
+    });
+
+    const wallpaperurl = await uploadSpecificImage(
+      wallpaper.file || wallpaperFileLocal,
+      uid,
+      "wallpaper.jpg"
+    );
 
     await Promise.all([
       GroupService.createSubCollection(uid, {

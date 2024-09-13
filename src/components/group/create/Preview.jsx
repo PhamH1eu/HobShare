@@ -154,7 +154,7 @@ const Preview = ({ name, description, members, wallpaper, setWallpaper }) => {
     if (file) {
       setWallpaper({
         file: file,
-        url: URL.createObjectURL(file)
+        url: URL.createObjectURL(file),
       });
     }
   };
@@ -163,7 +163,11 @@ const Preview = ({ name, description, members, wallpaper, setWallpaper }) => {
       <PreviewCard>
         <HeaderText variant="subtitle1">Xem trước</HeaderText>
         <CardContent>
-          <WallpaperWrapper style={{ backgroundImage: `url(${wallpaper.url})` }}>
+          <WallpaperWrapper
+            style={{
+              backgroundImage: `url(${wallpaper.url || "/wallpapergroup.jpg"})`,
+            }}
+          >
             <StyledButtonWrapper>
               <StyledButton
                 aria-label="upload picture"

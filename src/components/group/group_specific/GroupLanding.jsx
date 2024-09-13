@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useUserStore } from "src/store/userStore";
-
 import ProfileHeader from "./profileHeader/ProfileHeader";
 import NewPostInput from "src/components/home/NewsFeed/new_post/NewPostInput";
 import Post from "src/components/home/NewsFeed/component/Post";
@@ -15,10 +13,10 @@ import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
-import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
 import CircularLoading from "src/shared/components/Loading";
 import usePosts from "src/shared/hooks/fetch/usePosts";
 import Requests from "./request/Requests";
+import useGroupInfo from "src/shared/hooks/fetch/useGroup";
 
 const Wrapper = styled.div`
   display: flex;
@@ -58,10 +56,8 @@ const TabsHeader = styled.div`
 
 const GroupLanding = () => {
   const { groupId } = useParams();
-  const { currentUserId } = useUserStore();
-  const isViewingOwnProfile = groupId === currentUserId;
+  const { isLoading } = useGroupInfo(groupId);
 
-  const { isLoading } = useUserInfo(groupId);
   const { posts, isLoading: isPostLoading } = usePosts();
 
   const [value, setValue] = useState("2");
@@ -98,7 +94,7 @@ const GroupLanding = () => {
         <TabPanel value="2" sx={{ padding: 0, width: "70%" }}>
           <Main>
             <MainContent>
-              {isViewingOwnProfile && <NewPostInput groupId={groupId} groupName={undefined} />}
+              <NewPostInput groupId={groupId} groupName={undefined} />
               <div>
                 {posts.map((post, index) => (
                   <Post key={index} post={post} initComt={undefined} />

@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import { styled as MuiStyled, Typography } from "@mui/material";
+import { useParams } from "react-router-dom";
+import useGroupInfo from "src/shared/hooks/fetch/useGroup";
 
 const InfoWrapper = styled.div`
   border-radius: 5px;
@@ -18,11 +20,14 @@ const VisibilityItem = MuiStyled(Typography)({
 });
 
 const Description = () => {
+  const { groupId } = useParams();
+  const { group } = useGroupInfo(groupId);
+  
   return (
     <InfoWrapper>
       <h2>Giới thiệu</h2>
       <VisibilityItem>
-        Đây là 1 nhóm ưa thích đi chơi dã ngoại cùng nhau
+        {group.description}
       </VisibilityItem>
     </InfoWrapper>
   );

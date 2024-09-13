@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Typography,
   Card,
@@ -19,7 +18,7 @@ const RightPanel = styled("div")(({ theme }) => ({
   width: "100%",
 }));
 
-const HeaderText = styled(Typography)(({ theme }) => ({
+const HeaderText = styled(Typography)(() => ({
   fontWeight: "bold",
 }));
 
@@ -153,8 +152,10 @@ const Preview = ({ name, description, members, wallpaper, setWallpaper }) => {
   const handleWallpaperChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      const fileURL = URL.createObjectURL(file);
-      setWallpaper(fileURL);
+      setWallpaper({
+        file: file,
+        url: URL.createObjectURL(file)
+      });
     }
   };
   return (
@@ -162,7 +163,7 @@ const Preview = ({ name, description, members, wallpaper, setWallpaper }) => {
       <PreviewCard>
         <HeaderText variant="subtitle1">Xem trước</HeaderText>
         <CardContent>
-          <WallpaperWrapper style={{ backgroundImage: `url(${wallpaper})` }}>
+          <WallpaperWrapper style={{ backgroundImage: `url(${wallpaper.url})` }}>
             <StyledButtonWrapper>
               <StyledButton
                 aria-label="upload picture"

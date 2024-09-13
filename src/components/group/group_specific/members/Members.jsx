@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import { Avatar, Box } from "@mui/material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import { useParams } from "react-router-dom";
+import useGroupInfo from "src/shared/hooks/fetch/useGroup";
 
 const Container = styled.div`
   width: 600px;
@@ -88,29 +90,16 @@ const KickButton = styled.button`
   cursor: pointer;
 `;
 
-const friendsList = [
-  {
-    name: "Lê Bá Trường",
-    mutualFriends: 33,
-    avatar: "https://i.pravatar.cc/40?u=1",
-  },
-  {
-    name: "Nguyễn Đăng Hải",
-    mutualFriends: 69,
-    avatar: "https://i.pravatar.cc/40?u=2",
-  },
-];
-
-function FriendsTabPanel() {
+function FriendsTabPanel({users}) {
   return (
     <Box>
-      {friendsList.map((friend, index) => (
+      {users.map((friend, index) => (
         <FriendItem key={index}>
           <FriendDetails>
             <Avatar src={friend.avatar} />
             <FriendInfo>
-              <FriendName>{friend.name}</FriendName>
-              <CommonFriends>{friend.mutualFriends} bạn chung</CommonFriends>
+              <FriendName>{friend.username}</FriendName>
+              <CommonFriends>12 bạn chung</CommonFriends>
             </FriendInfo>
             <AddFriend>
               <PersonAddIcon
@@ -128,6 +117,9 @@ function FriendsTabPanel() {
 }
 
 const Members = () => {
+  const { groupId } = useParams();
+  const { group } = useGroupInfo(groupId);
+  
   return (
     <Container>
       <Header>
@@ -136,9 +128,9 @@ const Members = () => {
         <span>99287</span>
       </Header>
       <Role>Quản trị viên</Role>
-      <FriendsTabPanel></FriendsTabPanel>
+      <FriendsTabPanel users={group.admins}></FriendsTabPanel>
       <Role>Thành viên</Role>
-      <FriendsTabPanel></FriendsTabPanel>
+      <FriendsTabPanel users={group.admins}></FriendsTabPanel>
     </Container>
   );
 };

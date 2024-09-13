@@ -8,8 +8,9 @@ import { styled as MuiStyled } from "@mui/material";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import AvatarRow from "./AvatarRow";
 
-import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
 import uploadSpecificImage from "src/shared/helper/uploadAvatar";
+import useGroupInfo from "src/shared/hooks/fetch/useGroup";
+import { GroupService } from "src/services/SubDatabaseService";
 
 const HeaderWrapper = styled.div`
   width: 100%;
@@ -93,27 +94,32 @@ const FileInput = styled.input`
 const ProfileHeader = () => {
   const { currentUserId } = useUserStore();
   const { groupId } = useParams();
-  const isViewingOwnProfile = groupId === currentUserId;
-  const { data: user } = useUserInfo(groupId);
+  const { group } = useGroupInfo(groupId);
+  const isAdmin = group.admins.some((admin) => admin.userId === currentUserId);
 
   const [isWallpaperHovered, setIsWallpaperHovered] = useState(false);
 
   const handleWallpaperUpload = async (event) => {
     const file = event.target.files[0];
-    await uploadSpecificImage(file, user.id, "wallpaper.jpg");
+    const url = await uploadSpecificImage(file, group.id, "wallpaper.jpg");
+    if (url !== group.wallpaper) {
+      GroupService.updateDocument(group.id, {
+        wallpaper: url,
+      });
+    }
     window.location.reload();
   };
 
   return (
     <HeaderWrapper>
       <WallImage>
-        {isViewingOwnProfile ? (
+        {isAdmin ? (
           <WallpaperWrapper
             onMouseEnter={() => setIsWallpaperHovered(true)}
             onMouseLeave={() => setIsWallpaperHovered(false)}
           >
             <Wallpaper
-              src={user.wallpaper || "/background.png"}
+              src={group.wallpaper || "/background.png"}
               // @ts-ignore
               isHovered={isWallpaperHovered}
             />
@@ -134,11 +140,11 @@ const ProfileHeader = () => {
             />
           </WallpaperWrapper>
         ) : (
-          <Wallpaper src={user.wallpaper || "/background.png"} />
+          <Wallpaper src={group.wallpaper || "/background.png"} />
         )}
         <InfoWrapper>
           <TextWrapper>
-            <Name>{user.username}</Name>
+            <Name>{group.name}</Name>
             <Friends>1027 thành viên</Friends>
           </TextWrapper>
         </InfoWrapper>

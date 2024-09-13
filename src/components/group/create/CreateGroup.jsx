@@ -9,6 +9,12 @@ import FriendSuggestions from "./Suggestion";
 import { Cancel } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+
+import { GroupService } from "src/services/SubDatabaseService";
+import { UserService } from "src/services/SubDatabaseService";
+
+import uploadSpecificImage from "src/shared/helper/uploadAvatar";
 
 // Styled Components
 const LeftPanel = styled("div")(({ theme }) => ({
@@ -46,16 +52,41 @@ const GroupCreationPage = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [selectedUsers, setSelectedUsers] = useState([]);
-  const [wallpaper, setWallpaper] = useState(
-    "https://www.facebook.com/images/groups/groups-default-cover-photo-2x.png"
-  );
+  const [wallpaper, setWallpaper] = useState({
+    file: null,
+    url: "https://www.facebook.com/images/groups/groups-default-cover-photo-2x.png",
+  });
 
-  const createGroup = () => {
+  const createGroup = async () => {
     setLoading(true);
-    // get group id
-    const id = "123";
+    const uid = uuidv4();
+    const wallpaperurl = wallpaper.file
+      ? await uploadSpecificImage(wallpaper.file, uid, "wallpaper.jpg")
+      : wallpaper.url;
+
+    await Promise.all([
+      GroupService.createSubCollection(uid, {
+        id: uid,
+        wallpaper: wallpaperurl,
+        name: name,
+        description: description,
+        admins: [
+          {
+            userId: currentUser.id,
+            username: currentUser.username,
+            avatar: currentUser.avatar,
+          },
+        ],
+      }),
+      GroupService.batchWrite(`${uid}/members`, selectedUsers),
+      UserService.createSubCollection(`${currentUserId}/admingroups/${uid}`, {
+        groupId: uid,
+        name: name,
+        wallpaper: wallpaperurl,
+      }),
+    ]);
     setLoading(false);
-    navigate(`/group/${id}`);
+    navigate(`/group/${uid}`);
   };
 
   return (
@@ -105,6 +136,7 @@ const GroupCreationPage = () => {
             setSelectedUsers={setSelectedUsers}
           />
           <CreateButton
+            loading={loading}
             variant="contained"
             color="primary"
             onClick={createGroup}

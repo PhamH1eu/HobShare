@@ -15,6 +15,7 @@ import {
   orderBy,
   limit,
   startAfter,
+  writeBatch,
 } from "firebase/firestore";
 
 class SubDatabaseService {
@@ -24,12 +25,25 @@ class SubDatabaseService {
     this.collection = collectionName;
   }
 
-  createSubCollection = async (path, data, id) => {
+  createSubCollection = async (path, data) => {
     return await setDoc(doc(db, this.collection, path), {
       ...data,
       createdAt: serverTimestamp(),
     });
   };
+
+  batchWrite = async (path, data) => {
+    const batch = writeBatch(db);
+    data.forEach((item) => {
+      const docRef = doc(db, this.collection, `${path}/${item.receiverId}`);
+      batch.set(docRef, {
+        userId: item.receiverId,
+        username: item.receiverName,
+        avatar: item.receiverAvatar 
+      });
+    });
+    return await batch.commit();
+  }
 
   updateSubCollection = async (path, data, value) => {
     const docRef = doc(db, this.collection, path);
@@ -138,3 +152,5 @@ export const NotificationService = new SubDatabaseService("notifications");
 export const ChatService = new SubDatabaseService("userchats");
 
 export const GroupService = new SubDatabaseService("groups");
+
+export const UserService = new SubDatabaseService("users");

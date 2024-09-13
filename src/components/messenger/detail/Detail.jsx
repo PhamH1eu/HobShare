@@ -1,7 +1,7 @@
 import { useChatStore } from "src/store/chatStore";
 import { useUserStore } from "src/store/userStore";
 import { useInfoShowStore } from "src/store/infoShowStore";
-import BlockUser from "src/services/BlockUser";
+import BlockUser from "src/services/chat/BlockUser";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";

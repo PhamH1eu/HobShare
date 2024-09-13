@@ -18,8 +18,8 @@ import { useInfoShowStore } from "src/store/infoShowStore";
 import { useListenChat } from "src/shared/hooks/listen/useListenChat";
 import { loadMoreMessages } from "src/shared/hooks/listen/useListenChat";
 
-import UpdateChat from "src/services/UpdateChat";
-import SendMessage from "src/services/SendMessage";
+import UpdateChat from "src/services/chat/UpdateChat";
+import SendMessage from "src/services/chat/SendMessage";
 import CircularLoading from "src/shared/components/Loading";
 import "./chat.css";
 import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
@@ -78,7 +78,7 @@ export const Chat = () => {
   const [messages, setMessages] = useState([]);
   useEffect(() => {
     setMessages([]);
-  }, [chatId])
+  }, [chatId]);
   useEffect(() => {
     setMessageStore(messages);
   }, [messages]);

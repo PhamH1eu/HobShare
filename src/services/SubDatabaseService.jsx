@@ -136,3 +136,5 @@ export const PostService = new SubDatabaseService("posts");
 export const NotificationService = new SubDatabaseService("notifications");
 
 export const ChatService = new SubDatabaseService("userchats");
+
+export const GroupService = new SubDatabaseService("groups");

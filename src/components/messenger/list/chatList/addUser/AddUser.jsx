@@ -2,7 +2,7 @@ import "./addUser.css";
 import { useState } from "react";
 import { useUserStore } from "src/store/userStore";
 import SearchUser from "src/services/SearchUser";
-import AddUserToChat from "src/services/AddUserToChat";
+import AddUserToChat from "src/services/chat/AddUserToChat";
 import useChatList from "src/shared/hooks/listen/useChatList";
 import { ChatService } from "src/services/SubDatabaseService";
 import { useChatStore } from "src/store/chatStore";

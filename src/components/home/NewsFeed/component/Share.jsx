@@ -7,8 +7,8 @@ import styled from "styled-components";
 import CircularLoading from "src/shared/components/Loading";
 
 import { useQueryChatlist } from "src/shared/hooks/listen/useChatList";
-import SendMessage from "src/services/SendMessage";
-import UpdateChat from "src/services/UpdateChat";
+import SendMessage from "src/services/chat/SendMessage";
+import UpdateChat from "src/services/chat/UpdateChat";
 import { useUserStore } from "src/store/userStore";
 import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
 

@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 import truncateString from "src/shared/helper/truncateString";
 import { useUserStore } from "src/store/userStore";
 import useChatList from "src/shared/hooks/listen/useChatList";
-import UpdateChat from "src/services/UpdateChat";
+import UpdateChat from "src/services/chat/UpdateChat";
 
 const Wrapper = styled.div`
   position: fixed;
@@ -111,7 +111,9 @@ const ChatMinimezed = ({ chat }) => {
         setOpen(false);
       } else {
         // @ts-ignore
-        setMessageToShow(message.senderName + ": " + (message.text || "đã gửi một phương tiện"));
+        setMessageToShow(
+          message.senderName + ": " + (message.text || "đã gửi một phương tiện")
+        );
         setOpen(true);
       }
     }

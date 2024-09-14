@@ -26,7 +26,7 @@ import SendMessage from "src/services/chat/SendMessage";
 import UpdateChat from "src/services/chat/UpdateChat";
 import EmojiPicker from "emoji-picker-react";
 import { useInView } from "react-intersection-observer";
-import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
+import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale/vi";
 

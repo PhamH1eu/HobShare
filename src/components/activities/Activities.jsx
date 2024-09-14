@@ -3,7 +3,7 @@ import StackGrid, { transitions, easings } from "react-stack-grid";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { IconButton } from "@mui/material";
 
-import useActivities from "src/shared/hooks/fetch/useActivities";
+import useActivities from "src/shared/hooks/fetch/activity/useActivities";
 
 import { useUserStore } from "src/store/userStore";
 import { UserService } from "src/services/DatabaseService";

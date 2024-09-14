@@ -2,7 +2,7 @@ import React from "react";
 import CircularLoading from "src/shared/components/Loading";
 import styled from "styled-components";
 import Post from "../home/NewsFeed/component/Post";
-import usePosts from "src/shared/hooks/fetch/usePosts";
+import usePosts from "src/shared/hooks/fetch/post/usePosts";
 import { useParams } from "react-router-dom";
 
 // Styled Components

@@ -19,7 +19,7 @@ import TagModal from "./TagModal";
 import { useUserStore } from "src/store/userStore";
 import { useState } from "react";
 import useFriendStore from "src/store/useFriendStore";
-import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
+import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
 
 import { PostService } from "src/services/DatabaseService";
 

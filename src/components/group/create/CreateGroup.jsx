@@ -3,7 +3,7 @@ import { LoadingButton } from "@mui/lab";
 import { styled } from "@mui/material/styles";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useUserStore } from "src/store/userStore";
-import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
+import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
 import Preview from "./Preview";
 import FriendSuggestions from "./Suggestion";
 import { Cancel } from "@mui/icons-material";

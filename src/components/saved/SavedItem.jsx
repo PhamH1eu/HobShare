@@ -16,7 +16,7 @@ import useModal from "src/shared/hooks/util/useModal";
 import SaveToCollectionModal from "./modal/SaveItemToCollection";
 
 import { useUserStore } from "src/store/userStore";
-import useSavedPosts from "src/shared/hooks/fetch/useSavedPost";
+import useSavedPosts from "src/shared/hooks/fetch/saved/useSavedPost";
 import truncateString from "src/shared/helper/truncateString";
 import { SavedService } from "src/services/SubDatabaseService";
 import { useQueryClient } from "react-query";

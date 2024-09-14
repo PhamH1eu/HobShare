@@ -9,7 +9,7 @@ import useEditableText from "src/shared/hooks/util/useEditableText";
 import { UserService } from "src/services/DatabaseService";
 import { useUserStore } from "src/store/userStore";
 import { useQueryClient } from "react-query";
-import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
+import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
 
 const Container = styled.div`
   padding: 20px;

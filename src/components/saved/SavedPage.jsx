@@ -17,7 +17,7 @@ import AllInboxIcon from "@mui/icons-material/AllInbox";
 
 import useModal from "src/shared/hooks/util/useModal";
 import AddNewCollectionModal from "./modal/AddNewCollection";
-import useCollections from "src/shared/hooks/fetch/useCollections";
+import useCollections from "src/shared/hooks/fetch/saved/useCollections";
 import CircularLoading from "src/shared/components/Loading";
 import { SavedService } from "src/services/SubDatabaseService";
 import { useUserStore } from "src/store/userStore";

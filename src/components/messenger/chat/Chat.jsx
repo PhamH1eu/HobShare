@@ -22,7 +22,7 @@ import UpdateChat from "src/services/chat/UpdateChat";
 import SendMessage from "src/services/chat/SendMessage";
 import CircularLoading from "src/shared/components/Loading";
 import "./chat.css";
-import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
+import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
 import { Box } from "@mui/material";
 
 import { styled as MuiStyled } from "@mui/material";

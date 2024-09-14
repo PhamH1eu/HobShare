@@ -13,7 +13,7 @@ import Avatar from "@mui/material/Avatar";
 import { useState } from "react";
 import uploadSpecificImage from "src/shared/helper/uploadAvatar";
 
-import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
+import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
 
 const HeaderWrapper = styled.div`
   width: 100%;

@@ -2,11 +2,11 @@ import { CommentSection } from "@pmhieu/react-comments-section";
 import { useUserStore } from "src/store/userStore";
 import "@pmhieu/react-comments-section/dist/index.css";
 import "./comment.css";
-import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
+import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
 
 import { PostService } from "src/services/SubDatabaseService";
 import { NotificationService } from "src/services/SubDatabaseService";
-import useComments from "src/shared/hooks/fetch/useComments";
+import useComments from "src/shared/hooks/fetch/post/useComments";
 import CircularLoading from "src/shared/components/Loading";
 import { styled } from "styled-components";
 import { useEffect, useState } from "react";

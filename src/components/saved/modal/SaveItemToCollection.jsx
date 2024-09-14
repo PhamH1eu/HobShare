@@ -10,7 +10,7 @@ import {
   Button,
   Avatar,
 } from "@mui/material";
-import useCollections from "src/shared/hooks/fetch/useCollections";
+import useCollections from "src/shared/hooks/fetch/saved/useCollections";
 import CircularLoading from "src/shared/components/Loading";
 
 import { SavedService } from "src/services/SubDatabaseService";

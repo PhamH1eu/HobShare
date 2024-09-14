@@ -3,7 +3,7 @@ import { Box, Typography, Paper, Divider, Avatar, Button } from "@mui/material";
 import { Sidebar } from "./Sidebar";
 import PeopleIcon from "@mui/icons-material/People";
 import ReplyIcon from "@mui/icons-material/Reply";
-import usePosts from "src/shared/hooks/fetch/usePosts";
+import usePosts from "src/shared/hooks/fetch/post/usePosts";
 import Post from "../home/NewsFeed/component/Post";
 import CircularLoading from "src/shared/components/Loading";
 const Container = styled(Box)`

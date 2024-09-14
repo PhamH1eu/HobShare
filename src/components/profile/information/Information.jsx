@@ -12,7 +12,7 @@ import ProfileEdit from "./EditModal";
 
 import { useUserStore } from "src/store/userStore";
 import { useParams } from "react-router-dom";
-import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
+import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
 
 const style = {
   position: "absolute",

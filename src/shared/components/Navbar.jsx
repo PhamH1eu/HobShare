@@ -22,7 +22,7 @@ import { useUserStore } from "src/store/userStore";
 import NotificationDialog from "./navbar_dialog/NotificationDialog";
 import MessengerDialog from "./navbar_dialog/MessengerDialog";
 import { useState } from "react";
-import useUserInfo from "../hooks/fetch/useUserInfo";
+import useUserInfo from "../hooks/fetch/user/useUserInfo";
 import useChatList from "../hooks/listen/useChatList";
 import useListenNotifications from "../hooks/listen/useListenNotifications";
 import { useQueryClient } from "react-query";

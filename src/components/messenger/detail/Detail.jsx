@@ -9,7 +9,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import CircularLoading from "src/shared/components/Loading";
 import "./detail.css";
 import useListenOnline from "src/shared/hooks/listen/useListenOnline";
-import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
+import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
 
 export const Detail = () => {
   const {

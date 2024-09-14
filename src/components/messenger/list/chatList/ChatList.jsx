@@ -8,7 +8,7 @@ import { ChatService } from "src/services/SubDatabaseService";
 import Avatar from "src/shared/components/Avatar";
 import SearchIcon from "@mui/icons-material/Search";
 import "./chatList.css";
-import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
+import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
 
 export const ChatList = () => {
   const [addMode, setAddMode] = useState(false);
@@ -29,9 +29,9 @@ export const ChatList = () => {
 
   const handleSelect = async (chat) => {
     //update with seen status
-    const path =  `${currentUserId}/chat/${chat.chatId}`;
+    const path = `${currentUserId}/chat/${chat.chatId}`;
     await ChatService.updateDocument(path, {
-      isSeen: true
+      isSeen: true,
     });
     //pop up chat in screen
     if (chatId === chat.chatId) return;

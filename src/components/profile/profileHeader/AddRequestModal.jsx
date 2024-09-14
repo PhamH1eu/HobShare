@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { useUserStore } from "src/store/userStore";
-import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
+import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
 
 const CenteredBox = styled(Box)({
   display: "flex",

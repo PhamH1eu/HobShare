@@ -6,7 +6,7 @@ import AddUserToChat from "src/services/chat/AddUserToChat";
 import useChatList from "src/shared/hooks/listen/useChatList";
 import { ChatService } from "src/services/SubDatabaseService";
 import { useChatStore } from "src/store/chatStore";
-import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
+import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
 
 const AddUser = ({ setAddMode }) => {
   const [targetUser, setTargetUser] = useState(null);
@@ -28,7 +28,7 @@ const AddUser = ({ setAddMode }) => {
 
   const handleSelect = async (chat) => {
     //update with seen status
-    const path =  `${currentUserId}/chat/${chat.chatId}`;
+    const path = `${currentUserId}/chat/${chat.chatId}`;
     await ChatService.updateSubCollection(path, "isSeen", true);
     //pop up chat in screen
     if (chatId === chat.chatId) {

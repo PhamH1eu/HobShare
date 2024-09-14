@@ -10,7 +10,7 @@ import { useQueryChatlist } from "src/shared/hooks/listen/useChatList";
 import SendMessage from "src/services/chat/SendMessage";
 import UpdateChat from "src/services/chat/UpdateChat";
 import { useUserStore } from "src/store/userStore";
-import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
+import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
 
 const style = {
   position: "absolute",

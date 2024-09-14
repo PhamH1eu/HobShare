@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import Post from "./component/Post";
-import useSinglePost from "src/shared/hooks/fetch/useSinglePost";
+import useSinglePost from "src/shared/hooks/fetch/post/useSinglePost";
 import styled from "styled-components";
 import CircularLoading from "src/shared/components/Loading";
 

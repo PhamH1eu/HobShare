@@ -9,7 +9,7 @@ import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import AvatarRow from "./AvatarRow";
 
 import uploadSpecificImage from "src/shared/helper/uploadAvatar";
-import useGroupInfo from "src/shared/hooks/fetch/useGroup";
+import useGroupInfo from "src/shared/hooks/fetch/group/useGroup";
 import { GroupService } from "src/services/SubDatabaseService";
 
 const HeaderWrapper = styled.div`

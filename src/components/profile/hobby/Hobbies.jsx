@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import "./hobbies.css";
 import { useUserStore } from "src/store/userStore";
-import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
+import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
 
 const HobbyWrapper = styled.div`
   border-radius: 5px;

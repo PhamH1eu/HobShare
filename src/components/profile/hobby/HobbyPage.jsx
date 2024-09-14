@@ -14,7 +14,7 @@ import styled from "styled-components";
 
 import { useUserStore } from "src/store/userStore";
 import useModal from "src/shared/hooks/util/useModal";
-import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
+import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
 
 import { useParams } from "react-router-dom";
 import { UserService } from "src/services/DatabaseService";

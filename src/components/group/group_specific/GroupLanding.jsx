@@ -14,9 +14,9 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import CircularLoading from "src/shared/components/Loading";
-import usePosts from "src/shared/hooks/fetch/usePosts";
+import usePosts from "src/shared/hooks/fetch/post/usePosts";
 import Requests from "./request/Requests";
-import useGroupInfo from "src/shared/hooks/fetch/useGroup";
+import useGroupInfo from "src/shared/hooks/fetch/group/useGroup";
 
 const Wrapper = styled.div`
   display: flex;

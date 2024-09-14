@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { styled as MuiStyled, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
-import useGroupInfo from "src/shared/hooks/fetch/useGroup";
+import useGroupInfo from "src/shared/hooks/fetch/group/useGroup";
 
 const InfoWrapper = styled.div`
   border-radius: 5px;

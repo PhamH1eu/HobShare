@@ -13,7 +13,7 @@ import WatchLaterOutlinedIcon from "@mui/icons-material/WatchLaterOutlined";
 import PinDropIcon from "@mui/icons-material/PinDrop";
 import { useUserStore } from "src/store/userStore";
 import "./tab.css";
-import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
+import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
 
 const SidebarWrapper = styled.div`
   width: 280px;

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { Avatar, Box } from "@mui/material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { useParams } from "react-router-dom";
-import useGroupInfo from "src/shared/hooks/fetch/useGroup";
+import useGroupInfo from "src/shared/hooks/fetch/group/useGroup";
 
 const Container = styled.div`
   width: 600px;

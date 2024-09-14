@@ -6,7 +6,7 @@ import Divider from "@mui/material/Divider";
 
 import useModal from "src/shared/hooks/util/useModal";
 import NewModal from "./NewModal";
-import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
+import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
 
 const ChatInput = styled.div`
   display: flex;
@@ -79,7 +79,7 @@ const IconButton = styled.button`
   }
 `;
 
-const NewPostInput = ({groupId, groupName}) => {
+const NewPostInput = ({ groupId, groupName }) => {
   const { currentUserId } = useUserStore();
   const { data: currentUser } = useUserInfo(currentUserId);
   const { open, handleOpen, handleClose } = useModal();
@@ -106,7 +106,12 @@ const NewPostInput = ({groupId, groupName}) => {
           <span>Cảm xúc/hoạt động</span>
         </IconButton>
       </Actions>
-      <NewModal open={open} onClose={handleClose} groupId={groupId} groupName={groupName} />
+      <NewModal
+        open={open}
+        onClose={handleClose}
+        groupId={groupId}
+        groupName={groupName}
+      />
     </ChatInput>
   );
 };

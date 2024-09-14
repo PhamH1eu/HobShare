@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 
-import useActivities from "src/shared/hooks/fetch/useActivities";
+import useActivities from "src/shared/hooks/fetch/activity/useActivities";
 
 import { useUserStore } from "src/store/userStore";
 import { UserService } from "src/services/DatabaseService";

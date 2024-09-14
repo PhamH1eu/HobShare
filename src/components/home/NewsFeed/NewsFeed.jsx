@@ -3,7 +3,7 @@ import Post from "./component/Post";
 import FriendsRecommend from "./FriendsRecommend";
 import styled from "styled-components";
 
-import usePosts from "src/shared/hooks/fetch/usePosts";
+import usePosts from "src/shared/hooks/fetch/post/usePosts";
 import CircularLoading from "src/shared/components/Loading";
 
 const NewFeed = styled.div`

@@ -11,7 +11,7 @@ import CircularLoading from "src/shared/components/Loading";
 
 import useStatus from "./lib/status";
 
-import useUserInfo from "./shared/hooks/fetch/useUserInfo";
+import useUserInfo from "./shared/hooks/fetch/user/useUserInfo";
 
 import { generateToken, messaging } from "./lib/firebase";
 import { onMessage } from "firebase/messaging";

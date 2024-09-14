@@ -4,7 +4,7 @@ import { Button } from "@mui/material";
 import { UserService } from "src/services/DatabaseService";
 import { useUserStore } from "src/store/userStore";
 import { geohashForLocation } from "geofire-common";
-import useUserInfo from "src/shared/hooks/fetch/useUserInfo";
+import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
 import { useQueryClient } from "react-query";
 
 const Container = styled.div`

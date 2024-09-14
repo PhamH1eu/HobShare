@@ -46,7 +46,7 @@ const Sidebar = styled(Box)(({ theme }) => ({
   },
 }));
 
-const MainContent = styled(Box)(({ theme }) => ({
+const MainContent = styled(Box)(() => ({
   marginLeft: "340px",
   padding: "0 16px",
 }));
@@ -182,7 +182,7 @@ const GroupWithSidebar = () => {
           </Typography>
         )}
         {admins.map((group, index) => (
-          <StyledLink to={`/group/${group.groupId}`} index={index}>
+          <StyledLink to={`/group/${group.groupId}`} key={index}>
             <GroupContainer>
               <Avatar
                 variant="rounded"
@@ -208,7 +208,7 @@ const GroupWithSidebar = () => {
           </Typography>
         )}
         {joined.map((group, index) => (
-          <StyledLink to={`/group/${group.groupId}`} index={index}>
+          <StyledLink to={`/group/${group.groupId}`} key={index}>
             <GroupContainer>
               <Avatar
                 variant="rounded"

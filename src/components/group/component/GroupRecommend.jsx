@@ -52,7 +52,7 @@ const GroupRecommend = () => {
         >
           {groups.map((group) => {
             return (
-              <SwiperSlide>
+              <SwiperSlide key={group.id}>
                 <GroupCard group={group}/>
               </SwiperSlide>
             );
@@ -76,7 +76,7 @@ const GroupRecommend = () => {
       <Grid container spacing={2} sx={{ padding: "0 44px" }}>
         {groups.map((group) => {
           return (
-            <Grid item xs={12} sm={6} md={4}>
+            <Grid key={group.id} item xs={12} sm={6} md={4}>
               <GroupCard group={group}/>
             </Grid>
           );

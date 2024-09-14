@@ -57,7 +57,7 @@ const NewRecommend = () => {
     <SidebarWrapper>
       <h3>Xu hướng</h3>
       {tag.map((t, index) => (
-        <StyledLink to={`/hashtag/${t.tag.replace("#", "")}`}>
+        <StyledLink key={index} to={`/hashtag/${t.tag.replace("#", "")}`}>
           <Hashtag key={index}>
             <span>{t.tag}</span>
             <p>{t.count} posts</p>

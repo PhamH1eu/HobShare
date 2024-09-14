@@ -81,6 +81,7 @@ class SubDatabaseService {
   checkExistSubCollection = async (path) => {
     const docRef = doc(db, this.collection, path);
     const docSnap = await getDoc(docRef);
+    console.log(docSnap.exists());
     return docSnap.exists();
   };
 

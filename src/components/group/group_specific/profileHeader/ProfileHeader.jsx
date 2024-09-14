@@ -41,6 +41,7 @@ const WallpaperWrapper = styled.div`
 
 const Wallpaper = styled.img`
   width: 100%;
+  max-height: 290px;
   height: 100%;
   object-fit: cover;
   border-radius: 0 0 10px 10px;

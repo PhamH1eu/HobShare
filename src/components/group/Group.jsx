@@ -14,6 +14,11 @@ import { Home, Explore } from "@mui/icons-material";
 import GroupNewsFeed from "./component/GroupNewsFeed";
 import GroupRecommend from "./component/GroupRecommend";
 import { useNavigate } from "react-router-dom";
+import { useUserStore } from "src/store/userStore";
+import useUserGroup from "src/shared/hooks/fetch/user/useUserGroups";
+import CircularLoading from "src/shared/components/Loading";
+import useMembersCount from "src/shared/hooks/fetch/group/useMemberCount";
+import StyledLink from "src/shared/components/StyledLink";
 
 const Sidebar = styled(Box)(({ theme }) => ({
   width: "340px",
@@ -103,40 +108,27 @@ const a11yProps = (index) => {
   };
 };
 
-const groups = [
-  {
-    avatar: "https://path-to-image-1.jpg",
-    name: "PhD.Hub",
-  },
-  {
-    avatar: "https://path-to-image-1.jpg",
-    name: "PhD.Hub",
-  },
-  {
-    avatar: "https://path-to-image-1.jpg",
-    name: "PhD.Hub",
-  },
-  {
-    avatar: "https://path-to-image-1.jpg",
-    name: "PhD.Hub",
-  },
-  {
-    avatar: "https://path-to-image-1.jpg",
-    name: "PhD.Hub",
-  },
-  {
-    avatar: "https://path-to-image-1.jpg",
-    name: "PhD.Hub",
-  },
-];
+const Members = ({ groupId }) => {
+  const { membersCount, isLoading } = useMembersCount(groupId);
+  if (isLoading) return <CircularLoading />;
+  return (
+    <Typography variant="caption" color="textSecondary">
+      {membersCount} thành viên
+    </Typography>
+  );
+};
 
 const GroupWithSidebar = () => {
   const navigate = useNavigate();
   const [value, setValue] = useState(0);
+  const { currentUserId } = useUserStore();
+  const { admins, joined, isLoading } = useUserGroup(currentUserId);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  if (isLoading) return <CircularLoading />;
 
   return (
     <Box
@@ -181,50 +173,56 @@ const GroupWithSidebar = () => {
           + Tạo nhóm mới
         </CustomButton>
         <Divider sx={{ marginY: 2 }} />
-        <Typography
-          sx={{ fontWeight: "600", fontSize: "1.2rem" }}
-          variant="subtitle1"
-        >
-          Nhóm do bạn quản lý
-        </Typography>
-        <GroupContainer>
-          <Avatar
-            variant="rounded"
-            sx={{ width: 48, height: 48 }}
-            src="https://path-to-image.jpg"
-          />
-          <GroupDetails>
-            <Typography sx={{ fontWeight: "600" }} variant="body2">
-              123
-            </Typography>
-            <Typography variant="caption" color="textSecondary">
-              123 thành viên
-            </Typography>
-          </GroupDetails>
-        </GroupContainer>
+        {admins.length > 0 && (
+          <Typography
+            sx={{ fontWeight: "600", fontSize: "1.2rem" }}
+            variant="subtitle1"
+          >
+            Nhóm do bạn quản lý
+          </Typography>
+        )}
+        {admins.map((group, index) => (
+          <StyledLink to={`/group/${group.groupId}`} index={index}>
+            <GroupContainer>
+              <Avatar
+                variant="rounded"
+                sx={{ width: 48, height: 48 }}
+                src={group.wallpaper}
+              />
+              <GroupDetails>
+                <Typography sx={{ fontWeight: "600" }} variant="body2">
+                  {group.name}
+                </Typography>
+                <Members groupId={group.groupId} />
+              </GroupDetails>
+            </GroupContainer>
+          </StyledLink>
+        ))}
         <Divider sx={{ marginY: 1 }} />
-        <Typography
-          sx={{ fontWeight: "600", fontSize: "1.2rem" }}
-          variant="subtitle1"
-        >
-          Nhóm bạn đã tham gia
-        </Typography>
-        {groups.map((group, index) => (
-          <GroupContainer key={index}>
-            <Avatar
-              variant="rounded"
-              sx={{ width: 48, height: 48 }}
-              src={group.avatar}
-            />
-            <GroupDetails>
-              <Typography sx={{ fontWeight: "600" }} variant="body2">
-                {group.name}
-              </Typography>
-              <Typography variant="caption" color="textSecondary">
-                123 thành viên
-              </Typography>
-            </GroupDetails>
-          </GroupContainer>
+        {joined.length > 0 && (
+          <Typography
+            sx={{ fontWeight: "600", fontSize: "1.2rem" }}
+            variant="subtitle1"
+          >
+            Nhóm bạn đã tham gia
+          </Typography>
+        )}
+        {joined.map((group, index) => (
+          <StyledLink to={`/group/${group.groupId}`} index={index}>
+            <GroupContainer>
+              <Avatar
+                variant="rounded"
+                sx={{ width: 48, height: 48 }}
+                src={group.wallpaper}
+              />
+              <GroupDetails>
+                <Typography sx={{ fontWeight: "600" }} variant="body2">
+                  {group.name}
+                </Typography>
+                <Members groupId={group.groupId} />
+              </GroupDetails>
+            </GroupContainer>
+          </StyledLink>
         ))}
       </Sidebar>
 

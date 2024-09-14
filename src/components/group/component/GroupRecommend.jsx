@@ -7,123 +7,12 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 
 import GroupCard from "./Card";
-
-const rec = [
-  {
-    id: 1,
-    name: "PhD.Hub",
-    description: "43K thành viên • 10 bài viết/ngày",
-    members: "Phạm Xuân Bách và 5 người bạn là thành viên",
-    image: "https://path-to-image-1.jpg",
-  },
-  {
-    id: 2,
-    name: "Build in public VN",
-    description: "11K thành viên • 2 bài viết/ngày",
-    members: "Nguyễn Cao Quang và 3 người bạn là thành viên",
-    image: "https://path-to-image-2.jpg",
-  },
-  {
-    id: 3,
-    name: "PhD.Hub",
-    description: "43K thành viên • 10 bài viết/ngày",
-    members: "Phạm Xuân Bách và 5 người bạn là thành viên",
-    image: "https://path-to-image-1.jpg",
-  },
-  {
-    id: 4,
-    name: "Build in public VN",
-    description: "11K thành viên • 2 bài viết/ngày",
-    members: "Nguyễn Cao Quang và 3 người bạn là thành viên",
-    image: "https://path-to-image-2.jpg",
-  },
-  {
-    id: 1,
-    name: "PhD.Hub",
-    description: "43K thành viên • 10 bài viết/ngày",
-    members: "Phạm Xuân Bách và 5 người bạn là thành viên",
-    image: "https://path-to-image-1.jpg",
-  },
-  {
-    id: 2,
-    name: "Build in public VN",
-    description: "11K thành viên • 2 bài viết/ngày",
-    members: "Nguyễn Cao Quang và 3 người bạn là thành viên",
-    image: "https://path-to-image-2.jpg",
-  },
-  {
-    id: 3,
-    name: "PhD.Hub",
-    description: "43K thành viên • 10 bài viết/ngày",
-    members: "Phạm Xuân Bách và 5 người bạn là thành viên",
-    image: "https://path-to-image-1.jpg",
-  },
-  {
-    id: 4,
-    name: "Build in public VN",
-    description: "11K thành viên • 2 bài viết/ngày",
-    members: "Nguyễn Cao Quang và 3 người bạn là thành viên",
-    image: "https://path-to-image-2.jpg",
-  },
-  {
-    id: 1,
-    name: "PhD.Hub",
-    description: "43K thành viên • 10 bài viết/ngày",
-    members: "Phạm Xuân Bách và 5 người bạn là thành viên",
-    image: "https://path-to-image-1.jpg",
-  },
-  {
-    id: 2,
-    name: "Build in public VN",
-    description: "11K thành viên • 2 bài viết/ngày",
-    members: "Nguyễn Cao Quang và 3 người bạn là thành viên",
-    image: "https://path-to-image-2.jpg",
-  },
-  {
-    id: 3,
-    name: "PhD.Hub",
-    description: "43K thành viên • 10 bài viết/ngày",
-    members: "Phạm Xuân Bách và 5 người bạn là thành viên",
-    image: "https://path-to-image-1.jpg",
-  },
-  {
-    id: 4,
-    name: "Build in public VN",
-    description: "11K thành viên • 2 bài viết/ngày",
-    members: "Nguyễn Cao Quang và 3 người bạn là thành viên",
-    image: "https://path-to-image-2.jpg",
-  },
-  {
-    id: 1,
-    name: "PhD.Hub",
-    description: "43K thành viên • 10 bài viết/ngày",
-    members: "Phạm Xuân Bách và 5 người bạn là thành viên",
-    image: "https://path-to-image-1.jpg",
-  },
-  {
-    id: 2,
-    name: "Build in public VN",
-    description: "11K thành viên • 2 bài viết/ngày",
-    members: "Nguyễn Cao Quang và 3 người bạn là thành viên",
-    image: "https://path-to-image-2.jpg",
-  },
-  {
-    id: 3,
-    name: "PhD.Hub",
-    description: "43K thành viên • 10 bài viết/ngày",
-    members: "Phạm Xuân Bách và 5 người bạn là thành viên",
-    image: "https://path-to-image-1.jpg",
-  },
-  {
-    id: 4,
-    name: "Build in public VN",
-    description: "11K thành viên • 2 bài viết/ngày",
-    members: "Nguyễn Cao Quang và 3 người bạn là thành viên",
-    image: "https://path-to-image-2.jpg",
-  },
-];
+import useGroups from "src/shared/hooks/fetch/group/useGroups";
+import CircularLoading from "src/shared/components/Loading";
 
 const GroupRecommend = () => {
+  const { groups, isLoading } = useGroups();
+  if (isLoading) return <CircularLoading />;
   return (
     <Box sx={{ padding: "0 24px", width: "calc(100vw-340px)" }}>
       {/* First section: Swiper for sliding groups */}
@@ -161,10 +50,10 @@ const GroupRecommend = () => {
           }}
           modules={[Navigation]} // Include Navigation module
         >
-          {rec.map((group) => {
+          {groups.map((group) => {
             return (
               <SwiperSlide>
-                <GroupCard />
+                <GroupCard group={group}/>
               </SwiperSlide>
             );
           })}
@@ -185,10 +74,10 @@ const GroupRecommend = () => {
         Gợi ý khác
       </Typography>
       <Grid container spacing={2} sx={{ padding: "0 44px" }}>
-        {rec.map((group) => {
+        {groups.map((group) => {
           return (
             <Grid item xs={12} sm={6} md={4}>
-              <GroupCard />
+              <GroupCard group={group}/>
             </Grid>
           );
         })}

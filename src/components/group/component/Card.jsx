@@ -8,6 +8,8 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import CloseIcon from "@mui/icons-material/Close";
+import useMembersCount from "src/shared/hooks/fetch/group/useMemberCount";
+import CircularLoading from "src/shared/components/Loading";
 
 // Styled components
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -37,20 +39,24 @@ const StyledIconButton = styled(IconButton)({
   },
 });
 
-const GroupCard = () => {
+const GroupCard = ({ group }) => {
+  const { membersCount, isLoading } = useMembersCount(group.id);
+
+  if (isLoading) return <CircularLoading />;
+  
   return (
     <StyledCard>
       <StyledIconButton>
         <CloseIcon />
       </StyledIconButton>
       <StyledCardMedia
-        image="https://c4.wallpaperflare.com/wallpaper/297/22/531/lake-blue-moonlight-moon-wallpaper-thumb.jpg" // Replace with your image URL
-        title="PhD.Hub"
+        image={group.wallpaper}
+        title={group.name}
       />
       <CardContent>
-        <Typography variant="h6">PhD.Hub</Typography>
+        <Typography variant="h6">{group.name}</Typography>
         <Typography variant="body2" color="textSecondary">
-          45K thành viên • 10 bài viết/ngày
+          {membersCount} thành viên • 10 bài viết/ngày
         </Typography>
         <StyledButton variant="contained" color="primary">
           Tham gia nhóm

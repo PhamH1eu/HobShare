@@ -16,6 +16,7 @@ import {
   limit,
   startAfter,
   writeBatch,
+  getCountFromServer,
 } from "firebase/firestore";
 
 class SubDatabaseService {
@@ -89,6 +90,16 @@ class SubDatabaseService {
     return docSnap.data();
   };
 
+  getAll = async () => {
+    const q = collection(db, this.collection);
+    const querySnapshot = await getDocs(q);
+    let data = [];
+    querySnapshot.forEach((doc) => {
+      data.push(doc.data());
+    });
+    return data;
+  };
+
   getAllSubCollection = async (path) => {
     const q = query(collection(db, this.collection, path));
     const querySnapshot = await getDocs(q);
@@ -140,6 +151,12 @@ class SubDatabaseService {
     return await updateDoc(docRef, {
       [data]: arrayRemove(value),
     });
+  };
+
+  count = async (path) => {
+    const q = collection(db, this.collection, path);
+    const snapshot = await getCountFromServer(q);
+    return snapshot.data().count;
   };
 }
 

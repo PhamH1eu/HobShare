@@ -3,6 +3,8 @@ import { Avatar, Box } from "@mui/material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { useParams } from "react-router-dom";
 import useGroupInfo from "src/shared/hooks/fetch/group/useGroup";
+import useMembers from "src/shared/hooks/fetch/group/useMembers";
+import CircularLoading from "src/shared/components/Loading";
 
 const Container = styled.div`
   width: 600px;
@@ -90,7 +92,7 @@ const KickButton = styled.button`
   cursor: pointer;
 `;
 
-function FriendsTabPanel({users}) {
+function FriendsTabPanel({ users }) {
   return (
     <Box>
       {users.map((friend, index) => (
@@ -119,7 +121,12 @@ function FriendsTabPanel({users}) {
 const Members = () => {
   const { groupId } = useParams();
   const { group } = useGroupInfo(groupId);
-  
+  const { members, isLoading } = useMembers(groupId);
+
+  if (isLoading) {
+    return <CircularLoading />;
+  }
+
   return (
     <Container>
       <Header>
@@ -130,7 +137,7 @@ const Members = () => {
       <Role>Quản trị viên</Role>
       <FriendsTabPanel users={group.admins}></FriendsTabPanel>
       <Role>Thành viên</Role>
-      <FriendsTabPanel users={group.admins}></FriendsTabPanel>
+      <FriendsTabPanel users={members}></FriendsTabPanel>
     </Container>
   );
 };

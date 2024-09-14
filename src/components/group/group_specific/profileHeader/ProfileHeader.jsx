@@ -11,6 +11,7 @@ import AvatarRow from "./AvatarRow";
 import uploadSpecificImage from "src/shared/helper/uploadAvatar";
 import useGroupInfo from "src/shared/hooks/fetch/group/useGroup";
 import { GroupService } from "src/services/SubDatabaseService";
+import useMembersCount from "src/shared/hooks/fetch/group/useMemberCount";
 
 const HeaderWrapper = styled.div`
   width: 100%;
@@ -77,6 +78,7 @@ const InfoWrapper = styled.div`
 const TextWrapper = styled.div``;
 
 const Name = styled.p`
+  width: max-content;
   font-size: 2.5rem;
   font-weight: 700;
 `;
@@ -95,6 +97,7 @@ const ProfileHeader = () => {
   const { currentUserId } = useUserStore();
   const { groupId } = useParams();
   const { group } = useGroupInfo(groupId);
+  const { membersCount } = useMembersCount(groupId);
   const isAdmin = group.admins.some((admin) => admin.userId === currentUserId);
 
   const [isWallpaperHovered, setIsWallpaperHovered] = useState(false);
@@ -145,11 +148,11 @@ const ProfileHeader = () => {
         <InfoWrapper>
           <TextWrapper>
             <Name>{group.name}</Name>
-            <Friends>1027 thành viên</Friends>
+            <Friends>{membersCount} thành viên</Friends>
           </TextWrapper>
         </InfoWrapper>
       </WallImage>
-      <AvatarRow />
+      <AvatarRow isAdmin={isAdmin}/>
     </HeaderWrapper>
   );
 };

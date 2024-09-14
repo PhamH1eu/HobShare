@@ -20,6 +20,7 @@ import { TabPanel, TabContext, TabList } from "@mui/lab";
 import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
 import ThumbUpAlt from "@mui/icons-material/ThumbUpAlt";
 import PersonAdd from "@mui/icons-material/PersonAdd";
+import Diversity2Icon from "@mui/icons-material/Diversity2";
 import { MoreVert } from "@mui/icons-material";
 import { Check } from "@mui/icons-material";
 
@@ -92,6 +93,17 @@ const LikeIcon = styled(ThumbUpAlt)`
 `;
 
 const AddFriendIcon = styled(PersonAdd)`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: #0492fc;
+  color: white;
+  border-radius: 50%;
+  padding: 4px !important;
+  font-size: 24px;
+`;
+
+const GroupIcon = styled(Diversity2Icon)`
   position: absolute;
   bottom: 0;
   right: 0;
@@ -323,6 +335,8 @@ const renderIcon = (type) => {
       return <LikeIcon />;
     case "add":
       return <AddFriendIcon />;
+    case "group":
+      return <GroupIcon />;
     default:
       return <RepliedIcon />;
   }

@@ -8,6 +8,13 @@ import CircularLoading from "src/shared/components/Loading";
 
 import { useQueryChatlist } from "src/shared/hooks/listen/useChatList";
 import { useUserStore } from "src/store/userStore";
+import { NotificationService } from "src/services/SubDatabaseService";
+import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
+
+import { v4 as uuidv4 } from "uuid";
+import { increment } from "firebase/firestore";
+import { useParams } from "react-router-dom";
+import useGroupInfo from "src/shared/hooks/fetch/group/useGroup";
 
 const style = {
   position: "absolute",
@@ -100,7 +107,10 @@ const SendButton = styled.div`
 
 const Invite = ({ handleClose }) => {
   const { currentUserId } = useUserStore();
+  const { data: currentUser } = useUserInfo(currentUserId);
   const { isLoading, data: chats } = useQueryChatlist(currentUserId);
+  const { groupId } = useParams();
+  const { group } = useGroupInfo(groupId);
   const [search, setSearchinput] = useState("");
 
   const handleSearch = (e) => {
@@ -134,6 +144,27 @@ const Invite = ({ handleClose }) => {
         { chatId: item.chatId, userId: item.user.id },
       ]);
     }
+  };
+
+  const handleSend = async () => {
+    const promises = recipients.map(async (item) => {
+      await NotificationService.createSubCollection(
+        `${item.userId}/notifications/${uuidv4()}`,
+        {
+          sourceName: currentUser.username,
+          sourceImage: group.wallpaper,
+          content: `đã mời bạn tham gia nhóm ${group.name}`,
+          isRead: false,
+          type: "group",
+          url: `/group/${groupId}`,
+        }
+      );
+      await NotificationService.createSubCollection(`${item.userId}`, {
+        unreadNotis: increment(1),
+      });
+    });
+    await Promise.all(promises);
+    handleClose();
   };
 
   if (isLoading)
@@ -178,7 +209,7 @@ const Invite = ({ handleClose }) => {
           </RecipientItem>
         ))}
       </RecipientList>
-      <SendButton onClick={handleClose}>
+      <SendButton onClick={handleSend}>
         <ForwardToInboxIcon
           // @ts-ignore
           color="white"

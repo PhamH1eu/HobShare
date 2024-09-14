@@ -10,6 +10,7 @@ import { styled } from "@mui/material/styles";
 import CloseIcon from "@mui/icons-material/Close";
 import useMembersCount from "src/shared/hooks/fetch/group/useMemberCount";
 import CircularLoading from "src/shared/components/Loading";
+import { useNavigate } from "react-router-dom";
 
 // Styled components
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -41,6 +42,7 @@ const StyledIconButton = styled(IconButton)({
 
 const GroupCard = ({ group }) => {
   const { membersCount, isLoading } = useMembersCount(group.id);
+  const navigate = useNavigate();
 
   if (isLoading) return <CircularLoading />;
   
@@ -58,7 +60,7 @@ const GroupCard = ({ group }) => {
         <Typography variant="body2" color="textSecondary">
           {membersCount} thành viên • 10 bài viết/ngày
         </Typography>
-        <StyledButton variant="contained" color="primary">
+        <StyledButton onClick={() => navigate(`/group/${group.id}`)} variant="contained" color="primary">
           Tham gia nhóm
         </StyledButton>
       </CardContent>

@@ -17,7 +17,10 @@ import {
   Modal,
 } from "@mui/material";
 import useDialog from "src/shared/hooks/util/useDialog";
-import { Close } from "@mui/icons-material";
+import { Close, MoreVert } from "@mui/icons-material";
+import useMembers from "src/shared/hooks/fetch/group/useMembers";
+import { useParams } from "react-router-dom";
+import CircularLoading from "src/shared/components/Loading";
 
 const Container = styled.div`
   display: flex;
@@ -66,7 +69,6 @@ const StatusButton = styled(Button)`
     background-color: #e0dcdc;
     color: black;
     text-transform: none;
-    padding: 6px 12px;
     border-radius: 8px;
     font-weight: bold;
 
@@ -82,7 +84,7 @@ const StyledDialogTitle = styled(DialogTitle)({
   alignItems: "center",
   position: "relative",
   fontWeight: "bold",
-  padding: '12px'
+  padding: "12px",
 });
 
 const StyledIconButton = styled(IconButton)({
@@ -121,19 +123,38 @@ const CustomDialog = ({ open, onClose }) => {
   );
 };
 
-const AvatarRow = () => {
-  const avatars = [
-    "/avatars/cat.png", // Add your avatar image URLs here
-    "/avatars/user1.png",
-    "/avatars/cat.png", // Add your avatar image URLs here
-    "/avatars/user1.png",
-    "/avatars/cat.png", // Add your avatar image URLs here
-    "/avatars/user1.png",
-    "/avatars/cat.png", // Add your avatar image URLs here
-    "/avatars/user1.png",
-    "/avatars/cat.png", // Add your avatar image URLs here
-    "/avatars/user1.png",
-  ];
+const DeleteModal = ({ open, onClose }) => {
+  return (
+    <Dialog open={open} onClose={onClose}>
+      <StyledDialogTitle>
+        Bạn có chắc không?
+        <StyledIconButton onClick={onClose}>
+          <Close />
+        </StyledIconButton>
+      </StyledDialogTitle>
+      <Divider />
+      <DialogContent>
+        Bạn có chắc chắn muốn xoá Tuyển dụng Flutter tại Việt Nam không?
+      </DialogContent>
+      <DialogContent>
+        Điều này sẽ xoá toàn bộ bài viết, thành viên và dữ liệu khác của nhóm.
+      </DialogContent>
+      <Divider />
+      <FooterActions>
+        <Button onClick={onClose} color="primary">
+          Huỷ
+        </Button>
+        <Button onClick={onClose} color="primary" variant="contained">
+          Xoá nhóm
+        </Button>
+      </FooterActions>
+    </Dialog>
+  );
+};
+
+const AvatarRow = ({ isAdmin }) => {
+  const { groupId } = useParams();
+  const { members, isLoading } = useMembers(groupId);
 
   const {
     open,
@@ -145,8 +166,17 @@ const AvatarRow = () => {
     handleOpen: handleOpenConfirm,
     handleClose: handleCloseConfirm,
   } = useModal();
+  const {
+    open: openDeleteModal,
+    handleOpen: handleOpenDeleteModal,
+    handleClose: handleCloseDeleteModal,
+  } = useModal();
+
   const { anchorEl, isOpen, handleOpen, handleClose } = useDialog();
-  const menuId = "primary-search-account-menu";
+  const handleOpenLeave = () => {
+    if (isAdmin) return;
+    handleOpen();
+  };
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
@@ -154,7 +184,7 @@ const AvatarRow = () => {
         vertical: "bottom",
         horizontal: "right",
       }}
-      id={menuId}
+      id="primary-search-account-menu"
       keepMounted
       transformOrigin={{
         vertical: "top",
@@ -163,27 +193,69 @@ const AvatarRow = () => {
       open={isOpen}
       onClose={handleClose}
     >
-      <MenuItem onClick={() => {
-        handleOpenConfirm();
-        handleClose();
-      }} sx={{gap: '20px'}}>
+      <MenuItem
+        onClick={() => {
+          handleOpenConfirm();
+          handleClose();
+        }}
+        sx={{ gap: "20px" }}
+      >
         <LogoutIcon />
         Rời nhóm
       </MenuItem>
     </Menu>
   );
 
+  const {
+    anchorEl: deleteEl,
+    isOpen: isOpenDelete,
+    handleOpen: handleOpenDelete,
+    handleClose: handleCloseDelete,
+  } = useDialog();
+  const renderDeleteMenu = (
+    <Menu
+      anchorEl={deleteEl}
+      anchorOrigin={{
+        vertical: "bottom",
+        horizontal: "right",
+      }}
+      id="primary-search-account-menu"
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      open={isOpenDelete}
+      onClose={handleCloseDelete}
+    >
+      <MenuItem
+        onClick={() => {
+          handleCloseDelete();
+          handleOpenDeleteModal();
+        }}
+        sx={{ gap: "20px" }}
+      >
+        <LogoutIcon />
+        Xoá nhóm
+      </MenuItem>
+    </Menu>
+  );
+
+  if (isLoading) return <CircularLoading />;
+
   return (
     <Container>
       <AvatarGroup>
-        {avatars.map((src, index) => (
-          <StyledAvatar key={index} src={src} />
+        {members.slice(0, 10).map((user, index) => (
+          <StyledAvatar key={index} src={user.avatar} />
         ))}
       </AvatarGroup>
       <Action>
         <InviteButton onClick={handleOpenModal}>+ Mời</InviteButton>
-        <StatusButton onClick={handleOpen} endIcon={<ArrowDropDownIcon />}>
+        <StatusButton onClick={handleOpenLeave} endIcon={<ArrowDropDownIcon />}>
           Đã tham gia
+        </StatusButton>
+        <StatusButton onClick={handleOpenDelete}>
+          <MoreVert />
         </StatusButton>
       </Action>
       <Modal
@@ -192,10 +264,14 @@ const AvatarRow = () => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Invite handleClose={handleCloseModal} />
+        <Invite handleClose={handleCloseModal}/>
       </Modal>
       {renderMenu}
+      {renderDeleteMenu}
       <CustomDialog onClose={handleCloseConfirm} open={openConfirm} />
+      {isAdmin && (
+        <DeleteModal open={openDeleteModal} onClose={handleCloseDeleteModal} />
+      )}
     </Container>
   );
 };

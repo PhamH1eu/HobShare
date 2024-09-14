@@ -132,7 +132,7 @@ const Members = () => {
       <Header>
         <p>Thành viên</p>
         <span> · </span>
-        <span>99287</span>
+        <span>{members.length + 1}</span>
       </Header>
       <Role>Quản trị viên</Role>
       <FriendsTabPanel users={group.admins}></FriendsTabPanel>

@@ -14,7 +14,7 @@ import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
 import { v4 as uuidv4 } from "uuid";
 import { increment } from "firebase/firestore";
 import { useParams } from "react-router-dom";
-import useGroupInfo from "src/shared/hooks/fetch/group/useGroup";
+import useGroupInfo from "src/shared/hooks/fetch/group/useGroupInfo";
 
 const style = {
   position: "absolute",

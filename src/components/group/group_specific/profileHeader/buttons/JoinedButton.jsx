@@ -14,6 +14,10 @@ import {
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import useDialog from "src/shared/hooks/util/useDialog";
 import useModal from "src/shared/hooks/util/useModal";
+import { useParams } from "react-router-dom";
+import { useUserStore } from "src/store/userStore";
+import { GroupService, UserService } from "src/services/SubDatabaseService";
+import useGroupInfo from "src/shared/hooks/fetch/group/useGroupInfo";
 
 const StyledDialogTitle = styled(DialogTitle)({
   display: "flex",
@@ -49,6 +53,18 @@ const StatusButton = styled(Button)`
 `;
 
 const CustomDialog = ({ open, onClose }) => {
+  const { groupId } = useParams();
+  const { group } = useGroupInfo(groupId);
+  const { currentUserId } = useUserStore();
+  const handleLeave = async () => {
+    await GroupService.removeSubCollection(
+      `${groupId}/members/${currentUserId}`
+    );
+    await UserService.removeSubCollection(
+      `${currentUserId}/joinedgroups/${groupId}`
+    );
+    window.location.reload();
+  };
   return (
     <Dialog open={open} onClose={onClose}>
       <StyledDialogTitle>
@@ -59,14 +75,14 @@ const CustomDialog = ({ open, onClose }) => {
       </StyledDialogTitle>
       <Divider />
       <DialogContent>
-        Bạn có chắc chắn muốn rời khỏi Tuyển dụng Flutter tại Việt Nam không?
+        Bạn có chắc chắn muốn rời khỏi {group.name} không?
       </DialogContent>
       <Divider />
       <FooterActions>
         <Button onClick={onClose} color="primary">
           Huỷ
         </Button>
-        <Button onClick={onClose} color="primary" variant="contained">
+        <Button onClick={handleLeave} color="primary" variant="contained">
           Rời khỏi nhóm
         </Button>
       </FooterActions>
@@ -74,7 +90,7 @@ const CustomDialog = ({ open, onClose }) => {
   );
 };
 
-const JoinedButton = ({ isAdmin }) => {
+const JoinedButton = () => {
   const {
     open: openConfirm,
     handleOpen: handleOpenConfirm,
@@ -82,10 +98,7 @@ const JoinedButton = ({ isAdmin }) => {
   } = useModal();
 
   const { anchorEl, isOpen, handleOpen, handleClose } = useDialog();
-  const handleOpenLeave = () => {
-    if (isAdmin) return;
-    handleOpen();
-  };
+
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
@@ -116,7 +129,10 @@ const JoinedButton = ({ isAdmin }) => {
   );
   return (
     <>
-      <StatusButton onClick={handleOpenLeave} endIcon={<ArrowDropDownIcon />}>
+      <StatusButton
+        onClick={handleOpen}
+        endIcon={<ArrowDropDownIcon />}
+      >
         Đã tham gia
       </StatusButton>
       {renderMenu}

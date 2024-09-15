@@ -10,9 +10,13 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
+import { useState } from "react";
 import useDialog from "src/shared/hooks/util/useDialog";
 import useModal from "src/shared/hooks/util/useModal";
 import styled from "styled-components";
+import { useParams } from "react-router-dom";
+import useGroupInfo from "src/shared/hooks/fetch/group/useGroupInfo";
 
 const StyledDialogTitle = styled(DialogTitle)({
   display: "flex",
@@ -48,6 +52,16 @@ const StatusButton = styled(Button)`
 `;
 
 const DeleteModal = ({ open, onClose }) => {
+  const [loading, setLoading] = useState(false);
+  const { groupId } = useParams();
+  const { group } = useGroupInfo(groupId);
+  const handleDelete = async () => {
+    setLoading(true);
+    // await GroupService.removeGroup(groupId);
+    setLoading(false);
+    onClose();
+  }
+
   return (
     <Dialog open={open} onClose={onClose}>
       <StyledDialogTitle>
@@ -58,7 +72,7 @@ const DeleteModal = ({ open, onClose }) => {
       </StyledDialogTitle>
       <Divider />
       <DialogContent>
-        Bạn có chắc chắn muốn xoá Tuyển dụng Flutter tại Việt Nam không?
+        Bạn có chắc chắn muốn xoá {group.name} không?
       </DialogContent>
       <DialogContent>
         Điều này sẽ xoá toàn bộ bài viết, thành viên và dữ liệu khác của nhóm.
@@ -68,9 +82,14 @@ const DeleteModal = ({ open, onClose }) => {
         <Button onClick={onClose} color="primary">
           Huỷ
         </Button>
-        <Button onClick={onClose} color="primary" variant="contained">
+        <LoadingButton
+          loading={loading}
+          onClick={handleDelete}
+          color="primary"
+          variant="contained"
+        >
           Xoá nhóm
-        </Button>
+        </LoadingButton>
       </FooterActions>
     </Dialog>
   );

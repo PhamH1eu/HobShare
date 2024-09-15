@@ -1,6 +1,14 @@
 import styled from "styled-components";
 import { Avatar, Box } from "@mui/material";
-import HowToRegIcon from '@mui/icons-material/HowToReg';
+import { LoadingButton } from "@mui/lab";
+import HowToRegIcon from "@mui/icons-material/HowToReg";
+import usePendingRequests from "src/shared/hooks/fetch/group/usePendingRequests";
+import { useParams } from "react-router-dom";
+import CircularLoading from "src/shared/components/Loading";
+import { GroupService, UserService } from "src/services/SubDatabaseService";
+import { useQueryClient } from "react-query";
+import { useState } from "react";
+import useGroupInfo from "src/shared/hooks/fetch/group/useGroupInfo";
 
 const Container = styled.div`
   width: 600px;
@@ -10,6 +18,7 @@ const Container = styled.div`
   padding: 16px;
   font-family: Arial, sans-serif;
   margin-bottom: 32px;
+  margin-top: 20px;
 `;
 
 const Header = styled.div`
@@ -62,7 +71,7 @@ const CommonFriends = styled.div`
   color: #606770;
 `;
 
-const AddFriend = styled.button`
+const Accept = styled(LoadingButton)`
   margin-left: auto;
   background-color: #6ec924;
   color: white;
@@ -73,9 +82,14 @@ const AddFriend = styled.button`
   display: flex;
   gap: 5px;
   cursor: pointer;
+  text-transform: none;
+
+  &:hover {
+    background-color: #5cb41b;
+  }
 `;
 
-const KickButton = styled.button`
+const KickButton = styled(LoadingButton)`
   background-color: #e0dcdc;
   border: none;
   border-radius: 8px;
@@ -86,40 +100,78 @@ const KickButton = styled.button`
   display: flex;
   gap: 5px;
   cursor: pointer;
+  text-transform: none;
+
+  &:hover {
+    background-color: #e0e0e0;
+  }
 `;
 
-const friendsList = [
-  {
-    name: "Lê Bá Trường",
-    mutualFriends: 33,
-    avatar: "https://i.pravatar.cc/40?u=1",
-  },
-  {
-    name: "Nguyễn Đăng Hải",
-    mutualFriends: 69,
-    avatar: "https://i.pravatar.cc/40?u=2",
-  },
-];
+function RequestTabPanel({ pendingRequests }) {
+  const queryClient = useQueryClient();
+  const { groupId } = useParams();
+  const { group } = useGroupInfo(groupId);
+  const [loadingAccept, setLoadingAccept] = useState(false);
+  const [loadingDeny, setLoadingDeny] = useState(false);
 
-function RequestTabPanel() {
+  const handleAccept = async (request) => {
+    setLoadingAccept(true);
+    await GroupService.removeSubCollection(
+      `${groupId}/pendingRequests/${request.userId}`
+    );
+    await GroupService.createSubCollection(
+      `${groupId}/members/${request.userId}`,
+      request
+    );
+    await UserService.createSubCollection(
+      `${request.userId}/joinedgroups/${groupId}`,
+      {
+        groupId: groupId,
+        name: group.name,
+        wallpaper: group.wallpaper,
+      }
+    );
+    queryClient.invalidateQueries("pendingRequests");
+    queryClient.invalidateQueries("members");
+    queryClient.invalidateQueries("membersCount");
+    setLoadingAccept(false);
+  };
+
+  const handleDeny = async (currentUserId) => {
+    setLoadingDeny(true);
+    await GroupService.removeSubCollection(
+      `${groupId}/pendingRequests/${currentUserId}`
+    );
+    queryClient.invalidateQueries("pendingRequests");
+    setLoadingDeny(false);
+  };
+
   return (
     <Box>
-      {friendsList.map((friend, index) => (
+      {pendingRequests.map((request, index) => (
         <FriendItem key={index}>
           <FriendDetails>
-            <Avatar src={friend.avatar} />
+            <Avatar src={request.avatar} />
             <FriendInfo>
-              <FriendName>{friend.name}</FriendName>
-              <CommonFriends>{friend.mutualFriends} bạn chung</CommonFriends>
+              <FriendName>{request.username}</FriendName>
+              <CommonFriends>11 bạn chung</CommonFriends>
             </FriendInfo>
-            <AddFriend>
+            <Accept
+              loading={loadingAccept}
+              onClick={() => handleAccept(request)}
+            >
               <HowToRegIcon
                 // @ts-ignore
                 color="white"
               />
               Chấp nhận
-            </AddFriend>
-            <KickButton>Xoá</KickButton>
+            </Accept>
+            <KickButton
+              loading={loadingDeny}
+              onClick={() => handleDeny(request.userId)}
+            >
+              Xoá
+            </KickButton>
           </FriendDetails>
         </FriendItem>
       ))}
@@ -128,15 +180,25 @@ function RequestTabPanel() {
 }
 
 const Requests = () => {
+  const { groupId } = useParams();
+  const { pendingRequests, count, isLoading } = usePendingRequests(groupId);
+
+  if (isLoading)
+    return (
+      <Container>
+        <CircularLoading />
+      </Container>
+    );
+
   return (
     <Container>
       <Header>
         <p>Yêu cầu tham gia nhóm</p>
         <span> · </span>
-        <span>99287</span>
+        <span>{count}</span>
       </Header>
       <Role>Gần đây</Role>
-      <RequestTabPanel></RequestTabPanel>
+      <RequestTabPanel pendingRequests={pendingRequests}></RequestTabPanel>
     </Container>
   );
 };

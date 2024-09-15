@@ -1,6 +1,10 @@
 import { HighlightOff } from "@mui/icons-material";
 import { Button, Menu, MenuItem } from "@mui/material";
+import { useQueryClient } from "react-query";
+import { useParams } from "react-router-dom";
+import { GroupService } from "src/services/SubDatabaseService";
 import useDialog from "src/shared/hooks/util/useDialog";
+import { useUserStore } from "src/store/userStore";
 import styled from "styled-components";
 
 const StatusButton = styled(Button)`
@@ -18,7 +22,15 @@ const StatusButton = styled(Button)`
 `;
 
 const PendingButton = () => {
+  const queryClient = useQueryClient();
+  const { groupId } = useParams();
+  const { currentUserId } = useUserStore();
   const { anchorEl, isOpen, handleOpen, handleClose } = useDialog();
+
+  const handleCancel = async () => {
+    await GroupService.removeSubCollection(`${groupId}/pendingRequests/${currentUserId}`);
+    queryClient.invalidateQueries("groupStatus");
+  }
 
   const renderMenu = (
     <Menu
@@ -39,6 +51,7 @@ const PendingButton = () => {
       <MenuItem
         onClick={() => {
           handleClose();
+          handleCancel();
         }}
         sx={{ gap: "20px" }}
       >

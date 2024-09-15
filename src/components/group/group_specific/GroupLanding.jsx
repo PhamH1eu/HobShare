@@ -16,7 +16,9 @@ import TabPanel from "@mui/lab/TabPanel";
 import CircularLoading from "src/shared/components/Loading";
 import usePosts from "src/shared/hooks/fetch/post/usePosts";
 import Requests from "./request/Requests";
-import useGroupInfo from "src/shared/hooks/fetch/group/useGroup";
+import useGroupInfo from "src/shared/hooks/fetch/group/useGroupInfo";
+import { useUserStore } from "src/store/userStore";
+import useGroupStatus from "src/shared/hooks/fetch/group/useGroupStatus";
 
 const Wrapper = styled.div`
   display: flex;
@@ -55,18 +57,24 @@ const TabsHeader = styled.div`
 `;
 
 const GroupLanding = () => {
+  const { currentUserId } = useUserStore();
   const { groupId } = useParams();
-  const { isLoading } = useGroupInfo(groupId);
+  const { isLoading, isAdmin } = useGroupInfo(groupId);
+  const { status, isLoadingStatus } = useGroupStatus({
+    groupId,
+    currentUserId,
+    isAdmin,
+  });
 
   const { posts, isLoading: isPostLoading } = usePosts();
 
-  const [value, setValue] = useState("2");
+  const [value, setValue] = useState("1");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  if (isLoading || isPostLoading) {
+  if (isLoading || isPostLoading || isLoadingStatus) {
     return (
       <Wrapper>
         <CircularLoading />
@@ -81,33 +89,39 @@ const GroupLanding = () => {
         <TabsHeader>
           <TabList onChange={handleChange}>
             <Tab label="Giới thiệu" value="1" sx={{ fontWeight: "600" }} />
-            <Tab label="Diễn đàn" value="2" sx={{ fontWeight: "600" }} />
+            {status === "joined" && (
+              <Tab label="Diễn đàn" value="2" sx={{ fontWeight: "600" }} />
+            )}
             <Tab label="Thành viên" value="3" sx={{ fontWeight: "600" }} />
-            <Tab label="Phê duyệt" value="4" sx={{ fontWeight: "600" }} />
+            {isAdmin && (
+              <Tab label="Phê duyệt" value="4" sx={{ fontWeight: "600" }} />
+            )}
           </TabList>
         </TabsHeader>
-        <TabPanel value="1" sx={{ display: "flex", width: "70%" }}>
+        <TabPanel value="1" sx={{ display: "flex", width: "70%", padding: 0 }}>
           <Main>
             <Information />
           </Main>
         </TabPanel>
-        <TabPanel value="2" sx={{ padding: 0, width: "70%" }}>
-          <Main>
-            <MainContent>
-              <NewPostInput groupId={groupId} groupName={undefined} />
-              <div>
-                {posts.map((post, index) => (
-                  <Post key={index} post={post} initComt={undefined} />
-                ))}
-              </div>
-            </MainContent>
-            <Info>
-              <div style={{ width: "25vw", position: "sticky", top: "32px" }}>
-                <Description />
-              </div>
-            </Info>
-          </Main>
-        </TabPanel>
+        {status === "joined" && (
+          <TabPanel value="2" sx={{ padding: 0, width: "70%" }}>
+            <Main>
+              <MainContent>
+                <NewPostInput groupId={groupId} groupName={undefined} />
+                <div>
+                  {posts.map((post, index) => (
+                    <Post key={index} post={post} initComt={undefined} />
+                  ))}
+                </div>
+              </MainContent>
+              <Info>
+                <div style={{ width: "25vw", position: "sticky", top: "32px" }}>
+                  <Description />
+                </div>
+              </Info>
+            </Main>
+          </TabPanel>
+        )}
         <TabPanel value="3" sx={{ padding: 0 }}>
           <Members />
         </TabPanel>

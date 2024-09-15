@@ -9,7 +9,7 @@ import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import AvatarRow from "./AvatarRow";
 
 import uploadSpecificImage from "src/shared/helper/uploadAvatar";
-import useGroupInfo from "src/shared/hooks/fetch/group/useGroup";
+import useGroupInfo from "src/shared/hooks/fetch/group/useGroupInfo";
 import { GroupService } from "src/services/SubDatabaseService";
 import useMembersCount from "src/shared/hooks/fetch/group/useMemberCount";
 

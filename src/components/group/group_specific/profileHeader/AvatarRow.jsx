@@ -12,6 +12,8 @@ import InviteButtonPlus from "./buttons/InviteButton";
 import JoinedButton from "./buttons/JoinedButton";
 import PendingButton from "./buttons/PendingButton";
 import JoinButton from "./buttons/JoinButton";
+import useGroupInfo from "src/shared/hooks/fetch/group/useGroupInfo";
+import useGroupStatus from "src/shared/hooks/fetch/group/useGroupStatus";
 
 const Container = styled.div`
   display: flex;
@@ -42,29 +44,14 @@ const Action = styled.div`
 
 const AvatarRow = ({ isAdmin }) => {
   const { groupId } = useParams();
+  const { group } = useGroupInfo(groupId);
   const { currentUserId } = useUserStore();
   const { members, isLoading } = useMembers(groupId);
-
-  const [status, setStatus] = useState("");
-  useEffect(() => {
-    GroupService.checkExistSubCollection(
-      `${groupId}/members/${currentUserId}`
-    ).then((res) => {
-      if (res || isAdmin) {
-        setStatus("joined");
-      } else {
-        GroupService.checkExistSubCollection(
-          `${groupId}/pendings/${currentUserId}`
-        ).then((res) => {
-          if (res) {
-            setStatus("pending");
-          } else {
-            setStatus("outsider");
-          }
-        });
-      }
-    });
-  }, [groupId, currentUserId, isAdmin]);
+  const { status, isLoadingStatus } = useGroupStatus({
+    groupId,
+    currentUserId,
+    isAdmin,
+  });
 
   const renderActions = () => {
     switch (status) {
@@ -72,7 +59,7 @@ const AvatarRow = ({ isAdmin }) => {
         return (
           <Action>
             <InviteButtonPlus />
-            <JoinedButton isAdmin={isAdmin} />
+            <JoinedButton />
             <DeleteButton isAdmin={isAdmin} />
           </Action>
         );
@@ -93,12 +80,15 @@ const AvatarRow = ({ isAdmin }) => {
     }
   };
 
-  if (isLoading) return <CircularLoading />;
+  if (isLoading || isLoadingStatus) return <CircularLoading />;
 
   return (
     <Container>
       <AvatarGroup>
-        {members.slice(0, 10).map((user, index) => (
+        {group.admins.slice(0, 1).map((user, index) => (
+          <StyledAvatar key={index} src={user.avatar} />
+        ))}
+        {members.slice(0, 9).map((user, index) => (
           <StyledAvatar key={index} src={user.avatar} />
         ))}
       </AvatarGroup>

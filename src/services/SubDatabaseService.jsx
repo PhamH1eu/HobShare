@@ -17,6 +17,8 @@ import {
   startAfter,
   writeBatch,
   getCountFromServer,
+  where,
+  Timestamp,
 } from "firebase/firestore";
 
 class SubDatabaseService {
@@ -40,11 +42,11 @@ class SubDatabaseService {
       batch.set(docRef, {
         userId: item.receiverId,
         username: item.receiverName,
-        avatar: item.receiverAvatar 
+        avatar: item.receiverAvatar,
       });
     });
     return await batch.commit();
-  }
+  };
 
   updateSubCollection = async (path, data, value) => {
     const docRef = doc(db, this.collection, path);
@@ -59,10 +61,10 @@ class SubDatabaseService {
     });
   };
 
-  updateDocument = async  (path, obj) => {
+  updateDocument = async (path, obj) => {
     const docRef = doc(db, this.collection, path);
 
-    await updateDoc(docRef, obj)
+    await updateDoc(docRef, obj);
   };
 
   removeSubCollection = async (path) => {
@@ -157,6 +159,29 @@ class SubDatabaseService {
     const q = collection(db, this.collection, path);
     const snapshot = await getCountFromServer(q);
     return snapshot.data().count;
+  };
+
+  queryByDate = async (range) => {
+    const now = new Date();
+    const rangeAgo = new Date(now);
+    rangeAgo.setDate(now.getDate() - range);
+    const startOfDay = new Date(rangeAgo);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(rangeAgo);
+    endOfDay.setHours(23, 59, 59, 999);
+    const startOfDayTimestamp = Timestamp.fromDate(startOfDay);
+    const endOfDayTimestamp = Timestamp.fromDate(endOfDay);
+    const postsQuery = query(
+      collection(db, this.collection),
+      where("createdAt", ">=", startOfDayTimestamp),
+      where("createdAt", "<=", endOfDayTimestamp)
+    );
+    const querySnapshot = await getDocs(postsQuery);
+    let data = [];
+    querySnapshot.forEach((doc) => {
+      data.push(doc.data());
+    });
+    return data;
   };
 }
 

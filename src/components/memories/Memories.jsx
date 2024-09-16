@@ -4,6 +4,7 @@ import { Sidebar } from "./Sidebar";
 import usePosts from "src/shared/hooks/fetch/post/usePosts";
 import Post from "../home/NewsFeed/component/Post";
 import CircularLoading from "src/shared/components/Loading";
+import useMemories from "src/shared/hooks/fetch/memory/useMemories";
 const Container = styled(Box)`
   margin-top: 64px;
   display: flex;
@@ -43,7 +44,16 @@ const MemoryCard = styled(Paper)`
 `;
 
 function MemoriesPage() {
-  const { posts, isLoading } = usePosts();
+  const range = {
+    diff: 7,
+    unit: "ngày",
+  };
+  const { posts, isLoading } = useMemories(range.diff);
+
+  if (isLoading) {
+    return <CircularLoading />;
+  }
+
   const hasMemories = posts.length > 0;
 
   return (
@@ -73,7 +83,7 @@ function MemoriesPage() {
             Vào ngày này
           </Typography>
           <Typography variant="h6" gutterBottom>
-            2 năm trước
+            {range.diff} {range.unit} trước
           </Typography>
         </Card>
 
@@ -82,7 +92,7 @@ function MemoriesPage() {
         ) : (
           posts.map((post, index) => (
             <MemoryCard key={index}>
-              <Post post={post} initComt={undefined} />
+              <Post post={post} initComt={undefined} isAdminGroup={undefined} />
             </MemoryCard>
           ))
         )}

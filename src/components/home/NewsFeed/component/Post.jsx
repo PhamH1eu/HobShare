@@ -256,6 +256,7 @@ const Post = ({ post, initComt, isAdminGroup }) => {
   const handleDeletePost = async () => {
     setLoading(true);
     await PostService.delete(post.id);
+    await LikeService.removeCollection(`${post.id}/comments`);
     queryClient.invalidateQueries("posts");
     setLoading(false);
     handleCloseDeleteModal();

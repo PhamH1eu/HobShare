@@ -32,7 +32,7 @@ const PostPage = () => {
 
   return (
     <PostPageContainer>
-      <Post post={post} initComt={true} />
+      <Post post={post} initComt={true} isAdminGroup={undefined} />
     </PostPageContainer>
   );
 };

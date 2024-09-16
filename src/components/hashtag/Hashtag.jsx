@@ -1,8 +1,8 @@
 import CircularLoading from "src/shared/components/Loading";
 import styled from "styled-components";
 import Post from "../home/NewsFeed/component/Post";
-import usePosts from "src/shared/hooks/fetch/post/usePosts";
 import { useParams } from "react-router-dom";
+import useQueryPosts from "src/shared/hooks/fetch/post/useQueryPosts";
 
 // Styled Components
 const HashtagWrapper = styled.div`
@@ -40,7 +40,7 @@ const PostWrapper = styled.div`
 
 const Hashtag = () => {
   const { hashtag } = useParams();
-  const { posts, isLoading } = usePosts();
+  const { posts, isLoading } = useQueryPosts(hashtag);
 
   return (
     <HashtagWrapper>
@@ -53,7 +53,12 @@ const Hashtag = () => {
           <CircularLoading />
         ) : (
           posts.map((post) => (
-            <Post key={post.id} post={post} initComt={undefined} />
+            <Post
+              key={post.id}
+              post={post}
+              initComt={undefined}
+              isAdminGroup={undefined}
+            />
           ))
         )}
       </PostWrapper>

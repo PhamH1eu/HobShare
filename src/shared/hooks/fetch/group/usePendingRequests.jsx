@@ -1,5 +1,5 @@
-const { useQuery } = require("react-query");
-const { GroupService } = require("src/services/SubDatabaseService");
+import { useQuery } from "react-query";
+import { GroupService } from "src/services/SubDatabaseService";
 
 const usePendingRequests = (groupId) => {
   const { data, isLoading } = useQuery("pendingRequests", () =>

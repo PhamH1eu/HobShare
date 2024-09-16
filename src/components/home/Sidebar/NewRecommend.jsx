@@ -39,7 +39,7 @@ const Hashtag = styled.div`
 
 const tag = [
   {
-    tag: "#codinginflow",
+    tag: "#12",
     count: 2,
   },
   {

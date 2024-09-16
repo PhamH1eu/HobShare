@@ -3,7 +3,7 @@ import StackGrid, { transitions, easings } from "react-stack-grid";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { IconButton } from "@mui/material";
 
-import useActivities from "src/shared/hooks/fetch/activity/useActivities";
+import useAllActivities from "src/shared/hooks/fetch/activity/useAllActivities";
 
 import { useUserStore } from "src/store/userStore";
 import { UserService } from "src/services/DatabaseService";
@@ -18,7 +18,7 @@ const Activities = () => {
   const currentUserId = useUserStore((state) => state.currentUserId);
   const [loading, setLoading] = useState(false);
 
-  const { activities, isLoading } = useActivities();
+  const { activities, isLoading } = useAllActivities();
 
   const [liked, setLiked] = useState([]);
   const addHobby = (obj) => {
@@ -36,7 +36,12 @@ const Activities = () => {
     setLoading(false);
   };
 
-  if (isLoading) return <CircularLoading />;
+  if (isLoading)
+    return (
+      <div>
+        <CircularLoading />
+      </div>
+    );
 
   return (
     <div className="activity">

@@ -1,18 +1,33 @@
-import { PostService } from "src/services/DatabaseService";
-import { useQuery } from "react-query";
+import { useQueries } from "react-query";
+import { useUserStore } from "src/store/userStore";
+
+import { PostService } from "src/services/SubDatabaseService";
 
 const useSinglePost = (id) => {
-  const { data, isLoading } = useQuery(["posts", id], () =>
-    PostService.get(id)
-  );
+  const { currentUserId } = useUserStore();
+
+  const [postQuery, likeQuery] = useQueries([
+    {
+      queryKey: ["posts", id],
+      queryFn: () => PostService.getDocument(id),
+    },
+    {
+      queryKey: ["like", id, currentUserId],
+      queryFn: () =>
+        PostService.checkExistSubCollection(`${id}/like/${currentUserId}`),
+    },
+  ]);
+  
   const post = {
-    ...data?.data(),
-    id: data?.id,
+    ...postQuery.data,
+    id: postQuery.data?.id,
   };
 
   return {
     post,
-    isLoading,
+    isLike: likeQuery.data,
+    isLoading: postQuery.isLoading || likeQuery.isLoading,
+    isRefetching: likeQuery.isRefetching
   };
 };
 

@@ -22,7 +22,7 @@ const NewsFeed = () => {
   return (
     <NewFeed>
       <FriendsRecommend />
-      <NewPostInput />
+      <NewPostInput groupId={undefined} groupName={undefined} groupWallpaper={undefined} />
       {isLoading ? (
         <CircularLoading />
       ) : (

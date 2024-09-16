@@ -24,8 +24,10 @@ import { styled as MuiStyled } from "@mui/material";
 import { SavedService } from "src/services/SubDatabaseService";
 import { useUserStore } from "src/store/userStore";
 import { PostService } from "src/services/DatabaseService";
-import { useQueryClient } from "react-query";
+import { PostService as LikeService } from "src/services/SubDatabaseService";
+import { useMutation, useQueryClient } from "react-query";
 import { useLocation } from "react-router-dom";
+import useSinglePost from "src/shared/hooks/fetch/post/useSinglePost";
 
 const PostWrapper = styled.div`
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
@@ -108,6 +110,11 @@ const PostAction = styled.button`
   gap: 4px;
   font-size: 1.05rem;
   font-weight: 500;
+
+  span {
+    width: 24px !important;
+    height: 24px !important;
+  }
 
   &:hover {
     background-color: rgba(228, 230, 233, 255);
@@ -201,10 +208,29 @@ const GroupHeader = styled.div`
 
 const Post = ({ post, initComt, isAdminGroup }) => {
   const queryClient = useQueryClient();
+  const { isLike, isRefetching } = useSinglePost(post.id);
   const { currentUserId } = useUserStore();
-  const [like, setLike] = useState(false);
-  const handleLike = () => {
-    setLike(!like);
+
+  const mutation = useMutation(
+    async () => {
+      if (!isLike) {
+        await LikeService.createSubCollection(
+          `${post.id}/like/${currentUserId}`
+        );
+      } else {
+        await LikeService.removeSubCollection(
+          `${post.id}/like/${currentUserId}`
+        );
+      }
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["like", post.id, currentUserId]);
+      },
+    }
+  );
+  const handleLike = async () => {
+    mutation.mutate();
   };
 
   const [loading, setLoading] = useState(false);
@@ -387,13 +413,19 @@ const Post = ({ post, initComt, isAdminGroup }) => {
         <PostActions>
           <PostAction
             onClick={handleLike}
-            style={{ color: like ? "#6ec924" : "rgba(91, 98, 106, 255)" }}
+            style={{ color: isLike ? "#6ec924" : "rgba(91, 98, 106, 255)" }}
           >
-            <ThumbUpAltIcon
-              // @ts-ignore
-              color={like ? "primary" : "greyIcon"}
-            />{" "}
-            Thích
+            {isRefetching || mutation.isLoading ? (
+              <CircularLoading />
+            ) : (
+              <>
+                <ThumbUpAltIcon
+                  // @ts-ignore
+                  color={isLike ? "primary" : "greyIcon"}
+                />{" "}
+                Thích
+              </>
+            )}
           </PostAction>
           <PostAction
             onClick={() => setShowComment(true)}

@@ -5,9 +5,6 @@ import { useParams } from "react-router-dom";
 import CircularLoading from "src/shared/components/Loading";
 import { useUserStore } from "src/store/userStore";
 
-import { useState, useEffect } from "react";
-import { GroupService } from "src/services/SubDatabaseService";
-import DeleteButton from "./buttons/DeleteButton";
 import InviteButtonPlus from "./buttons/InviteButton";
 import JoinedButton from "./buttons/JoinedButton";
 import PendingButton from "./buttons/PendingButton";
@@ -60,7 +57,6 @@ const AvatarRow = ({ isAdmin }) => {
           <Action>
             <InviteButtonPlus />
             <JoinedButton />
-            <DeleteButton isAdmin={isAdmin} />
           </Action>
         );
       case "pending":

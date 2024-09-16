@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
-import { useUserStore } from "src/store/userStore";
 import { IconButton } from "@mui/material";
 import { styled as MuiStyled } from "@mui/material";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
@@ -15,7 +14,6 @@ import useMembersCount from "src/shared/hooks/fetch/group/useMemberCount";
 
 const HeaderWrapper = styled.div`
   width: 100%;
-  height: 60%;
   background: linear-gradient(to bottom, #8c8882 0%, #ffffff 50%, #ffffff 100%);
   display: flex;
   flex-direction: column;
@@ -25,14 +23,12 @@ const HeaderWrapper = styled.div`
 
 const WallImage = styled.div`
   width: 70%;
-  height: 90%;
   display: flex;
   flex-direction: column;
 `;
 
 const WallpaperWrapper = styled.div`
   width: 100%;
-  height: 90%;
   border-radius: 0 0 10px 10px;
   overflow: hidden;
   transition: filter 0.3s ease-in-out;
@@ -41,7 +37,7 @@ const WallpaperWrapper = styled.div`
 
 const Wallpaper = styled.img`
   width: 100%;
-  max-height: 290px;
+  max-height: 300px;
   height: 100%;
   object-fit: cover;
   border-radius: 0 0 10px 10px;
@@ -95,11 +91,9 @@ const FileInput = styled.input`
 `;
 
 const ProfileHeader = () => {
-  const { currentUserId } = useUserStore();
   const { groupId } = useParams();
-  const { group } = useGroupInfo(groupId);
+  const { group, isAdmin } = useGroupInfo(groupId);
   const { membersCount } = useMembersCount(groupId);
-  const isAdmin = group.admins.some((admin) => admin.userId === currentUserId);
 
   const [isWallpaperHovered, setIsWallpaperHovered] = useState(false);
 

@@ -14,10 +14,14 @@ import {
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import useDialog from "src/shared/hooks/util/useDialog";
 import useModal from "src/shared/hooks/util/useModal";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useUserStore } from "src/store/userStore";
 import { GroupService, UserService } from "src/services/SubDatabaseService";
 import useGroupInfo from "src/shared/hooks/fetch/group/useGroupInfo";
+import { LoadingButton } from "@mui/lab";
+import { useState } from "react";
+import useMembersCount from "src/shared/hooks/fetch/group/useMemberCount";
+import NewAdminModal from "../component/AssignAdmin";
 
 const StyledDialogTitle = styled(DialogTitle)({
   display: "flex",
@@ -52,7 +56,61 @@ const StatusButton = styled(Button)`
   }
 `;
 
-const CustomDialog = ({ open, onClose }) => {
+const DeleteModal = ({ open, onClose }) => {
+  const [loading, setLoading] = useState(false);
+  const { groupId } = useParams();
+  const { group } = useGroupInfo(groupId);
+  const { currentUserId } = useUserStore();
+  const navigate = useNavigate();
+  const handleDelete = async () => {
+    setLoading(true);
+    await Promise.all([
+      UserService.removeSubCollection(
+        `${currentUserId}/admingroups/${groupId}`
+      ),
+      GroupService.removeSubCollection(`${groupId}`),
+      GroupService.removeCollection(`${groupId}/pendingRequests`),
+      GroupService.removeCollection(`${groupId}/posts`),
+    ]);
+    setLoading(false);
+    onClose();
+    navigate("/group");
+  };
+
+  return (
+    <Dialog open={open} onClose={onClose}>
+      <StyledDialogTitle>
+        Bạn có chắc không?
+        <StyledIconButton onClick={onClose}>
+          <Close />
+        </StyledIconButton>
+      </StyledDialogTitle>
+      <Divider />
+      <DialogContent sx={{ textAlign: "center" }}>
+        Do bạn là thành viên cuối cùng của {group.name} nên nhóm sẽ bị xoá
+      </DialogContent>
+      <DialogContent sx={{ textAlign: "center" }}>
+        Điều này sẽ xoá toàn bộ bài viết và dữ liệu khác của nhóm.
+      </DialogContent>
+      <Divider />
+      <FooterActions>
+        <Button onClick={onClose} color="primary">
+          Huỷ
+        </Button>
+        <LoadingButton
+          loading={loading}
+          onClick={handleDelete}
+          color="primary"
+          variant="contained"
+        >
+          Xoá nhóm
+        </LoadingButton>
+      </FooterActions>
+    </Dialog>
+  );
+};
+
+const LeaveDialog = ({ open, onClose }) => {
   const { groupId } = useParams();
   const { group } = useGroupInfo(groupId);
   const { currentUserId } = useUserStore();
@@ -91,10 +149,23 @@ const CustomDialog = ({ open, onClose }) => {
 };
 
 const JoinedButton = () => {
+  const { groupId } = useParams();
+  const { membersCount } = useMembersCount(groupId);
+  const { isAdmin } = useGroupInfo(groupId);
   const {
     open: openConfirm,
     handleOpen: handleOpenConfirm,
     handleClose: handleCloseConfirm,
+  } = useModal();
+  const {
+    open: openAssignNewAdmin,
+    handleOpen: handleOpenAssignNewAdmin,
+    handleClose: handleCloseAssignNewAdmin,
+  } = useModal();
+  const {
+    open: openDelete,
+    handleOpen: handleOpenDelete,
+    handleClose: handleCloseDelete,
   } = useModal();
 
   const { anchorEl, isOpen, handleOpen, handleClose } = useDialog();
@@ -117,7 +188,16 @@ const JoinedButton = () => {
     >
       <MenuItem
         onClick={() => {
-          handleOpenConfirm();
+          if (isAdmin) {
+            if (membersCount === 1) {
+              // if (true) {
+              handleOpenDelete();
+            } else {
+              handleOpenAssignNewAdmin();
+            }
+          } else {
+            handleOpenConfirm();
+          }
           handleClose();
         }}
         sx={{ gap: "20px" }}
@@ -129,14 +209,16 @@ const JoinedButton = () => {
   );
   return (
     <>
-      <StatusButton
-        onClick={handleOpen}
-        endIcon={<ArrowDropDownIcon />}
-      >
+      <StatusButton onClick={handleOpen} endIcon={<ArrowDropDownIcon />}>
         Đã tham gia
       </StatusButton>
       {renderMenu}
-      <CustomDialog onClose={handleCloseConfirm} open={openConfirm} />
+      <LeaveDialog onClose={handleCloseConfirm} open={openConfirm} />
+      <NewAdminModal
+        open={openAssignNewAdmin}
+        onClose={handleCloseAssignNewAdmin}
+      />
+      <DeleteModal open={openDelete} onClose={handleCloseDelete} />
     </>
   );
 };

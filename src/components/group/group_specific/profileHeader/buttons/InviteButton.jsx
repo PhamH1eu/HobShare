@@ -1,6 +1,6 @@
 import { Button, Modal, styled } from "@mui/material";
 import useModal from "src/shared/hooks/util/useModal";
-import Invite from "../Invite";
+import Invite from "../component/Invite";
 
 const InviteButton = styled(Button)`
   && {

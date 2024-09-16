@@ -9,7 +9,6 @@ import { GroupService, UserService } from "src/services/SubDatabaseService";
 import { LoadingButton } from "@mui/lab";
 import { useState } from "react";
 import { useQueryClient } from "react-query";
-import { useUserStore } from "src/store/userStore";
 
 const Container = styled.div`
   width: 600px;
@@ -105,9 +104,7 @@ const KickButton = styled(LoadingButton)`
 const Member = ({ member }) => {
   const queryClient = useQueryClient();
   const { groupId } = useParams();
-  const { group } = useGroupInfo(groupId);
-  const { currentUserId } = useUserStore();
-  const isAdmin = group.admins.some((admin) => admin.userId === currentUserId);
+  const { isAdmin } = useGroupInfo(groupId);
 
   const [loading, setLoading] = useState(false);
 

@@ -199,7 +199,7 @@ const GroupHeader = styled.div`
 }
 `;
 
-const Post = ({ post, initComt }) => {
+const Post = ({ post, initComt, isAdminGroup }) => {
   const queryClient = useQueryClient();
   const { currentUserId } = useUserStore();
   const [like, setLike] = useState(false);
@@ -244,14 +244,14 @@ const Post = ({ post, initComt }) => {
   } = useModal();
 
   const location = useLocation();
-  const isNotGroupPath = !location.pathname.startsWith("/group/");
+  const isNotGroupPath = location.pathname.startsWith("/group/");
 
   return (
     <PostWrapper>
       <PostHeader>
         {post.groupId && !isNotGroupPath ? (
           <StyledLink to={`/group/${post.groupId}`}>
-            <ProfilePic src={post.groupAvatar} />
+            <ProfilePic src={post.groupWallpaper} />
           </StyledLink>
         ) : (
           <StyledLink to={`/profile/${post.authorId}`}>
@@ -262,7 +262,7 @@ const Post = ({ post, initComt }) => {
           <PostInfo>
             <PostTagging>
               <StyledLink to={`/group/${post.groupId}`}>
-                <PostAuthor>1234</PostAuthor>
+                <PostAuthor>{post.groupName}</PostAuthor>
               </StyledLink>
             </PostTagging>
             <GroupHeader>
@@ -324,7 +324,7 @@ const Post = ({ post, initComt }) => {
             </IconButton>
           )}
         </Marked>
-        {currentUserId === post.authorId && (
+        {(currentUserId === post.authorId || isAdminGroup) && (
           <DeleteButton>
             <IconButton onClick={handleOpenDeleteModal}>
               <BackspaceIcon

@@ -112,7 +112,13 @@ const Profile = () => {
               <Hobbies />
             </Info>
             <MainContent>
-              {isViewingOwnProfile && <NewPostInput />}
+              {isViewingOwnProfile && (
+                <NewPostInput
+                  groupId={undefined}
+                  groupName={undefined}
+                  groupWallpaper={undefined}
+                />
+              )}
               {posts.length > 0 ? (
                 <div>
                   {posts.map((post, index) => (

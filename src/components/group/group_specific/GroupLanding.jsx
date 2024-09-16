@@ -14,11 +14,11 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import CircularLoading from "src/shared/components/Loading";
-import usePosts from "src/shared/hooks/fetch/post/usePosts";
 import Requests from "./request/Requests";
 import useGroupInfo from "src/shared/hooks/fetch/group/useGroupInfo";
 import { useUserStore } from "src/store/userStore";
 import useGroupStatus from "src/shared/hooks/fetch/group/useGroupStatus";
+import useGroupPosts from "src/shared/hooks/fetch/group/useGroupPosts";
 
 const Wrapper = styled.div`
   display: flex;
@@ -56,17 +56,30 @@ const TabsHeader = styled.div`
   }
 `;
 
+const NoPosts = styled.div`
+  margin-top: 20px;
+  background-color: white;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  font-size: 20px;
+  font-weight: 600;
+`;
+
 const GroupLanding = () => {
   const { currentUserId } = useUserStore();
   const { groupId } = useParams();
-  const { isLoading, isAdmin } = useGroupInfo(groupId);
+  const { isLoading, isAdmin, group } = useGroupInfo(groupId);
   const { status, isLoadingStatus } = useGroupStatus({
     groupId,
     currentUserId,
     isAdmin,
   });
 
-  const { posts, isLoading: isPostLoading } = usePosts();
+  const { posts, isLoading: isPostLoading } = useGroupPosts(groupId);
 
   const [value, setValue] = useState("1");
 
@@ -107,11 +120,19 @@ const GroupLanding = () => {
           <TabPanel value="2" sx={{ padding: 0, width: "70%" }}>
             <Main>
               <MainContent>
-                <NewPostInput groupId={groupId} groupName={undefined} />
+                <NewPostInput
+                  groupId={groupId}
+                  groupName={group.name}
+                  groupWallpaper={group.wallpaper}
+                />
                 <div>
-                  {posts.map((post, index) => (
-                    <Post key={index} post={post} initComt={undefined} />
-                  ))}
+                  {posts.length > 0 ? (
+                    posts.map((post, index) => (
+                      <Post key={index} post={post} initComt={undefined} isAdminGroup={isAdmin}/>
+                    ))
+                  ) : (
+                    <NoPosts>Chưa có bài viết nào</NoPosts>
+                  )}
                 </div>
               </MainContent>
               <Info>

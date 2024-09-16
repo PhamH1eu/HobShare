@@ -79,7 +79,7 @@ const IconButton = styled.button`
   }
 `;
 
-const NewPostInput = ({ groupId, groupName }) => {
+const NewPostInput = ({ groupId, groupName, groupWallpaper }) => {
   const { currentUserId } = useUserStore();
   const { data: currentUser } = useUserInfo(currentUserId);
   const { open, handleOpen, handleClose } = useModal();
@@ -111,6 +111,7 @@ const NewPostInput = ({ groupId, groupName }) => {
         onClose={handleClose}
         groupId={groupId}
         groupName={groupName}
+        groupWallpaper={groupWallpaper}
       />
     </ChatInput>
   );

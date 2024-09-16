@@ -24,6 +24,7 @@ import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
 import { PostService } from "src/services/DatabaseService";
 
 import upload from "src/shared/helper/upload";
+import { GroupService } from "src/services/SubDatabaseService";
 
 const ModalContainer = MuiStyled(Box)`
   position: absolute;
@@ -157,7 +158,7 @@ const Hashtag = styled.span`
   display: flex;
 `;
 
-const NewModal = ({ open, onClose, groupId, groupName }) => {
+const NewModal = ({ open, onClose, groupId, groupName, groupWallpaper }) => {
   const { currentUserId } = useUserStore();
   const { data: currentUser } = useUserInfo(currentUserId);
   const [loading, setLoading] = useState(false);
@@ -229,11 +230,24 @@ const NewModal = ({ open, onClose, groupId, groupName }) => {
         }),
       }),
       tags: hashtags,
-      ...(groupId && { groupId: groupId }),
-      ...(groupName && { groupName: groupName }),
+      ...(groupId &&
+        groupName &&
+        groupWallpaper && {
+          groupId: groupId,
+          groupName: groupName,
+          groupWallpaper: groupWallpaper,
+        }),
       priority: 0,
     };
-    await PostService.create(data);
+    const resID = await PostService.create(data);
+    if (groupId && groupName && groupWallpaper) {
+      // @ts-ignore
+      await GroupService.createSubCollection(`${groupId}/posts/${resID.id}`, {
+        ...data,
+        // @ts-ignore
+        id: resID.id,
+      });
+    }
     setText("");
     setHashtags([]);
     setSelectedFile(null);

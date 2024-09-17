@@ -1,8 +1,6 @@
 import { useParams } from "react-router-dom";
 import Post from "./component/Post";
-import useSinglePost from "src/shared/hooks/fetch/post/useSinglePost";
 import styled from "styled-components";
-import CircularLoading from "src/shared/components/Loading";
 
 const PostPageContainer = styled.div`
   margin-top: 64px;
@@ -20,19 +18,10 @@ const PostPageContainer = styled.div`
 
 const PostPage = () => {
   const { postId } = useParams();
-  const { post, isLoading } = useSinglePost(postId);
-
-  if (isLoading) {
-    return (
-      <PostPageContainer>
-        <CircularLoading />
-      </PostPageContainer>
-    );
-  }
 
   return (
     <PostPageContainer>
-      <Post post={post} initComt={true} isAdminGroup={undefined} />
+      <Post postId={postId} initComt={true} isAdminGroup={undefined} />
     </PostPageContainer>
   );
 };

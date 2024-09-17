@@ -1,3 +1,4 @@
+// @ts-nocheck
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 
@@ -28,12 +29,21 @@ import { PostService as LikeService } from "src/services/SubDatabaseService";
 import { useMutation, useQueryClient } from "react-query";
 import { useLocation } from "react-router-dom";
 import useSinglePost from "src/shared/hooks/fetch/post/useSinglePost";
+import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
 
 const PostWrapper = styled.div`
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
   background-color: white;
   border-radius: 10px;
   margin: 25px 0;
+`;
+
+const PostLoading = styled.div`
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  background-color: white;
+  border-radius: 10px;
+  margin: 25px 0;
+  min-height: 300px;
 `;
 
 const PostHeader = styled.div`
@@ -206,26 +216,32 @@ const GroupHeader = styled.div`
 }
 `;
 
-const Post = ({ post, initComt, isAdminGroup }) => {
+const Post = ({ postId, initComt, isAdminGroup }) => {
   const queryClient = useQueryClient();
-  const { isLike, isRefetching } = useSinglePost(post.id);
+  const { post, isLike, isRefetching, isLoading } = useSinglePost(postId);
   const { currentUserId } = useUserStore();
+  const { data: currentUser } = useUserInfo(currentUserId);
 
   const mutation = useMutation(
     async () => {
       if (!isLike) {
         await LikeService.createSubCollection(
-          `${post.id}/like/${currentUserId}`
+          `${postId}/like/${currentUserId}`,
+          {
+            avatar: currentUser.avatar,
+            username: currentUser.username,
+            userId: currentUser.id,
+          }
         );
       } else {
         await LikeService.removeSubCollection(
-          `${post.id}/like/${currentUserId}`
+          `${postId}/like/${currentUserId}`
         );
       }
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(["like", post.id, currentUserId]);
+        queryClient.invalidateQueries(["like", postId, currentUserId]);
       },
     }
   );
@@ -235,7 +251,7 @@ const Post = ({ post, initComt, isAdminGroup }) => {
 
   const [loading, setLoading] = useState(false);
   const [marked, setMarked] = useState(false);
-  const pathToPostSaved = `${currentUserId}/saved/${post.id}`;
+  const pathToPostSaved = `${currentUserId}/saved/${postId}`;
   useEffect(() => {
     SavedService.checkExistSubCollection(pathToPostSaved).then((res) => {
       if (res) {
@@ -245,6 +261,8 @@ const Post = ({ post, initComt, isAdminGroup }) => {
   }, [pathToPostSaved]);
   const handleMarked = async () => {
     setLoading(true);
+    console.log(post);
+    
     if (marked) {
       await SavedService.removeSubCollection(pathToPostSaved);
     } else {
@@ -255,8 +273,8 @@ const Post = ({ post, initComt, isAdminGroup }) => {
   };
   const handleDeletePost = async () => {
     setLoading(true);
-    await PostService.delete(post.id);
-    await LikeService.removeCollection(`${post.id}/comments`);
+    await PostService.delete(postId);
+    await LikeService.removeCollection(`${postId}/comments`);
     queryClient.invalidateQueries("posts");
     setLoading(false);
     handleCloseDeleteModal();
@@ -272,6 +290,14 @@ const Post = ({ post, initComt, isAdminGroup }) => {
 
   const location = useLocation();
   const isNotGroupPath = location.pathname.startsWith("/group/");
+
+  if (isLoading) {
+    return (
+      <PostLoading>
+        <CircularLoading />
+      </PostLoading>
+    );
+  }
 
   return (
     <PostWrapper>
@@ -297,7 +323,7 @@ const Post = ({ post, initComt, isAdminGroup }) => {
                 <p>{post.authorName}</p>
               </StyledLink>
               <span>·</span>
-              <StyledLink to={`/post/${post.id}`}>
+              <StyledLink to={`/post/${postId}`}>
                 <PostTime>
                   {timeDiff(
                     post.createdAt.seconds * 1000 +
@@ -329,7 +355,7 @@ const Post = ({ post, initComt, isAdminGroup }) => {
               {post.location && <div>đang ở</div>}
               <PostAuthor>{post.location}</PostAuthor>
             </PostTagging>
-            <StyledLink to={`/post/${post.id}`}>
+            <StyledLink to={`/post/${postId}`}>
               <PostTime>
                 {timeDiff(
                   post.createdAt.seconds * 1000 +
@@ -451,7 +477,7 @@ const Post = ({ post, initComt, isAdminGroup }) => {
         </PostActions>
       </PostFooter>
       <Divider flexItem variant="middle" color="#bdbdbd" />
-      {showComment && <Comments postId={post.id} authorId={post.authorId} />}
+      {showComment && <Comments postId={postId} authorId={post.authorId} />}
       <Modal
         open={open}
         onClose={handleClose}

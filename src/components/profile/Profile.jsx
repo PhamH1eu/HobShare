@@ -19,6 +19,7 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
 import CircularLoading from "src/shared/components/Loading";
+import useUserPosts from "src/shared/hooks/fetch/user/useUserPosts";
 
 const Wrapper = styled.div`
   display: flex;
@@ -68,14 +69,13 @@ const NoPosts = styled.div`
   font-weight: 600;
 `;
 
-const posts = [];
-
 const Profile = () => {
   const { userId } = useParams();
   const { currentUserId } = useUserStore();
   const isViewingOwnProfile = userId === currentUserId;
 
   const { isLoading } = useUserInfo(userId);
+  const { posts, isLoading: isLoadingPosts } = useUserPosts(userId);
 
   const [value, setValue] = useState("1");
 
@@ -83,7 +83,7 @@ const Profile = () => {
     setValue(newValue);
   };
 
-  if (isLoading) {
+  if (isLoading || isLoadingPosts) {
     return (
       <Wrapper>
         <CircularLoading />
@@ -122,7 +122,12 @@ const Profile = () => {
               {posts.length > 0 ? (
                 <div>
                   {posts.map((post, index) => (
-                    <Post key={index} post={post} initComt={undefined} />
+                    <Post
+                      key={index}
+                      postId={post.id}
+                      initComt={undefined}
+                      isAdminGroup={undefined}
+                    />
                   ))}
                 </div>
               ) : (

@@ -128,7 +128,7 @@ const GroupLanding = () => {
                 <div>
                   {posts.length > 0 ? (
                     posts.map((post, index) => (
-                      <Post key={index} post={post} initComt={undefined} isAdminGroup={isAdmin}/>
+                      <Post key={index} postId={post.id} initComt={undefined} isAdminGroup={isAdmin}/>
                     ))
                   ) : (
                     <NoPosts>Chưa có bài viết nào</NoPosts>

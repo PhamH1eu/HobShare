@@ -15,7 +15,7 @@ const PostContent = () => {
     >
       <PostContainer>
         {posts.map((post, index) => (
-          <Post key={index} post={post} />
+          <Post key={index} postId={post.id} />
         ))}
       </PostContainer>
       {/* Add more posts */}

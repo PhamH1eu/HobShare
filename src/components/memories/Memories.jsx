@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { Box, Typography, Paper } from "@mui/material";
 import { Sidebar } from "./Sidebar";
-import usePosts from "src/shared/hooks/fetch/post/usePosts";
 import Post from "../home/NewsFeed/component/Post";
 import CircularLoading from "src/shared/components/Loading";
 import useMemories from "src/shared/hooks/fetch/memory/useMemories";
@@ -51,7 +50,14 @@ function MemoriesPage() {
   const { posts, isLoading } = useMemories(range.diff);
 
   if (isLoading) {
-    return <CircularLoading />;
+    return (
+      <Container>
+        <Sidebar />
+        <Content>
+          <CircularLoading />
+        </Content>
+      </Container>
+    );
   }
 
   const hasMemories = posts.length > 0;
@@ -92,7 +98,11 @@ function MemoriesPage() {
         ) : (
           posts.map((post, index) => (
             <MemoryCard key={index}>
-              <Post post={post} initComt={undefined} isAdminGroup={undefined} />
+              <Post
+                postId={post.id}
+                initComt={undefined}
+                isAdminGroup={undefined}
+              />
             </MemoryCard>
           ))
         )}

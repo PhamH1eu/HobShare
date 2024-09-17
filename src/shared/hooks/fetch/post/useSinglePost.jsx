@@ -20,7 +20,7 @@ const useSinglePost = (id) => {
   
   const post = {
     ...postQuery.data,
-    id: postQuery.data?.id,
+    id: id,
   };
 
   return {

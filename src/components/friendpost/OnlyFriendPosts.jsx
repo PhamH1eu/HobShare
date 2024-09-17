@@ -6,7 +6,7 @@ const OnlyFriendPosts = () => {
   return (
     <div style={{ marginLeft: "80px", marginRight: "80px" }}>
       {posts.map((post, index) => (
-        <Post key={index} post={post} />
+        <Post key={index} postId={post.id} />
       ))}
     </div>
   );

@@ -24,7 +24,7 @@ import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
 import { PostService } from "src/services/DatabaseService";
 
 import upload from "src/shared/helper/upload";
-import { GroupService } from "src/services/SubDatabaseService";
+import { GroupService, UserService } from "src/services/SubDatabaseService";
 
 const ModalContainer = MuiStyled(Box)`
   position: absolute;
@@ -241,12 +241,16 @@ const NewModal = ({ open, onClose, groupId, groupName, groupWallpaper }) => {
     };
     const resID = await PostService.create(data);
     if (groupId && groupName && groupWallpaper) {
-      // @ts-ignore
       await GroupService.createSubCollection(`${groupId}/posts/${resID.id}`, {
-        ...data,
-        // @ts-ignore
         id: resID.id,
       });
+    } else {
+      await UserService.createSubCollection(
+        `${currentUserId}/posts/${resID.id}`,
+        {
+          id: resID.id,
+        }
+      );
     }
     setText("");
     setHashtags([]);

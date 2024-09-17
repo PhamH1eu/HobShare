@@ -19,7 +19,7 @@ const GroupNewsFeed = () => {
         <div>
           {posts.map((post, index) => (
             // @ts-ignore
-            <Post key={index} post={post} />
+            <Post key={index} postId={post.id} />
           ))}
         </div>
       )}

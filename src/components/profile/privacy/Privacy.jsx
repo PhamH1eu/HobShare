@@ -42,10 +42,18 @@ const Privacy = () => {
         (_error) => {
           console.log(_error);
           setDeny(true);
+          setLocation({
+            latitude: null,
+            longitude: null,
+          });
         }
       );
     } else {
       setDeny(true);
+      setLocation({
+        latitude: null,
+        longitude: null,
+      });
     }
   };
 
@@ -73,9 +81,9 @@ const Privacy = () => {
           <br />1 vài tính năng có thể không hiện hữu nếu bạn bỏ qua bước này.
         </p>
         <p style={{ fontWeight: "600" }}>
-          {currentUser.location.denyExposingLocation
-            ? "Bạn đã từ chối cung cấp vị trí"
-            : `Vị trí hiện tại của bạn: ${location.latitude} - ${location.longitude}`}
+          {location.latitude
+            ? `Vị trí hiện tại của bạn: ${location.latitude} - ${location.longitude}`
+            : "Bạn đã từ chối cung cấp vị trí"}
         </p>
         <div className="action">
           <Button variant="contained" className="button" onClick={getLocation}>

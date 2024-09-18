@@ -16,7 +16,10 @@ import LoadingCircleSlide from "./Loading";
 import { useUserStore } from "src/store/userStore";
 
 import "leaflet/dist/leaflet.css";
+import "leaflet-defaulticon-compatibility";
+import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
 import "./map.css";
+
 const UserCardWrapper = styled.div`
   display: flex;
   flex-direction: column;

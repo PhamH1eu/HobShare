@@ -1,19 +1,29 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * const {onCall} = require("firebase-functions/v2/https");
- * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+const functions = require("firebase-functions");
+const admin = require("firebase-admin");
 
-const {onRequest} = require("firebase-functions/v2/https");
-const logger = require("firebase-functions/logger");
+admin.initializeApp();
 
-// Create and deploy your first functions
-// https://firebase.google.com/docs/functions/get-started
+exports.onPostCreated = functions.firestore
+  .document("posts/{postId}")
+  .onCreate(async (snap, context) => {
+    const postId = context.params.postId;
+    const data = snap.data();
 
-// exports.helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+    // Check if tags exist and are an array
+    if (data.tags && Array.isArray(data.tags)) {
+      const promises = data.tags.map(async (tag) => {
+        const hashtagRef = admin
+          .firestore()
+          .doc(`hashtag/${tag}/posts/${postId}`);
+        return hashtagRef.set({
+          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+          postId: postId,
+        });
+      });
+
+      // Wait for all the tag document creations to complete
+      await Promise.all(promises);
+    }
+
+    return null;
+  });

@@ -161,7 +161,7 @@ class SubDatabaseService {
     return snapshot.data().count;
   };
 
-  queryByDate = async (range) => {
+  queryByDate = async (path, range) => {
     const now = new Date();
     const rangeAgo = new Date(now);
     rangeAgo.setDate(now.getDate() - range);
@@ -172,7 +172,7 @@ class SubDatabaseService {
     const startOfDayTimestamp = Timestamp.fromDate(startOfDay);
     const endOfDayTimestamp = Timestamp.fromDate(endOfDay);
     const postsQuery = query(
-      collection(db, this.collection),
+      collection(db, this.collection, path),
       where("createdAt", ">=", startOfDayTimestamp),
       where("createdAt", "<=", endOfDayTimestamp)
     );

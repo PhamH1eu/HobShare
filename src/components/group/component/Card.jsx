@@ -45,22 +45,23 @@ const GroupCard = ({ group }) => {
   const navigate = useNavigate();
 
   if (isLoading) return <CircularLoading />;
-  
+
   return (
     <StyledCard>
       <StyledIconButton>
         <CloseIcon />
       </StyledIconButton>
-      <StyledCardMedia
-        image={group.wallpaper}
-        title={group.name}
-      />
+      <StyledCardMedia image={group.wallpaper} title={group.name} />
       <CardContent>
         <Typography variant="h6">{group.name}</Typography>
         <Typography variant="body2" color="textSecondary">
           {membersCount} thành viên • 10 bài viết/ngày
         </Typography>
-        <StyledButton onClick={() => navigate(`/group/${group.id}`)} variant="contained" color="primary">
+        <StyledButton
+          onClick={() => navigate(`/group/${group.id}`)}
+          variant="contained"
+          color="primary"
+        >
           Tham gia nhóm
         </StyledButton>
       </CardContent>

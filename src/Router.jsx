@@ -15,6 +15,7 @@ import GroupWithSidebar from "./components/group/Group";
 import GroupCreationPage from "./components/group/create/CreateGroup";
 import GroupLanding from "./components/group/group_specific/GroupLanding";
 import Hashtag from "./components/hashtag/Hashtag";
+import MapPage from "./components/map/Map";
 
 const Router = () => {
   let location = useLocation();
@@ -36,6 +37,7 @@ const Router = () => {
         <Route path="/group/create" element={<GroupCreationPage />} />
         <Route path="/group/:groupId" element={<GroupLanding />} />
         <Route path="/hashtag/:hashtag" element={<Hashtag />} />
+        <Route path="/nearby" element={<MapPage />} />
       </Routes>
       {!checkMess && <ChatHolder />}
       {!checkMess && <MinimizedChatDialog />}

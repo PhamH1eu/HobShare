@@ -3,7 +3,7 @@ import { Box, Typography, Paper } from "@mui/material";
 import { Sidebar } from "./Sidebar";
 import Post from "../home/NewsFeed/component/Post";
 import CircularLoading from "src/shared/components/Loading";
-import useMemories from "src/shared/hooks/fetch/memory/useMemories";
+import useMemories from "src/shared/hooks/fetch/user/useMemories";
 const Container = styled(Box)`
   margin-top: 64px;
   display: flex;

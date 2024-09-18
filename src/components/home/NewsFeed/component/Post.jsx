@@ -262,7 +262,7 @@ const Post = ({ postId, initComt, isAdminGroup }) => {
   const handleMarked = async () => {
     setLoading(true);
     console.log(post);
-    
+
     if (marked) {
       await SavedService.removeSubCollection(pathToPostSaved);
     } else {
@@ -290,6 +290,7 @@ const Post = ({ postId, initComt, isAdminGroup }) => {
 
   const location = useLocation();
   const isNotGroupPath = location.pathname.startsWith("/group/");
+  const [isExpanded, setIsExpanded] = useState(false);
 
   if (isLoading) {
     return (
@@ -298,6 +299,12 @@ const Post = ({ postId, initComt, isAdminGroup }) => {
       </PostLoading>
     );
   }
+
+  const handleShowAll = () => {
+    setIsExpanded(!isExpanded);
+  };
+  const truncatedText =
+    post.text.length > 130 ? `${post.text.substring(0, 130)}...` : post.text;
 
   return (
     <PostWrapper>
@@ -389,7 +396,23 @@ const Post = ({ postId, initComt, isAdminGroup }) => {
         )}
       </PostHeader>
       <div>
-        <p style={{ padding: "10px", marginLeft: "5px" }}>{post.text}</p>
+        <div style={{ display: "flex" }}>
+          <p style={{ padding: "10px", marginLeft: "5px" }}>
+            {isExpanded ? post.text : truncatedText}
+            {post.text.length > 130 && (
+              <span
+                onClick={handleShowAll}
+                style={{
+                  margin: "0 5px",
+                  color: "#6ec924",
+                  cursor: "pointer",
+                }}
+              >
+                {isExpanded ? "Ẩn bớt" : "Xem thêm"}
+              </span>
+            )}
+          </p>
+        </div>
         {post.groupId && !isNotGroupPath && (
           <PostTagging>
             {post.stayingWith && (

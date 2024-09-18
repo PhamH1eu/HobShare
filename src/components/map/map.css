@@ -1,0 +1,20 @@
+.leaflet-popup-content {
+    margin: 6px;
+}
+
+.leaflet-popup-close-button {
+    top: -5px !important;
+    right: -5px !important;
+    width: 20px !important;
+    height: 20px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    border-radius: 50%;
+
+    span {
+        color: white !important;
+    }
+}

@@ -15,10 +15,19 @@ import LoadingCircleSlide from "./Loading";
 
 import { useUserStore } from "src/store/userStore";
 
+import L from "leaflet";
+import iconMarker from "leaflet/dist/images/marker-icon.png";
+import iconRetina from "leaflet/dist/images/marker-icon-2x.png";
+import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import "leaflet/dist/leaflet.css";
-import "leaflet-defaulticon-compatibility";
-import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
 import "./map.css";
+const icon = L.icon({
+  iconRetinaUrl: iconRetina,
+  iconUrl: iconMarker,
+  shadowUrl: iconShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+});
 
 const UserCardWrapper = styled.div`
   display: flex;
@@ -44,7 +53,7 @@ const AutoOpenMarkerPopup = (props) => {
   useEffect(() => {
     leafletRef.current.openPopup();
   }, []);
-  return <Marker ref={leafletRef} {...props} />;
+  return <Marker ref={leafletRef} {...props} icon={icon} />;
 };
 
 const animateCircleRadius = (circle, startRadius, endRadius) => {

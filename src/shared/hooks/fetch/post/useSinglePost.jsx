@@ -6,7 +6,7 @@ import { PostService } from "src/services/SubDatabaseService";
 const useSinglePost = (id) => {
   const { currentUserId } = useUserStore();
 
-  const [postQuery, likeQuery] = useQueries([
+  const [postQuery, likeQuery, countQuery] = useQueries([
     {
       queryKey: ["posts", id],
       queryFn: () => PostService.getDocument(id),
@@ -16,8 +16,12 @@ const useSinglePost = (id) => {
       queryFn: () =>
         PostService.checkExistSubCollection(`${id}/like/${currentUserId}`),
     },
+    {
+      queryKey: ["count", id],
+      queryFn: () => PostService.count(`${id}/like`),
+    },
   ]);
-  
+
   const post = {
     ...postQuery.data,
     id: id,
@@ -25,9 +29,11 @@ const useSinglePost = (id) => {
 
   return {
     post,
+    likeCount: countQuery.data,
     isLike: likeQuery.data,
-    isLoading: postQuery.isLoading || likeQuery.isLoading,
-    isRefetching: likeQuery.isRefetching
+    isLoading:
+      postQuery.isLoading || likeQuery.isLoading || countQuery.isLoading,
+    isRefetching: likeQuery.isRefetching,
   };
 };
 

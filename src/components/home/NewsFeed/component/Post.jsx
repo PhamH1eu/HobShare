@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import ShareIcon from "@mui/icons-material/Share";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
-import SentimentVerySatisfiedIcon from "@mui/icons-material/SentimentVerySatisfied";
 
 import Comments from "./Comments";
 
@@ -30,8 +29,7 @@ import { useMutation, useQueryClient } from "react-query";
 import { useLocation } from "react-router-dom";
 import useSinglePost from "src/shared/hooks/fetch/post/useSinglePost";
 import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
-import { doc } from "firebase/firestore";
-import { db } from "src/lib/firebase";
+import UsersLike from "./UsersLike";
 
 const PostWrapper = styled.div`
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
@@ -99,6 +97,7 @@ const PostReactions = styled.div`
   gap: 2px;
   margin: 10px 10px;
   font-size: 1rem;
+  cursor: pointer;
 `;
 
 const PostActions = styled.div`
@@ -220,8 +219,8 @@ const GroupHeader = styled.div`
 
 const Post = ({ postId, initComt, isAdminGroup }) => {
   const queryClient = useQueryClient();
-  const { post, isLike, isRefetching, isLoading } = useSinglePost(postId);
-  console.log(post.likes);
+  const { post, likeCount, isLike, isRefetching, isLoading } =
+    useSinglePost(postId);
   const { currentUserId } = useUserStore();
   const { data: currentUser } = useUserInfo(currentUserId);
 
@@ -236,10 +235,6 @@ const Post = ({ postId, initComt, isAdminGroup }) => {
             userId: currentUser.id,
           }
         );
-        const docRef = doc(db, "posts", postId);
-        var likes = new sharded.Counter(docRef, "likes");
-        await likes.incrementBy(1);
-        queryClient.invalidateQueries(["posts", postId]);
       } else {
         await LikeService.removeSubCollection(
           `${postId}/like/${currentUserId}`
@@ -249,6 +244,7 @@ const Post = ({ postId, initComt, isAdminGroup }) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(["like", postId, currentUserId]);
+        queryClient.invalidateQueries(["count", postId]);
       },
     }
   );
@@ -293,6 +289,11 @@ const Post = ({ postId, initComt, isAdminGroup }) => {
     open: openDeleteModal,
     handleOpen: handleOpenDeleteModal,
     handleClose: handleCloseDeleteModal,
+  } = useModal();
+  const {
+    open: openUserLikeModal,
+    handleOpen: handleOpenUserLikeModal,
+    handleClose: handleCloseUserLikeModal,
   } = useModal();
 
   const location = useLocation();
@@ -458,13 +459,9 @@ const Post = ({ postId, initComt, isAdminGroup }) => {
         )}
       </div>
       <PostFooter>
-        <PostReactions>
+        <PostReactions onClick={handleOpenUserLikeModal}>
           <ThumbUpAltIcon style={{ fontSize: "1.25rem" }} color="primary" />
-          <SentimentVerySatisfiedIcon
-            style={{ fontSize: "1.25rem" }}
-            color="warning"
-          />
-          {post?.likes}
+          {likeCount}
         </PostReactions>
         <Divider flexItem variant="middle" color="#bdbdbd" />
         <PostActions>
@@ -515,6 +512,14 @@ const Post = ({ postId, initComt, isAdminGroup }) => {
         aria-describedby="modal-modal-description"
       >
         <Share post={post} handleClose={handleClose} />
+      </Modal>
+      <Modal
+        open={openUserLikeModal}
+        onClose={handleCloseUserLikeModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <UsersLike postId={postId} handleClose={handleCloseUserLikeModal} />
       </Modal>
       <Modal
         open={openDeleteModal}

@@ -30,6 +30,8 @@ import { useMutation, useQueryClient } from "react-query";
 import { useLocation } from "react-router-dom";
 import useSinglePost from "src/shared/hooks/fetch/post/useSinglePost";
 import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
+import { doc } from "firebase/firestore";
+import { db } from "src/lib/firebase";
 
 const PostWrapper = styled.div`
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
@@ -219,6 +221,7 @@ const GroupHeader = styled.div`
 const Post = ({ postId, initComt, isAdminGroup }) => {
   const queryClient = useQueryClient();
   const { post, isLike, isRefetching, isLoading } = useSinglePost(postId);
+  console.log(post.likes);
   const { currentUserId } = useUserStore();
   const { data: currentUser } = useUserInfo(currentUserId);
 
@@ -233,6 +236,10 @@ const Post = ({ postId, initComt, isAdminGroup }) => {
             userId: currentUser.id,
           }
         );
+        const docRef = doc(db, "posts", postId);
+        var likes = new sharded.Counter(docRef, "likes");
+        await likes.incrementBy(1);
+        queryClient.invalidateQueries(["posts", postId]);
       } else {
         await LikeService.removeSubCollection(
           `${postId}/like/${currentUserId}`
@@ -457,7 +464,7 @@ const Post = ({ postId, initComt, isAdminGroup }) => {
             style={{ fontSize: "1.25rem" }}
             color="warning"
           />
-          {post.reactions}
+          {post?.likes}
         </PostReactions>
         <Divider flexItem variant="middle" color="#bdbdbd" />
         <PostActions>

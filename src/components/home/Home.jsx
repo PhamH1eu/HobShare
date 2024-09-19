@@ -7,6 +7,7 @@ const HomePage = styled.div`
   display: flex;
   margin-top: 64px;
   overflow-y: auto;
+  width: 100%;
   &::-webkit-scrollbar-thumb {
     border-radius: 10px;
   }

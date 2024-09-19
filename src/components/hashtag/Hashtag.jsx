@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Post from "../home/NewsFeed/component/Post";
 import { useParams } from "react-router-dom";
 import useQueryPosts from "src/shared/hooks/fetch/post/useQueryPosts";
+import useHashtagInfo from "src/shared/hooks/fetch/hashtag/useHashtagInfo";
 
 // Styled Components
 const HashtagWrapper = styled.div`
@@ -40,13 +41,16 @@ const PostWrapper = styled.div`
 
 const Hashtag = () => {
   const { hashtag } = useParams();
+  const { hashtagInfo, isLoadingHashtag } = useHashtagInfo(`#${hashtag}`);
   const { posts, isLoading } = useQueryPosts(hashtag);
+
+  if (isLoadingHashtag) return <CircularLoading />;
 
   return (
     <HashtagWrapper>
       <HashtagInfo>
-        <HashtagTitle>#{hashtag}</HashtagTitle>
-        <HashtagStats>10 triệu bài viết</HashtagStats>
+        <HashtagTitle>{hashtagInfo.tag}</HashtagTitle>
+        <HashtagStats>{hashtagInfo.postCount} bài viết</HashtagStats>
       </HashtagInfo>
       <PostWrapper>
         {isLoading ? (

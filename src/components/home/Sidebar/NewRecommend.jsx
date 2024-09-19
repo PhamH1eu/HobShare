@@ -1,4 +1,6 @@
+import CircularLoading from "src/shared/components/Loading";
 import StyledLink from "src/shared/components/StyledLink";
+import usePopularHashtags from "src/shared/hooks/fetch/hashtag/usePopularHashtags";
 import styled from "styled-components";
 
 const SidebarWrapper = styled.div`
@@ -53,14 +55,22 @@ const tag = [
 ];
 
 const NewRecommend = () => {
+  const { tags, isLoading } = usePopularHashtags();
+  if (isLoading)
+    return (
+      <SidebarWrapper>
+        <h3>Xu hướng</h3>
+        <CircularLoading />
+      </SidebarWrapper>
+    );
   return (
     <SidebarWrapper>
       <h3>Xu hướng</h3>
-      {tag.map((t, index) => (
+      {tags.map((t, index) => (
         <StyledLink key={index} to={`/hashtag/${t.tag.replace("#", "")}`}>
           <Hashtag key={index}>
             <span>{t.tag}</span>
-            <p>{t.count} posts</p>
+            <p>{t.postCount} bài viết</p>
           </Hashtag>
         </StyledLink>
       ))}

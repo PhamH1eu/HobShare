@@ -73,3 +73,50 @@ exports.countHashtagPosts = functions.pubsub
       console.error("Error updating hashtag post counts:", error);
     }
   });
+
+exports.sendUserNotification = functions.firestore
+  .document("notifications/{userId}/notifications/{notiId}")
+  .onCreate(async (snapshot, context) => {
+    const userId = context.params.userId;
+
+    // Fetch the user's FCM token from Firestore
+    const userDoc = await admin
+      .firestore()
+      .collection("users")
+      .doc(userId)
+      .get();
+    const receiverToken = userDoc.data()?.receiverToken;
+
+    // Check if the token exists
+    if (!receiverToken) {
+      console.error(`No receiverToken found for user: ${userId}`);
+      return;
+    }
+
+    // Get the notification data from the created document
+    const notificationData = snapshot.data();
+    const title = notificationData.title || "New Notification";
+    const body = notificationData.body || "You have a new message!";
+
+    // Construct the FCM message
+    const message = {
+      token: receiverToken,
+      notification: {
+        title: title,
+        body: body,
+      },
+      data: {
+        userId: userId,
+        notiId: context.params.notiId,
+        // Add any additional data you want to send
+      },
+    };
+
+    try {
+      // Send the FCM notification
+      await admin.messaging().send(message);
+      console.log(`Notification sent to user: ${userId}`);
+    } catch (error) {
+      console.error(`Error sending notification to user: ${userId}`, error);
+    }
+  });

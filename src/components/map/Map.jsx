@@ -13,14 +13,17 @@ import StyledLink from "src/shared/components/StyledLink";
 import DiscreteSlider from "./Slider";
 import LoadingCircleSlide from "./Loading";
 
-import { useUserStore } from "src/store/userStore";
-
 import L from "leaflet";
 import iconMarker from "leaflet/dist/images/marker-icon.png";
 import iconRetina from "leaflet/dist/images/marker-icon-2x.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import "leaflet/dist/leaflet.css";
 import "./map.css";
+
+import { useUserStore } from "src/store/userStore";
+import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
+import useMapDistance from "src/shared/hooks/fetch/map/useMapDistance";
+
 const icon = L.icon({
   iconRetinaUrl: iconRetina,
   iconUrl: iconMarker,
@@ -79,36 +82,35 @@ const animateCircleRadius = (circle, startRadius, endRadius) => {
 
 const MapPage = () => {
   const { currentUserId } = useUserStore();
-  const location = [21.0331457, 105.7932597];
-  const location2 = [21.037059731294864, 105.79445387505912];
+  const { data: currentUser } = useUserInfo(currentUserId);
+  const [defaultDistance, setDistance] = useState(2);
+  const { users, isLoading, isRefetching } = useMapDistance(
+    defaultDistance,
+    currentUser.location.latitude,
+    currentUser.location.longitude
+  );
 
   const circleRef = useRef();
-  const [loading, setLoading] = useState(false);
-  const [defaultDistance, setDistance] = useState(2);
-  const handleChange = (event, value) => {
-    console.log(value);
-    setLoading(true);
+
+  const handleChange = async (event, value) => {
     animateCircleRadius(
       circleRef.current,
       defaultDistance * 1000,
       value * 1000
     );
     setDistance(value);
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
   };
 
   return (
     <>
-      <LoadingCircleSlide loading={loading} />
+      <LoadingCircleSlide loading={isRefetching || isLoading} />
       <MapContainer
         style={{
           height: "calc(100vh - 64px)",
           width: "100vw",
           marginTop: "64px",
         }}
-        center={location}
+        center={[currentUser.location.latitude, currentUser.location.longitude]}
         zoom={15}
         scrollWheelZoom={true}
       >
@@ -119,37 +121,36 @@ const MapPage = () => {
         <LayerGroup>
           <Circle
             ref={circleRef}
-            center={location}
+            center={[
+              currentUser.location.latitude,
+              currentUser.location.longitude,
+            ]}
             pathOptions={{ fillColor: "blue" }}
             radius={defaultDistance * 1000}
           />
         </LayerGroup>
-        <AutoOpenMarkerPopup position={location}>
-          <Popup
-            autoClose={false}
-            closeOnEscapeKey={false}
-            closeOnClick={false}
-          >
-            <StyledLink to={`/profile/${currentUserId}`}>
-              <UserCardWrapper>
-                <Avatar src="https://firebasestorage.googleapis.com/v0/b/reactchat-3358f.appspot.com/o/users%2FuRWlcplqyQd42640j55iZtDOI4h1%2Favatar.jpg?alt=media&token=037b60b7-c75a-4d26-ac97-38d779de2c45" />
-                <Username>Hieu321321312321321213231132</Username>
-              </UserCardWrapper>
-            </StyledLink>
-          </Popup>
-        </AutoOpenMarkerPopup>
-        <AutoOpenMarkerPopup position={location2}>
-          <Popup
-            autoClose={false}
-            closeOnEscapeKey={false}
-            closeOnClick={false}
-          >
-            <UserCardWrapper>
-              <Avatar src="https://firebasestorage.googleapis.com/v0/b/reactchat-3358f.appspot.com/o/users%2FuRWlcplqyQd42640j55iZtDOI4h1%2Favatar.jpg?alt=media&token=037b60b7-c75a-4d26-ac97-38d779de2c45" />
-              <Username>Hieu</Username>
-            </UserCardWrapper>
-          </Popup>
-        </AutoOpenMarkerPopup>
+        {users?.map((user, index) => {
+          return (
+            <AutoOpenMarkerPopup
+              key={index}
+              position={[user.location.latitude, user.location.longitude]}
+            >
+              <Popup
+                autoClose={false}
+                closeOnEscapeKey={false}
+                closeOnClick={false}
+              >
+                <StyledLink to={`/profile/${user.id}`}>
+                  <UserCardWrapper>
+                    <Avatar src={user.avatar}></Avatar>
+                    <Username>{user.username}</Username>
+                  </UserCardWrapper>
+                </StyledLink>
+              </Popup>
+            </AutoOpenMarkerPopup>
+          );
+        })}
+        {}
       </MapContainer>
       <div
         style={{
@@ -167,7 +168,7 @@ const MapPage = () => {
         <DiscreteSlider
           defaultDistance={defaultDistance}
           handleChange={handleChange}
-          disabled={loading}
+          disabled={isLoading || isRefetching}
         />
       </div>
     </>

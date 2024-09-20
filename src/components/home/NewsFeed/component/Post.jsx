@@ -95,9 +95,16 @@ const PostReactions = styled.div`
   display: flex;
   align-items: center;
   gap: 2px;
-  margin: 10px 10px;
+  margin: 5px 10px;
+  padding: 5px;
+  border-radius: 5px;
   font-size: 1rem;
   cursor: pointer;
+  width: fit-content;
+
+  &:hover {
+    background-color: #f0f2f5;
+  }
 `;
 
 const PostActions = styled.div`
@@ -264,7 +271,6 @@ const Post = ({ postId, initComt, isAdminGroup }) => {
   }, [pathToPostSaved]);
   const handleMarked = async () => {
     setLoading(true);
-    console.log(post);
 
     if (marked) {
       await SavedService.removeSubCollection(pathToPostSaved);

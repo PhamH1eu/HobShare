@@ -17,6 +17,7 @@ import { generateToken, messaging } from "./lib/firebase";
 import { onMessage } from "firebase/messaging";
 import toast from "react-hot-toast";
 import { NotifiComponent } from "./shared/components/noti/NotifiComponent";
+import { updateUserToken } from "./services/UserToken";
 
 const App = () => {
   useEffect(() => {
@@ -40,6 +41,11 @@ const App = () => {
 
   useStatus();
   const { currentUserId, isSignedUp } = useUserStore();
+  useEffect(() => {
+    if (currentUserId) {
+      updateUserToken(currentUserId);
+    }
+  }, [currentUserId]);
 
   const { data: currentUser, isLoading } = useUserInfo(currentUserId);
   useListenAuth();

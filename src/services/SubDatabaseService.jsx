@@ -183,20 +183,6 @@ class SubDatabaseService {
     });
     return data;
   };
-
-  queryByMostCount = async () => {
-    const q = query(
-      collection(db, this.collection),
-      orderBy("postCount", "desc"),
-      limit(3)
-    );
-    const querySnapshot = await getDocs(q);
-    let data = [];
-    querySnapshot.forEach((doc) => {
-      data.push(doc.data());
-    });
-    return data;
-  };
 }
 
 export const SavedService = new SubDatabaseService("saved");
@@ -212,3 +198,5 @@ export const GroupService = new SubDatabaseService("groups");
 export const UserService = new SubDatabaseService("users");
 
 export const HashtagService = new SubDatabaseService("hashtag");
+
+export const PopularHashtagService = new SubDatabaseService("populartags");

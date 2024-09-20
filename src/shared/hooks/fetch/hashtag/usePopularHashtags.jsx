@@ -1,9 +1,9 @@
 import { useQuery } from "react-query";
-import { HashtagService } from "src/services/SubDatabaseService";
+import { PopularHashtagService } from "src/services/SubDatabaseService";
 
 const usePopularHashtags = () => {
   const { data: tags, isLoading } = useQuery("tags", () =>
-    HashtagService.queryByMostCount()
+    PopularHashtagService.getAll()
   );
 
   return {

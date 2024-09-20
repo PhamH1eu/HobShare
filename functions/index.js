@@ -3,6 +3,8 @@ const functions = require("firebase-functions");
 
 admin.initializeApp();
 
+const db = admin.firestore();
+
 exports.onPostCreated = functions.firestore
   .document("posts/{postId}")
   .onCreate(async (snap, context) => {
@@ -12,9 +14,7 @@ exports.onPostCreated = functions.firestore
     // Check if tags exist and are an array
     if (data.tags && Array.isArray(data.tags)) {
       const promises = data.tags.map(async (tag) => {
-        const hashtagRef = admin
-          .firestore()
-          .doc(`hashtag/${tag}/posts/${postId}`);
+        const hashtagRef = db.doc(`hashtag/${tag}/posts/${postId}`);
         return hashtagRef.set({
           createdAt: admin.firestore.FieldValue.serverTimestamp(),
           postId: postId,
@@ -22,7 +22,7 @@ exports.onPostCreated = functions.firestore
       });
 
       const promiseCreateTags = data.tags.map(async (tag) => {
-        const tagRef = admin.firestore().doc(`hashtag/${tag}`);
+        const tagRef = db.doc(`hashtag/${tag}`);
         return tagRef.set({
           createdAt: admin.firestore.FieldValue.serverTimestamp(),
           tag: tag,
@@ -39,7 +39,7 @@ exports.onPostCreated = functions.firestore
 exports.countHashtagPosts = functions.pubsub
   .schedule("every 5 minutes")
   .onRun(async (context) => {
-    const hashtagCollectionRef = admin.firestore().collection("hashtag");
+    const hashtagCollectionRef = db.collection("hashtag");
 
     try {
       // Get all hashtag documents
@@ -65,12 +65,57 @@ exports.countHashtagPosts = functions.pubsub
         );
       });
 
-      // Wait for all count operations to complete
       await Promise.all(countPromises);
 
       console.log("Hashtag post counts updated successfully.");
     } catch (error) {
       console.error("Error updating hashtag post counts:", error);
+    }
+
+    try {
+      const hashtagSnapshot = await hashtagCollectionRef
+        .orderBy("postCount")
+        .limit(3)
+        .get();
+      const topHashtags = [];
+      hashtagSnapshot.forEach((doc) => {
+        topHashtags.push({ id: doc.id, ...doc.data() });
+      });
+      const popularTagsSnapshot = await db
+        .collection("populartags")
+        .orderBy("postCount", "desc")
+        .get();
+      const popularTags = [];
+      popularTagsSnapshot.forEach((doc) => {
+        popularTags.push({ id: doc.id, ...doc.data() });
+      });
+      const combinedTags = [...topHashtags, ...popularTags];
+
+      combinedTags.sort((a, b) => b.postCount - a.postCount);
+
+      // Keep only the top 3 hashtags
+      const updatedPopularTags = combinedTags.slice(0, 3);
+
+      // 4. Update the 'populartags' collection
+      const batch = db.batch();
+
+      // Clear previous 'populartags' collection
+      popularTagsSnapshot.forEach((doc) => {
+        batch.delete(db.collection("populartags").doc(doc.id));
+      });
+
+      // Add the new top 3 hashtags into the 'populartags' collection
+      updatedPopularTags.forEach((tag) => {
+        const docRef = db.collection("populartags").doc(tag.id);
+        batch.set(docRef, tag);
+      });
+
+      // Commit the batch write
+      await batch.commit();
+
+      console.log("Successfully updated popular tags");
+    } catch (error) {
+      console.error("Error updating popular hashtag:", error);
     }
   });
 
@@ -80,11 +125,7 @@ exports.sendUserNotification = functions.firestore
     const userId = context.params.userId;
 
     // Fetch the user's FCM token from Firestore
-    const userDoc = await admin
-      .firestore()
-      .collection("users")
-      .doc(userId)
-      .get();
+    const userDoc = await db.collection("users").doc(userId).get();
     const receiverToken = userDoc.data()?.receiverToken;
 
     // Check if the token exists

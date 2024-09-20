@@ -404,8 +404,12 @@ const ChatDialog = ({ chat }) => {
           style={{ display: "none" }}
           onChange={handleImg}
         />
-        <IconButton color="primary" disabled={isBlocking}>
-          <EmojiEmotions color="primary" onClick={() => setOpen(true)} />
+        <IconButton
+          color="primary"
+          onClick={() => setOpen(!open)}
+          disabled={isBlocking}
+        >
+          <EmojiEmotions color="primary" />
           <div className="picker">
             <EmojiPicker
               open={open}

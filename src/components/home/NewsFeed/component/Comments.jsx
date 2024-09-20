@@ -61,6 +61,9 @@ const Comments = ({ postId, authorId }) => {
     const path = `${postId}/comments/${data.comId}`;
     await PostService.createSubCollection(path, data);
     if (authorId !== currentUserId) {
+      await NotificationService.updateDocument(`${authorId}`, {
+        unreadNotis: increment(1),
+      });
       await NotificationService.createSubCollection(
         `${authorId}/notifications/${data.comId}`,
         {
@@ -71,11 +74,6 @@ const Comments = ({ postId, authorId }) => {
           type: "comment",
           url: `/post/${postId}`,
         }
-      );
-      await NotificationService.updateSubCollection(
-        `${authorId}`,
-        "unreadNotis",
-        increment(1)
       );
     }
   };
@@ -100,22 +98,24 @@ const Comments = ({ postId, authorId }) => {
     }
     const path = `${postId}/comments/${data.parentOfRepliedCommentId}`;
     await PostService.addDataToArray(path, "replies", data);
-    await NotificationService.createSubCollection(
-      `${repliedUserId}/notifications/${data.comId}`,
-      {
-        sourceName: currentUser.username,
-        sourceImage: currentUser.avatar,
-        content: "đã phản hồi bình luận của bạn",
-        isRead: false,
-        type: "comment",
-        url: `/post/${postId}`,
-      }
-    );
-    await NotificationService.updateSubCollection(
-      `${authorId}`,
-      "unreadNotis",
-      increment(1)
-    );
+    if (repliedUserId !== currentUserId) {
+      await NotificationService.createSubCollection(
+        `${repliedUserId}/notifications/${data.comId}`,
+        {
+          sourceName: currentUser.username,
+          sourceImage: currentUser.avatar,
+          content: "đã phản hồi bình luận của bạn",
+          isRead: false,
+          type: "comment",
+          url: `/post/${postId}`,
+        }
+      );
+      await NotificationService.updateSubCollection(
+        `${authorId}`,
+        "unreadNotis",
+        increment(1)
+      );
+    }
   };
 
   const edit = async (data) => {

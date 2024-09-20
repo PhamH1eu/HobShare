@@ -84,6 +84,9 @@ export const NotifiComponent = ({ message, t }) => {
     await Promise.all([updateStatus, updateCount]);
     queryClient.invalidateQueries("notifications");
   };
+  let dateObj = new Date(message.createdAt);
+  dateObj.setSeconds(dateObj.getSeconds() - 10);
+  const newNotiDate = dateObj.toISOString();
 
   return (
     <NotificationContainer>
@@ -100,12 +103,7 @@ export const NotifiComponent = ({ message, t }) => {
             <div>
               <UserName>{message.sourceName}</UserName> {message.content}
             </div>
-            <TimeLabel>
-              {timeDiff(
-                message.createdAt.seconds * 1000 +
-                  message.createdAt.nanoseconds / 1000000
-              )}
-            </TimeLabel>
+            <TimeLabel>{timeDiff(newNotiDate)}</TimeLabel>
           </TextContainer>
           <IndicatorDot />
         </Content>

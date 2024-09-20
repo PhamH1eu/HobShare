@@ -21,7 +21,7 @@ import StyledLink from "src/shared/components/StyledLink";
 import { LoadingButton } from "@mui/lab";
 import { styled as MuiStyled } from "@mui/material";
 
-import { SavedService } from "src/services/SubDatabaseService";
+import { NotificationService, SavedService } from "src/services/SubDatabaseService";
 import { useUserStore } from "src/store/userStore";
 import { PostService } from "src/services/DatabaseService";
 import { PostService as LikeService } from "src/services/SubDatabaseService";
@@ -30,6 +30,7 @@ import { useLocation } from "react-router-dom";
 import useSinglePost from "src/shared/hooks/fetch/post/useSinglePost";
 import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
 import UsersLike from "./UsersLike";
+import { increment } from "firebase/firestore";
 
 const PostWrapper = styled.div`
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
@@ -242,6 +243,22 @@ const Post = ({ postId, initComt, isAdminGroup }) => {
             userId: currentUser.id,
           }
         );
+        if (post.authorId !== currentUserId) {
+          await NotificationService.updateDocument(`${post.authorId}`, {
+            unreadNotis: increment(1),
+          });
+          await NotificationService.createSubCollection(
+            `${post.authorId}/notifications/${postId}`,
+            {
+              sourceName: currentUser.username,
+              sourceImage: currentUser.avatar,
+              content: "đã thích bài viết của bạn",
+              isRead: false,
+              type: "like",
+              url: `/post/${postId}`,
+            }
+          );
+        }
       } else {
         await LikeService.removeSubCollection(
           `${postId}/like/${currentUserId}`

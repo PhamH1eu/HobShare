@@ -9,6 +9,7 @@ import uploadSpecificImage from "src/shared/helper/uploadAvatar";
 
 import styled from "styled-components";
 import { useQueryClient } from "react-query";
+import { NotificationService } from "src/services/SubDatabaseService";
 
 const Form = styled.form`
   color: #1b1b1b;
@@ -151,6 +152,10 @@ const Signup = () => {
         },
         res.user.uid
       );
+
+      await NotificationService.createSubCollection(res.user.uid, {
+        unreadNotis: 0,
+      });
 
       setUserId(res.user.uid);
       setSignedUp(true);

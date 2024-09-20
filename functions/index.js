@@ -37,7 +37,7 @@ exports.onPostCreated = functions.firestore
   });
 
 exports.countHashtagPosts = functions.pubsub
-  .schedule("every 5 minutes")
+  .schedule("every 12 hours")
   .onRun(async (context) => {
     const hashtagCollectionRef = db.collection("hashtag");
 
@@ -134,22 +134,29 @@ exports.sendUserNotification = functions.firestore
       return;
     }
 
-    // Get the notification data from the created document
     const notificationData = snapshot.data();
-    const title = notificationData.title || "New Notification";
-    const body = notificationData.body || "You have a new message!";
 
-    // Construct the FCM message
     const message = {
       token: receiverToken,
       notification: {
-        title: title,
-        body: body,
+        title: "HobShare",
+        body: "Bạn có thông báo mới",
       },
       data: {
-        userId: userId,
-        notiId: context.params.notiId,
-        // Add any additional data you want to send
+        id: context.params.notiId,
+        url: notificationData.url,
+        content: notificationData.content,
+        createdAt: notificationData.createdAt.toDate().toISOString(),
+        sourceName: notificationData.sourceName,
+        sourceImage: notificationData.sourceImage,
+      },
+      webpush: {
+        fcmOptions: {
+          link: notificationData.url,
+        },
+        notification: {
+          icon: "favicon.png", // Same as above or use a different one
+        },
       },
     };
 

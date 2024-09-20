@@ -148,6 +148,9 @@ const Invite = ({ handleClose }) => {
 
   const handleSend = async () => {
     const promises = recipients.map(async (item) => {
+      await NotificationService.updateDocument(`${item.userId}`, {
+        unreadNotis: increment(1),
+      });
       await NotificationService.createSubCollection(
         `${item.userId}/notifications/${uuidv4()}`,
         {
@@ -159,9 +162,6 @@ const Invite = ({ handleClose }) => {
           url: `/group/${groupId}`,
         }
       );
-      await NotificationService.createSubCollection(`${item.userId}`, {
-        unreadNotis: increment(1),
-      });
     });
     await Promise.all(promises);
     handleClose();

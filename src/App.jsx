@@ -23,15 +23,15 @@ const App = () => {
   useEffect(() => {
     generateToken();
     onMessage(messaging, (payload) => {
-      console.log("Message received. ", payload);
       toast((t) => (
         <NotifiComponent
           message={{
-            url: "/post/2",
-            content: "This is a notificatio21312123121321321233213213213n",
-            createdAt: 0,
-            sourceName: "Source Name",
-            sourceImage: "https://via.placeholder.com/150",
+            id: payload.data.id,
+            url: payload.data.url,
+            content: payload.data.content,
+            createdAt: payload.data.createdAt,
+            sourceName: payload.data.sourceName,
+            sourceImage: payload.data.sourceImage,
           }}
           t={t}
         />

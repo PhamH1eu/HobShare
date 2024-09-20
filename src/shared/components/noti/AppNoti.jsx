@@ -11,7 +11,7 @@ const AppNoti = () => {
       }}
       containerClassName="noti123"
       toastOptions={{
-        duration: 4000,
+        duration: 10000,
         style: {
           padding: 0,
           margin: 0,

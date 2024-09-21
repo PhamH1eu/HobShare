@@ -25,6 +25,7 @@ import { PostService } from "src/services/DatabaseService";
 
 import upload from "src/shared/helper/upload";
 import { GroupService, UserService } from "src/services/SubDatabaseService";
+import uploadLabeledImage from "src/shared/helper/uploadLabeledImage";
 
 const ModalContainer = MuiStyled(Box)`
   position: absolute;
@@ -215,13 +216,14 @@ const NewModal = ({ open, onClose, groupId, groupName, groupWallpaper }) => {
       return;
     }
     setLoading(true);
-    const res = selectedFile ? await upload(selectedFile.file) : null;
+    const res = selectedFile?.type.startsWith("video/")
+      ? await upload(selectedFile.file)
+      : null;
     const data = {
       authorId: currentUserId,
       authorName: currentUser.username,
       authorAvatar: currentUser.avatar,
       ...(text !== "" && { text: text }),
-      ...(selectedFile?.type.startsWith("image/") && { image: res }),
       ...(selectedFile?.type.startsWith("video/") && { video: res }),
       ...(location && { location: location }),
       ...(selectedFriends.length > 0 && {
@@ -240,6 +242,14 @@ const NewModal = ({ open, onClose, groupId, groupName, groupWallpaper }) => {
       priority: 0,
     };
     const resID = await PostService.create(data);
+    if (selectedFile?.type.startsWith("image/")) {
+      const url = await uploadLabeledImage(
+        selectedFile.file,
+        resID.id,
+        "posts"
+      );
+      await PostService.update(resID.id, { image: url });
+    }
     if (groupId && groupName && groupWallpaper) {
       await GroupService.createSubCollection(`${groupId}/posts/${resID.id}`, {
         id: resID.id,

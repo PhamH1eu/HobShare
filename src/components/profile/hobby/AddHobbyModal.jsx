@@ -15,6 +15,7 @@ import { ActivitiesService, UserService } from "src/services/DatabaseService";
 import { useUserStore } from "src/store/userStore";
 import { useQueryClient } from "react-query";
 import formatString from "src/shared/helper/formatString";
+import uploadLabeledImage from "src/shared/helper/uploadLabeledImage";
 
 const AddHobbyModal = ({ open, handleClose }) => {
   const queryClient = useQueryClient();
@@ -43,14 +44,16 @@ const AddHobbyModal = ({ open, handleClose }) => {
       return;
     }
     setLoading(true);
-    const res = await upload(image.file);
     const newHobby = {
-      image: res,
       caption: caption,
       formatted_capption: formatString(caption),
     };
-    await UserService.union(currentUserId, "favorite", [newHobby]);
-    await ActivitiesService.create(newHobby);
+    const resID = await ActivitiesService.create(newHobby);
+    const res = await uploadLabeledImage(image.file, resID.id, "hobby");
+    await ActivitiesService.update(resID.id, { image: res });
+    await UserService.union(currentUserId, "favorite", [
+      { ...newHobby, image: res },
+    ]);
     queryClient.invalidateQueries(["user", currentUserId]);
     setCaption("");
     setImage(null);

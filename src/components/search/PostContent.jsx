@@ -1,24 +1,26 @@
 import { Box } from "@mui/material";
-import styled from "styled-components";
-import Post from "../home/NewsFeed/component/Post";
-
-const PostContainer = styled(Box)`
-  width: 60%;
-`;
-
-const posts = [];
+import "instantsearch.css/themes/satellite.css";
+import "./search.css";
+import { Configure, Hits, Index, useInstantSearch } from "react-instantsearch";
+import { HitPost } from "./component/HitPost";
+import LoadingCircleSlide from "../map/Loading";
 
 const PostContent = () => {
+  const { status } = useInstantSearch();
+
   return (
     <Box
       sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
     >
-      <PostContainer>
-        {posts.map((post, index) => (
-          <Post key={index} postId={post.id} />
-        ))}
-      </PostContainer>
-      {/* Add more posts */}
+      <div className="ais-InstantSearch">
+        <Index indexName="post_index">
+          <Configure hitsPerPage={5} />
+          <Hits hitComponent={HitPost} />
+        </Index>
+      </div>
+      <LoadingCircleSlide
+        loading={status === "loading" || status === "stalled"}
+      />
     </Box>
   );
 };

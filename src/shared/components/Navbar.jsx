@@ -26,6 +26,8 @@ import useUserInfo from "../hooks/fetch/user/useUserInfo";
 import useChatList from "../hooks/listen/useChatList";
 import useListenNotifications from "../hooks/listen/useListenNotifications";
 import { useQueryClient } from "react-query";
+import { SearchBox } from "react-instantsearch";
+import CustomSearchBox from "src/components/search/component/CustomSearchBox";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -196,10 +198,6 @@ const NavBar = () => {
   const handleSearch = (e) => {
     setInputValue(e.target.value);
   };
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    if (inputValue.length > 0) navigate(`/search/${inputValue}`);
-  };
 
   const { chats } = useChatList();
   const unreadChats = chats.filter((chat) => !chat.isSeen).length;
@@ -222,25 +220,7 @@ const NavBar = () => {
               src="https://cdn-icons-png.freepik.com/256/2853/2853408.png?semt=ais_hybrid"
             />
           </Link>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon
-                // @ts-ignore
-                color="greyIcon"
-              />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Tìm kiếm..."
-              inputProps={{ "aria-label": "search" }}
-              value={inputValue}
-              onChange={handleSearch}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleSearchSubmit(e);
-                }
-              }}
-            />
-          </Search>
+          <CustomSearchBox />
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" }, gap: "16px" }}>
             {!checkMess && (

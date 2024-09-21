@@ -16,12 +16,22 @@ import GroupCreationPage from "./components/group/create/CreateGroup";
 import GroupLanding from "./components/group/group_specific/GroupLanding";
 import Hashtag from "./components/hashtag/Hashtag";
 import MapPage from "./components/map/Map";
+import { InstantSearch } from "react-instantsearch";
+import { liteClient as algoliasearch } from "algoliasearch/lite";
+
+const searchClient = algoliasearch(
+  "N8BH27ZJ45",
+  "d2bcec7ecee3e783e7e7e45ee12d6474"
+);
 
 const Router = () => {
   let location = useLocation();
   let checkMess = Boolean(location.pathname === "/messenger");
   return (
-    <>
+    <InstantSearch
+      searchClient={searchClient}
+      indexName="post_index"
+    >
       <NavBar />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -30,7 +40,7 @@ const Router = () => {
         <Route path="/friends" element={<FriendsTab />} />
         <Route path="/saved" element={<SavedPage />} />
         <Route path="/memories" element={<MemoriesPage />} />
-        <Route path="/search/:id" element={<SearchScreen />} />
+        <Route path="/search" element={<SearchScreen />} />
         <Route path="/post/:postId" element={<PostPage />} />
         <Route path="/activities" element={<Activities />} />
         <Route path="/group" element={<GroupWithSidebar />} />
@@ -41,7 +51,7 @@ const Router = () => {
       </Routes>
       {!checkMess && <ChatHolder />}
       {!checkMess && <MinimizedChatDialog />}
-    </>
+    </InstantSearch>
   );
 };
 

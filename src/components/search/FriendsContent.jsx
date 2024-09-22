@@ -24,7 +24,7 @@ const FriendsContent = () => {
       <Wrapper>
         <div className="ais-InstantSearch">
           <Index indexName="user_index">
-            <Configure hitsPerPage={5} />
+            <Configure hitsPerPage={100} />
             <Hits
               hitComponent={({ hit }) => (
                 <HitUser hit={hit} handleOpen={handleOpen} />

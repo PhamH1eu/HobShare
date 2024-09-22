@@ -14,7 +14,7 @@ const PostContent = () => {
     >
       <div className="ais-InstantSearch">
         <Index indexName="post_index">
-          <Configure hitsPerPage={5} />
+          <Configure hitsPerPage={100} />
           <Hits hitComponent={HitPost} />
         </Index>
       </div>

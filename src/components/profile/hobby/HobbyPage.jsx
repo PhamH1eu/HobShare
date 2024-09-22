@@ -191,7 +191,7 @@ const HobbiesPage = () => {
             {showHits && (
               <HitsDropdown>
                 <Index indexName="activity_index">
-                  <Configure hitsPerPage={5} />
+                  <Configure hitsPerPage={100} />
                   <Hits
                     hitComponent={({ hit }) => (
                       <Hit

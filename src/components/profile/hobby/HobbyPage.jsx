@@ -7,6 +7,11 @@ import {
   Typography,
   IconButton,
   Button,
+  Avatar,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { Add, Delete } from "@mui/icons-material";
@@ -21,6 +26,13 @@ import { UserService } from "src/services/DatabaseService";
 import { useQueryClient } from "react-query";
 
 import AddHobbyModal from "./AddHobbyModal";
+import {
+  Configure,
+  Hits,
+  Index,
+  SearchBox,
+  useHits,
+} from "react-instantsearch";
 
 const Container = styled.div`
   display: flex;
@@ -81,10 +93,46 @@ const HobbyCaption = styled.span`
   width: auto;
 `;
 
+const SearchContainer = styled.div`
+  position: relative;
+  width: 300px;
+`;
+
+const HitsDropdown = styled.div`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+`;
+
+const NoResultsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+`;
+
+const StyledListItem = styled(ListItem)`
+  width: 100%;
+  ul {
+    width: 100%;
+  }
+`;
+
 // Main Component
 const HobbiesPage = () => {
   const queryClient = useQueryClient();
   const { open, handleOpen, handleClose } = useModal();
+  const [showHits, setShowHits] = useState(false);
 
   const { currentUserId } = useUserStore();
   const { userId } = useParams();
@@ -115,6 +163,16 @@ const HobbiesPage = () => {
     setLoading(false);
   };
 
+  const addHobby = async (hit) => {
+    const newHobby = {
+      caption: hit.caption,
+      formatted_capption: hit.formatted_capption,
+      image: hit.image,
+    };
+    await UserService.union(currentUserId, "favorite", [newHobby]);
+    queryClient.invalidateQueries(["user", currentUserId]);
+  };
+
   return (
     <Container>
       <HobbiesHeader>
@@ -124,14 +182,31 @@ const HobbiesPage = () => {
             : `Sở thích của ${currentUser.username}`}
         </Typography>
         {isViewingOwnProfile && (
-          <AddHobbyButton
-            // @ts-ignore
-            startIcon={<Add color="white" />}
-            onClick={handleOpen}
-          >
-            Thêm Sở Thích
-          </AddHobbyButton>
-          // <input type="text" />
+          <SearchContainer>
+            <SearchBox
+              style={{ marginBottom: 0 }}
+              onFocus={() => setShowHits(true)} // Show dropdown on input focus
+              onBlur={() => setTimeout(() => setShowHits(false), 200)} // Hide dropdown after focus lost
+            />
+            {showHits && (
+              <HitsDropdown>
+                <Index indexName="activity_index">
+                  <Configure hitsPerPage={5} />
+                  <Hits
+                    hitComponent={({ hit }) => (
+                      <Hit
+                        hit={hit}
+                        addActivity={() => {
+                          addHobby(hit);
+                        }}
+                      />
+                    )}
+                  />
+                  <NoResults handleOpen={handleOpen} />
+                </Index>
+              </HitsDropdown>
+            )}
+          </SearchContainer>
         )}
       </HobbiesHeader>
 
@@ -176,5 +251,45 @@ const HobbiesPage = () => {
     </Container>
   );
 };
+
+function Hit({ hit, addActivity }) {
+  return (
+    <List style={{ width: "100%" }}>
+      <StyledListItem>
+        <ListItemAvatar>
+          <Avatar variant="rounded" alt={hit.caption} src={hit.image} />
+        </ListItemAvatar>
+        <ListItemText primary={hit.caption} />
+        <IconButton
+          style={{ marginLeft: "auto" }}
+          onClick={() => addActivity(hit)}
+        >
+          <Add />
+        </IconButton>
+      </StyledListItem>
+    </List>
+  );
+}
+
+function NoResults({ handleOpen }) {
+  const { hits } = useHits();
+
+  if (hits.length === 0) {
+    return (
+      <NoResultsContainer>
+        Không tìm thấy hoạt động?
+        <AddHobbyButton
+          // @ts-ignore
+          startIcon={<Add color="white" />}
+          onClick={handleOpen}
+        >
+          Thêm Sở Thích
+        </AddHobbyButton>
+      </NoResultsContainer>
+    );
+  }
+
+  return null;
+}
 
 export default HobbiesPage;

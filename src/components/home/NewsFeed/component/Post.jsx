@@ -21,7 +21,10 @@ import StyledLink from "src/shared/components/StyledLink";
 import { LoadingButton } from "@mui/lab";
 import { styled as MuiStyled } from "@mui/material";
 
-import { NotificationService, SavedService } from "src/services/SubDatabaseService";
+import {
+  NotificationService,
+  SavedService,
+} from "src/services/SubDatabaseService";
 import { useUserStore } from "src/store/userStore";
 import { PostService } from "src/services/DatabaseService";
 import { PostService as LikeService } from "src/services/SubDatabaseService";
@@ -335,7 +338,7 @@ const Post = ({ postId, initComt, isAdminGroup }) => {
     setIsExpanded(!isExpanded);
   };
   const truncatedText =
-    post.text.length > 130 ? `${post.text.substring(0, 130)}...` : post.text;
+    post.text?.length > 130 ? `${post.text.substring(0, 130)}...` : post.text;
 
   return (
     <PostWrapper>
@@ -430,7 +433,7 @@ const Post = ({ postId, initComt, isAdminGroup }) => {
         <div style={{ display: "flex" }}>
           <p style={{ padding: "10px", marginLeft: "5px" }}>
             {isExpanded ? post.text : truncatedText}
-            {post.text.length > 130 && (
+            {post.text?.length > 130 && (
               <span
                 onClick={handleShowAll}
                 style={{

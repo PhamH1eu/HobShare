@@ -49,7 +49,7 @@ const AddHobbyModal = ({ open, handleClose }) => {
       formatted_capption: formatString(caption),
     };
     const resID = await ActivitiesService.create(newHobby);
-    const res = await uploadLabeledImage(image.file, resID.id, "hobby");
+    const res = await uploadLabeledImage(image.file, resID.id, "activities");
     await ActivitiesService.update(resID.id, { image: res });
     await UserService.union(currentUserId, "favorite", [
       { ...newHobby, image: res },

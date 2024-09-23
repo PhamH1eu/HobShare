@@ -11,11 +11,13 @@ import { UserService } from "src/services/DatabaseService";
 import "./index.css";
 import CircularLoading from "src/shared/components/Loading";
 import { LoadingButton } from "@mui/lab";
+import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
 
 const transition = transitions.scaleDown;
 
 const Activities = () => {
   const currentUserId = useUserStore((state) => state.currentUserId);
+  const { data: currentUser } = useUserInfo(currentUserId);
   const [loading, setLoading] = useState(false);
 
   const { activities, isLoading } = useAllActivities();
@@ -42,6 +44,11 @@ const Activities = () => {
         <CircularLoading />
       </div>
     );
+
+  const newActivities = activities.filter((item) =>
+    !currentUser.favorite.some((x) => x.id === item.id)
+  );
+  console.log(currentUser.favorite, "-", activities);
 
   return (
     <div className="activity">
@@ -71,7 +78,7 @@ const Activities = () => {
         leaved={transition.leaved}
         style={{ width: "100vw" }}
       >
-        {activities.map((obj) => (
+        {newActivities.map((obj) => (
           <figure
             key={obj.id}
             // @ts-ignore

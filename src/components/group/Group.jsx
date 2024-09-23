@@ -136,6 +136,7 @@ const GroupWithSidebar = () => {
         backgroundColor: "#f0f2f5",
         marginTop: "64px",
         overflowX: "hidden",
+        width: "100%",
       }}
     >
       <Sidebar>

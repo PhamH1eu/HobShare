@@ -52,7 +52,7 @@ const AddHobbyModal = ({ open, handleClose }) => {
     const res = await uploadLabeledImage(image.file, resID.id, "activities");
     await ActivitiesService.update(resID.id, { image: res });
     await UserService.union(currentUserId, "favorite", [
-      { ...newHobby, image: res },
+      { ...newHobby, image: res, id: resID.id },
     ]);
     queryClient.invalidateQueries(["user", currentUserId]);
     setCaption("");

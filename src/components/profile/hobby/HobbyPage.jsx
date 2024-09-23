@@ -168,6 +168,7 @@ const HobbiesPage = () => {
       caption: hit.caption,
       formatted_capption: hit.formatted_capption,
       image: hit.image,
+      id: hit.objectID,
     };
     await UserService.union(currentUserId, "favorite", [newHobby]);
     queryClient.invalidateQueries(["user", currentUserId]);

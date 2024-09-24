@@ -3,7 +3,6 @@ import styled from "styled-components";
 
 import { useUserStore } from "src/store/userStore";
 import useModal from "src/shared/hooks/util/useModal";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { IconButton } from "@mui/material";
 import { styled as MuiStyled } from "@mui/material";
 import AddRequestModal from "./AddRequestModal";
@@ -14,6 +13,10 @@ import { useState } from "react";
 import uploadSpecificImage from "src/shared/helper/uploadAvatar";
 
 import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
+import AddButton from "./component/AddButton";
+import CancelButton from "./component/CancelButton";
+import FriendButton from "./component/FriendButton";
+import MessageButton from "./component/MessageButton";
 
 const HeaderWrapper = styled.div`
   width: 100%;
@@ -93,21 +96,6 @@ const InfoWrapper = styled.div`
   position: absolute;
   left: 70px;
   bottom: 0;
-`;
-
-const AddFriend = styled.button`
-  position: absolute;
-  right: 20px;
-  bottom: 40px;
-  background-color: #6ec924;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 10px;
-  font-size: 1rem;
-  display: flex;
-  gap: 5px;
-  cursor: pointer;
 `;
 
 const TextWrapper = styled.div`
@@ -239,15 +227,10 @@ const ProfileHeader = () => {
             <Friends>329 người bạn</Friends>
           </TextWrapper>
         </InfoWrapper>
-        {!isViewingOwnProfile && (
-          <AddFriend onClick={handleOpen}>
-            <PersonAddIcon
-              // @ts-ignore
-              color="white"
-            />
-            Thêm bạn bè
-          </AddFriend>
-        )}
+        {/* {!isViewingOwnProfile && <AddButton handleOpen={handleOpen} />} */}
+        {/* <CancelButton /> */}
+        <FriendButton />
+        <MessageButton />
       </WallImage>
       <AddRequestModal open={open} handleClose={handleClose} />
     </HeaderWrapper>

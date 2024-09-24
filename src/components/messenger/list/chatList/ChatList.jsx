@@ -1,5 +1,4 @@
 import { useState } from "react";
-import AddUser from "./addUser/AddUser";
 import useChatList from "src/shared/hooks/listen/useChatList";
 import { useUserStore } from "src/store/userStore";
 import { useChatStore } from "src/store/chatStore";
@@ -11,7 +10,6 @@ import "./chatList.css";
 import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
 
 export const ChatList = () => {
-  const [addMode, setAddMode] = useState(false);
   const { chats } = useChatList();
   const { currentUserId } = useUserStore();
   const { data: currentUser } = useUserInfo(currentUserId);
@@ -52,12 +50,6 @@ export const ChatList = () => {
             onChange={handleSearch}
           />
         </div>
-        <img
-          src={addMode ? "./minus.png" : "./plus.png"}
-          alt="plus"
-          className="add"
-          onClick={() => setAddMode(!addMode)}
-        />
       </div>
       {filteredChats.map((chat) => {
         return (
@@ -95,7 +87,6 @@ export const ChatList = () => {
           </div>
         );
       })}
-      {addMode && <AddUser setAddMode={setAddMode} />}
     </div>
   );
 };

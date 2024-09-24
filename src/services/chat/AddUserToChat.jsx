@@ -1,10 +1,5 @@
 import { db } from "src/lib/firebase";
-import {
-  collection,
-  setDoc,
-  doc,
-  serverTimestamp,
-} from "firebase/firestore";
+import { collection, setDoc, doc, serverTimestamp } from "firebase/firestore";
 
 export default async function AddUserToChat(targetUser, currentUser) {
   const chatRef = collection(db, "chats");
@@ -24,6 +19,7 @@ export default async function AddUserToChat(targetUser, currentUser) {
       receiverName: currentUser.username,
       receiverAvatar: currentUser.avatar,
       createdAt: Date.now(),
+      updatedAt: Date.now(),
     });
 
     await setDoc(doc(db, "userchats", currentUser.id, "chat", newChatRef.id), {
@@ -33,7 +29,18 @@ export default async function AddUserToChat(targetUser, currentUser) {
       receiverName: targetUser.username,
       receiverAvatar: targetUser.avatar,
       createdAt: Date.now(),
+      updatedAt: Date.now(),
     });
+
+    return {
+      chatId: newChatRef.id,
+      lastMessage: "",
+      receiverId: targetUser.id,
+      receiverName: targetUser.username,
+      receiverAvatar: targetUser.avatar,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    };
   } catch (error) {
     console.log(error);
   }

@@ -79,7 +79,6 @@ export const loadMoreMessages = async (
     startAfter(lastMessageTimestamp),
     limit(20)
   );
-  await new Promise((resolve) => setTimeout(resolve, 2000));
   onSnapshot(q, (snapshot) => {
     const docs = snapshot.docs;
     if (docs.length > 0) {

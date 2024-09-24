@@ -214,8 +214,8 @@ const ChatDialog = ({ chat }) => {
   const { chatId, user } = chat;
 
   const isBlocking =
-    user.blocked.includes(currentUserId) ||
-    currentUser.blocked.includes(user.id);
+    user.blocked?.includes(currentUserId) ||
+    currentUser.blocked?.includes(user.id);
 
   const [messages, setMessages] = useState([]);
 

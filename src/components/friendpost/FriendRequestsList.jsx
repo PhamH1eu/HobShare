@@ -1,5 +1,4 @@
 import {
-  Button,
   Card,
   CardActions,
   CardContent,
@@ -8,15 +7,20 @@ import {
   Box,
   Grid,
 } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import { styled } from "@mui/system";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import useReceivedRequest from "src/shared/hooks/fetch/friend/useReceivedRequest";
+import CircularLoading from "src/shared/components/Loading";
+import useAcceptRequestMutation from "src/shared/hooks/mutation/friend/useAcceptRequestMutation";
+import useDenyFriendRequestMutation from "src/shared/hooks/mutation/friend/useDenyFriendRequestMutation";
 
 const StyledCard = styled(Card)`
   width: 180px;
   margin: 5px;
 `;
 
-const StyledButton = styled(Button)`
+const StyledButton = styled(LoadingButton)`
   width: 97%;
   font-weight: 600;
 
@@ -25,14 +29,29 @@ const StyledButton = styled(Button)`
   }
 `;
 
-const FriendRequestCard = ({ name, mutualFriends, avatarUrl }) => {
+const FriendRequestCard = ({ name, mutualFriends, avatarUrl, senderId }) => {
+  const mutationAccept = useAcceptRequestMutation();
+  const mutationDeny = useDenyFriendRequestMutation();
+
+  const accept = () => {
+    if (mutationAccept.isLoading) return;
+    mutationAccept.mutate({ fromUserId: senderId });
+  };
+  const deny = () => {
+    if (mutationDeny.isLoading) return;
+    mutationDeny.mutate({ senderId });
+  };
+
   return (
     <StyledCard>
       <CardContent>
         <Box display="flex" alignItems="center">
           <Avatar alt={name} src={avatarUrl} />
           <Box marginLeft="10px">
-            <Typography variant="p" component="div" sx={{fontSize: '0.8rem', fontWeight: '600'}}>
+            <Typography
+              component="div"
+              sx={{ fontSize: "0.8rem", fontWeight: "600" }}
+            >
               {name}
             </Typography>
             <Typography variant="body2" color="text.secondary">
@@ -42,58 +61,54 @@ const FriendRequestCard = ({ name, mutualFriends, avatarUrl }) => {
         </Box>
       </CardContent>
       <CardActions>
-        <Button
+        <LoadingButton
           variant="contained"
           color="primary"
           size="small"
           sx={{ fontWeight: 600 }}
+          loading={mutationAccept.isLoading}
+          onClick={accept}
         >
           Xác nhận
-        </Button>
-        <Button
+        </LoadingButton>
+        <LoadingButton
           variant="outlined"
           color="greyIcon"
           size="small"
           sx={{ fontWeight: 600 }}
+          loading={mutationDeny.isLoading}
+          onClick={deny}
         >
           Xóa
-        </Button>
+        </LoadingButton>
       </CardActions>
     </StyledCard>
   );
 };
 
 const FriendRequestList = () => {
-  const friendRequests = [
-    { name: "Khánh Ly", mutualFriends: 2, avatarUrl: "/photos/photo01.jpg" },
-    {
-      name: "Phạm Minh Thư",
-      mutualFriends: 31,
-      avatarUrl: "/photos/photo02.jpg",
-    },
-    { name: "Như Quỳnhh", mutualFriends: 2, avatarUrl: "/photos/photo03.jpg" },
-    { name: "Phạm Mỹ", mutualFriends: 2, avatarUrl: "/photos/photo04.jpg" },
-    { name: "Bàn Hiếu", mutualFriends: 45, avatarUrl: "/photos/photo05.jpg" },
-    { name: "Khánh Linh", mutualFriends: 1, avatarUrl: "/photos/photo06.jpg" },
-    { name: "Quang Huy", mutualFriends: 17, avatarUrl: "/photos/photo07.jpg" },
-    { name: "Trịnh Thảo", mutualFriends: 14, avatarUrl: "/photos/photo08.jpg" },
-  ];
+  const { receivedRequests, isLoadingReceived } = useReceivedRequest();
 
   return (
-    <Box marginTop="15px">
-      <Typography variant="h6" sx={{ fontWeight: 600, margin: '5px' }}>
+    <Box marginTop="15px" flex="2" margin="0 80px">
+      <Typography variant="h6" sx={{ fontWeight: 600, margin: "5px" }}>
         Lời mời kết bạn
       </Typography>
       <Grid container spacing={1}>
-        {friendRequests.map((request, index) => (
-          <Grid item key={index}>
-            <FriendRequestCard
-              name={request.name}
-              mutualFriends={request.mutualFriends}
-              avatarUrl={request.avatarUrl}
-            />
-          </Grid>
-        ))}
+        {isLoadingReceived ? (
+          <CircularLoading />
+        ) : (
+          receivedRequests.map((request, index) => (
+            <Grid item key={index}>
+              <FriendRequestCard
+                senderId={request.id}
+                name={request.senderName}
+                mutualFriends={31}
+                avatarUrl={request.senderAvatar}
+              />
+            </Grid>
+          ))
+        )}
       </Grid>
       <Box display="flex" justifyContent="center" marginTop="20px">
         <StyledButton
@@ -104,7 +119,7 @@ const FriendRequestList = () => {
           Xem thêm
         </StyledButton>
       </Box>
-      <Typography variant="h6" sx={{ fontWeight: 600, margin: '5px' }}>
+      <Typography variant="h6" sx={{ fontWeight: 600, margin: "5px" }}>
         Bài viết của bạn bè
       </Typography>
     </Box>

@@ -8,6 +8,7 @@ import styled from "styled-components";
 
 const HomePage = styled.div`
   display: flex;
+  width: 100%;
   margin-top: 64px;
   overflow-y: auto;
   &::-webkit-scrollbar-thumb {

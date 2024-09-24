@@ -8,6 +8,8 @@ const sendFriendRequest = require("./friend/sendFriendRequest");
 const cancelFriendRequest = require("./friend/cancelFriendRequest");
 const acceptFriendRequest = require("./friend/acceptRequest");
 const removeFriend = require("./friend/removeFriend");
+const getAllFriends = require("./friend/getAllFriends");
+const denyFriendRequest = require("./friend/denyFriendRequest");
 const createUserNode = require("./user/createUserNeo4j");
 
 admin.initializeApp();
@@ -22,5 +24,7 @@ exports.sendFriendRequest = sendFriendRequest.sendFriendRequest;
 exports.cancelFriendRequest = cancelFriendRequest.cancelFriendRequest;
 exports.acceptFriendRequest = acceptFriendRequest.acceptFriendRequest;
 exports.removeFriend = removeFriend.removeFriend;
+exports.getAllFriends = getAllFriends.getAllFriends;
+exports.denyFriendRequest = denyFriendRequest.denyFriendRequest;
 
 exports.createUserNode = createUserNode.createUserNode;

@@ -4,13 +4,13 @@ import { UserService } from "src/services/SubDatabaseService";
 
 const useReceivedRequest = () => {
   const { currentUserId } = useUserStore();
-  const { data, isLoading } = useQuery(["received", currentUserId], () => {
-    UserService.getAllSubCollection(`${currentUserId}/friendRequests`);
-  });
+  const { data, isLoading } = useQuery(["received", currentUserId], () =>
+    UserService.getAllSubCollection(`${currentUserId}/friendRequests`)
+  );
 
   return {
     receivedRequests: data,
-    isLoading,
+    isLoadingReceived: isLoading,
   };
 };
 

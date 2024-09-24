@@ -107,7 +107,10 @@ class SubDatabaseService {
     const querySnapshot = await getDocs(q);
     let data = [];
     querySnapshot.forEach((doc) => {
-      data.push(doc.data());
+      data.push({
+        ...doc.data(),
+        id: doc.id,
+      });
     });
     return data;
   };

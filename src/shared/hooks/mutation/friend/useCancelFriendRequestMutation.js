@@ -7,20 +7,17 @@ const useCancelFriendRequestMutation = () => {
 
   async function cancelRequest({ receiverId }) {
     const cancelFriendRequest = httpsCallable(functions, "cancelFriendRequest");
-    cancelFriendRequest({
+    return await cancelFriendRequest({
       toUserId: receiverId,
-    })
-      .then((result) => {
-        console.log(result.data); // Friend request sent
-      })
-      .catch((error) => {
-        console.error("Error sending friend request:", error.message);
-      });
+    });
   }
 
   const mutation = useMutation(cancelRequest, {
     onSuccess: () => {
       queryClient.invalidateQueries("sent");
+    },
+    onError: (error) => {
+      console.error(error);
     },
   });
 

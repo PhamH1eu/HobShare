@@ -7,18 +7,16 @@ const useAcceptRequestMutation = () => {
 
   async function acceptRequest({ fromUserId }) {
     const acceptFriendRequest = httpsCallable(functions, "acceptFriendRequest");
-    acceptFriendRequest({ fromUserId })
-      .then((result) => {
-        console.log(result.data); // Friend request sent
-      })
-      .catch((error) => {
-        console.error("Error sending friend request:", error.message);
-      });
+    return await acceptFriendRequest({ fromUserId });
   }
 
   const mutation = useMutation(acceptRequest, {
     onSuccess: () => {
       queryClient.invalidateQueries("received");
+      queryClient.invalidateQueries("friend");
+    },
+    onError: (error) => {
+      console.error(error);
     },
   });
 

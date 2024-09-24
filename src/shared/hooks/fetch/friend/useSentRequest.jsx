@@ -4,13 +4,13 @@ import { UserService } from "src/services/SubDatabaseService";
 
 const useSentRequest = () => {
   const { currentUserId } = useUserStore();
-  const { data, isLoading } = useQuery(["sent", currentUserId], () => {
-    UserService.getAllSubCollection(`${currentUserId}/sentRequests`);
-  });
+  const { data, isLoading } = useQuery(["sent", currentUserId], () =>
+    UserService.getAllSubCollection(`${currentUserId}/sentRequests`)
+  );
 
   return {
     sentRequests: data,
-    isLoading,
+    isLoadingSent: isLoading,
   };
 };
 

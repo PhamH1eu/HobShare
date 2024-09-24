@@ -15,6 +15,12 @@ import AddButton from "./component/AddButton";
 import CancelButton from "./component/CancelButton";
 import FriendButton from "./component/FriendButton";
 import MessageButton from "./component/MessageButton";
+import useUserFriend from "src/shared/hooks/fetch/friend/useUserFriend";
+import useSentRequest from "src/shared/hooks/fetch/friend/useSentRequest";
+import useReceivedRequest from "src/shared/hooks/fetch/friend/useReceivedRequest";
+import CircularLoading from "src/shared/components/Loading";
+import AcceptButton from "./component/AcceptButton";
+import DenyButton from "./component/DenyButton";
 
 const HeaderWrapper = styled.div`
   width: 100%;
@@ -132,6 +138,58 @@ const FileInput = styled.input`
   display: none;
 `;
 
+const ActionWrapper = styled.div`
+  position: absolute;
+  right: 20px;
+  bottom: 40px;
+  border-radius: 8px;
+  padding: 10px;
+  width: 100px;
+  height: 40px;
+`;
+
+const renderAction = () => {
+  const { userId } = useParams();
+  const { friends, isLoading } = useUserFriend();
+  const { sentRequests, isLoadingSent } = useSentRequest();
+  const { receivedRequests, isLoadingReceived } = useReceivedRequest();
+
+  if (isLoading || isLoadingSent || isLoadingReceived) {
+    return (
+      <ActionWrapper>
+        <CircularLoading />
+      </ActionWrapper>
+    );
+  }
+
+  // @ts-ignore
+  if (friends.some((friend) => friend.id === userId)) {
+    return (
+      <>
+        <FriendButton friendId={userId} />
+        <MessageButton />
+      </>
+    );
+  }
+
+  // @ts-ignore
+  if (sentRequests.some((request) => request.id === userId)) {
+    return <CancelButton receiverId={userId} />;
+  }
+
+  // @ts-ignore
+  if (receivedRequests.some((request) => request.id === userId)) {
+    return (
+      <>
+        <AcceptButton receiverId={userId} />
+        <DenyButton senderId={userId} />
+      </>
+    );
+  }
+
+  return <AddButton receiverId={userId} />;
+};
+
 const ProfileHeader = () => {
   const { currentUserId } = useUserStore();
   const { userId } = useParams();
@@ -223,10 +281,7 @@ const ProfileHeader = () => {
             <Friends>329 người bạn</Friends>
           </TextWrapper>
         </InfoWrapper>
-        {!isViewingOwnProfile && <AddButton receiverId={userId} />}
-        {/* <CancelButton receiverId={userId}/> */}
-        {/* <FriendButton friendId={userId}/> */}
-        {/* <MessageButton /> */}
+        {!isViewingOwnProfile && renderAction()}
       </WallImage>
     </HeaderWrapper>
   );

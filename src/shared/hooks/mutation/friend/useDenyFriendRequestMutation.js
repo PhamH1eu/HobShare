@@ -7,20 +7,17 @@ const useDenyFriendRequestMutation = () => {
 
   async function denyRequest({ senderId }) {
     const denyFriendRequest = httpsCallable(functions, "denyFriendRequest");
-    denyFriendRequest({
+    return await denyFriendRequest({
       senderId, // The user who sent the friend request
-    })
-      .then((result) => {
-        console.log(result.data); // Friend request sent
-      })
-      .catch((error) => {
-        console.error("Error sending friend request:", error.message);
-      });
+    });
   }
 
   const mutation = useMutation(denyRequest, {
     onSuccess: () => {
-      queryClient.invalidateQueries("sent");
+      queryClient.invalidateQueries("received");
+    },
+    onError: (error) => {
+      console.error(error);
     },
   });
 

@@ -7,21 +7,19 @@ const useAddFriendMutation = () => {
 
   async function sendRequest({ receiverId, description }) {
     const sendFriendRequest = httpsCallable(functions, "sendFriendRequest");
-    sendFriendRequest({
+    return await sendFriendRequest({
       toUserId: receiverId,
       description: description, // Include a description with the friend request
-    })
-      .then((result) => {
-        console.log(result.data); // Friend request sent
-      })
-      .catch((error) => {
-        console.error("Error sending friend request:", error.message);
-      });
+    });
   }
 
   const mutation = useMutation(sendRequest, {
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log(data);
       queryClient.invalidateQueries("sent");
+    },
+    onError: (error) => {
+      console.log(error);
     },
   });
 

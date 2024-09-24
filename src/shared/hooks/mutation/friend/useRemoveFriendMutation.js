@@ -7,18 +7,15 @@ const useRemoveFriendMutation = () => {
 
   async function removeFriend({ friendId }) {
     const removeFriend = httpsCallable(functions, "removeFriend");
-    removeFriend({ friendId })
-      .then((result) => {
-        console.log(result.data); // Friend request sent
-      })
-      .catch((error) => {
-        console.error("Error sending friend request:", error.message);
-      });
+    return await removeFriend({ friendId });
   }
 
   const mutation = useMutation(removeFriend, {
     onSuccess: () => {
       queryClient.invalidateQueries("friend");
+    },
+    onError: (error) => {
+      console.error(error);
     },
   });
 

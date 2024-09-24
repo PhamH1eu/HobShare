@@ -4,6 +4,7 @@ import { Menu, MenuItem } from "@mui/material";
 import PersonOffIcon from "@mui/icons-material/PersonOff";
 
 import useDialog from "src/shared/hooks/util/useDialog";
+import useRemoveFriendMutation from "src/shared/hooks/mutation/friend/useRemoveFriendMutation";
 
 const Friend = styled.button`
   position: absolute;
@@ -20,8 +21,14 @@ const Friend = styled.button`
   cursor: pointer;
 `;
 
-const FriendButton = () => {
+const FriendButton = ({ friendId }) => {
   const { anchorEl, isOpen, handleOpen, handleClose } = useDialog();
+  const mutation = useRemoveFriendMutation();
+
+  const removeFriend = () => {
+    mutation.mutate({ friendId });
+    handleClose();
+  };
 
   const renderMenu = (
     <Menu
@@ -37,7 +44,7 @@ const FriendButton = () => {
         horizontal: "right",
       }}
       open={isOpen}
-      onClose={handleClose}
+      onClose={removeFriend}
     >
       <MenuItem sx={{ gap: "20px" }}>
         <PersonOffIcon />
@@ -49,9 +56,7 @@ const FriendButton = () => {
   return (
     <>
       <Friend onClick={handleOpen}>
-        <PeopleAltIcon
-        // @ts-ignore
-        />
+        <PeopleAltIcon />
         Bạn bè
       </Friend>
       {renderMenu}

@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import useModal from "src/shared/hooks/util/useModal";
+import AddRequestModal from "./AddRequestModal";
 
 const AddFriend = styled.button`
   position: absolute;
@@ -16,15 +18,21 @@ const AddFriend = styled.button`
   cursor: pointer;
 `;
 
-const AddButton = ({ handleOpen }) => {
+const AddButton = ({ receiverId }) => {
+  const { open, handleClose, handleOpen } = useModal();
+
   return (
-    <AddFriend onClick={handleOpen}>
-      <PersonAddIcon
-        // @ts-ignore
-        color="white"
+    <>
+      <AddFriend onClick={handleOpen}>
+        <PersonAddIcon />
+        Thêm bạn bè
+      </AddFriend>
+      <AddRequestModal
+        open={open}
+        handleClose={handleClose}
+        receiverId={receiverId}
       />
-      Thêm bạn bè
-    </AddFriend>
+    </>
   );
 };
 

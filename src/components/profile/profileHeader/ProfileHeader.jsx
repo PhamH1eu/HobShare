@@ -2,10 +2,8 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
 import { useUserStore } from "src/store/userStore";
-import useModal from "src/shared/hooks/util/useModal";
 import { IconButton } from "@mui/material";
 import { styled as MuiStyled } from "@mui/material";
-import AddRequestModal from "./AddRequestModal";
 
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import Avatar from "@mui/material/Avatar";
@@ -140,8 +138,6 @@ const ProfileHeader = () => {
   const isViewingOwnProfile = userId === currentUserId;
   const { data: user } = useUserInfo(userId);
 
-  const { open, handleClose, handleOpen } = useModal();
-
   const [isHovered, setIsHovered] = useState(false);
   const [isWallpaperHovered, setIsWallpaperHovered] = useState(false);
 
@@ -227,12 +223,11 @@ const ProfileHeader = () => {
             <Friends>329 người bạn</Friends>
           </TextWrapper>
         </InfoWrapper>
-        {/* {!isViewingOwnProfile && <AddButton handleOpen={handleOpen} />} */}
-        {/* <CancelButton /> */}
-        <FriendButton />
-        <MessageButton />
+        {!isViewingOwnProfile && <AddButton receiverId={userId} />}
+        {/* <CancelButton receiverId={userId}/> */}
+        {/* <FriendButton friendId={userId}/> */}
+        {/* <MessageButton /> */}
       </WallImage>
-      <AddRequestModal open={open} handleClose={handleClose} />
     </HeaderWrapper>
   );
 };

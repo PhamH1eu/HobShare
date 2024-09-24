@@ -10,6 +10,7 @@ exports.sendFriendRequest = functions.https.onCall(async (data, context) => {
 
     const fromUserId = context.auth.uid;  // The authenticated user (sender)
     const toUserId = data.toUserId;       // The recipient of the friend request
+    const description = data.description || '';
 
     // Firestore references
     const db = admin.firestore();
@@ -44,7 +45,8 @@ exports.sendFriendRequest = functions.https.onCall(async (data, context) => {
             from: fromUserId,
             timestamp: admin.firestore.FieldValue.serverTimestamp(), // Add timestamp
             senderName,  // Add sender's name
-            senderAvatar // Add sender's avatar
+            senderAvatar, // Add sender's avatar
+            description
         });
 
         // Add the friend request to the sender's sentRequests subcollection with receiver's info

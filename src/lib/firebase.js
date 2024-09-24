@@ -9,6 +9,7 @@ import {
 import { getStorage } from "firebase/storage";
 import { getDatabase } from "firebase/database";
 import { getMessaging, getToken } from "firebase/messaging";
+import { getFunctions } from "firebase/functions";
 
 export const firebaseConfig = {
   apiKey: "AIzaSyCbm7J9dowaJyngnO7EKu2jWg_sgpiEuzc",
@@ -33,6 +34,7 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 export const messaging = getMessaging(app);
+export const functions = getFunctions(app);
 
 export const generateToken = async () => {
   const permission = await Notification.requestPermission();

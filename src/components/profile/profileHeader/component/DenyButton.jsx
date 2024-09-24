@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import PersonAddDisabledIcon from "@mui/icons-material/PersonAddDisabled";
-import useCancelFriendRequestMutation from "src/shared/hooks/mutation/friend/useCancelFriendRequestMutation";
+import useDenyFriendRequestMutation from "src/shared/hooks/mutation/friend/useDenyFriendRequestMutation";
 
-const Cancel = styled.button`
+const Deny = styled.button`
   position: absolute;
   right: 20px;
   bottom: 40px;
@@ -17,18 +17,17 @@ const Cancel = styled.button`
   cursor: pointer;
 `;
 
-const CancelButton = ({ receiverId }) => {
-  const mutation = useCancelFriendRequestMutation();
-  const cancel = () => {
-    mutation.mutate({ receiverId });
+const DenyButton = ({ senderId }) => {
+  const mutation = useDenyFriendRequestMutation();
+  const deny = () => {
+    mutation.mutate({ senderId: senderId });
   };
-
   return (
-    <Cancel onClick={cancel}>
+    <Deny onClick={deny}>
       <PersonAddDisabledIcon />
-      Huỷ yêu cầu
-    </Cancel>
+      Từ chối
+    </Deny>
   );
 };
 
-export default CancelButton;
+export default DenyButton;

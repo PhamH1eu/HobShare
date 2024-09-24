@@ -11,6 +11,7 @@ import {
 import { styled } from "@mui/system";
 import { useUserStore } from "src/store/userStore";
 import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
+import useAddFriendMutation from "src/shared/hooks/mutation/friend/useAddFriendMutation";
 
 const CenteredBox = styled(Box)({
   display: "flex",
@@ -40,13 +41,14 @@ const StyledButton = styled(Button)({
 
 const MAX_CHAR_COUNT = 100;
 
-const AddRequestModal = ({ open, handleClose }) => {
+const AddRequestModal = ({ open, handleClose, receiverId }) => {
   const { currentUserId } = useUserStore();
   const { data: currentUser } = useUserInfo(currentUserId);
   const [description, setDescription] = useState(
     `Xin chào, mình là ${currentUser.username} đây, kết bạn với mình nhé!`
   );
   const [charCount, setCharCount] = useState(description.length);
+  const mutation = useAddFriendMutation();
 
   const handleDescriptionChange = (event) => {
     const input = event.target.value;
@@ -56,17 +58,25 @@ const AddRequestModal = ({ open, handleClose }) => {
     }
   };
 
+  const sendReq = () => {
+    mutation.mutate({
+      receiverId: receiverId,
+      description: description,
+    });
+    handleClose();
+  };
+
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogContent>
         <CenteredBox>
           <Avatar
             alt="User Avatar"
-            src="user-avatar-url.jpg"
+            src={currentUser.avatar}
             sx={{ width: 80, height: 80 }}
           />
           <Typography variant="h6" sx={{ marginTop: "10px" }}>
-            Hiếu Phạm
+            {currentUser.username}
           </Typography>
           <StyledTextField
             value={description}
@@ -78,11 +88,7 @@ const AddRequestModal = ({ open, handleClose }) => {
           {charCount === MAX_CHAR_COUNT && (
             <WarningText>Đã đạt giới hạn số lượng kí tự tối đa</WarningText>
           )}
-          <StyledButton
-            variant="contained"
-            color="primary"
-            onClick={handleClose}
-          >
+          <StyledButton variant="contained" color="primary" onClick={sendReq}>
             Gửi yêu cầu
           </StyledButton>
         </CenteredBox>

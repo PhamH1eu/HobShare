@@ -5,6 +5,7 @@ import PersonOffIcon from "@mui/icons-material/PersonOff";
 
 import useDialog from "src/shared/hooks/util/useDialog";
 import useRemoveFriendMutation from "src/shared/hooks/mutation/friend/useRemoveFriendMutation";
+import CircularLoading from "src/shared/components/Loading";
 
 const Friend = styled.button`
   position: absolute;
@@ -21,12 +22,25 @@ const Friend = styled.button`
   cursor: pointer;
 `;
 
+const LoadingWrapper = styled.div`
+  span {
+    width: 24px !important;
+    height: 24px !important;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+`;
+
 const FriendButton = ({ friendId }) => {
   const { anchorEl, isOpen, handleOpen, handleClose } = useDialog();
   const mutation = useRemoveFriendMutation();
 
-  const removeFriend = () => {
-    mutation.mutate({ friendId });
+  const removeFriend = async () => {
+    if (mutation.isLoading) return;
+    await mutation.mutateAsync({ friendId });
     handleClose();
   };
 
@@ -44,11 +58,19 @@ const FriendButton = ({ friendId }) => {
         horizontal: "right",
       }}
       open={isOpen}
-      onClose={removeFriend}
+      onClose={handleClose}
     >
-      <MenuItem sx={{ gap: "20px" }}>
-        <PersonOffIcon />
-        Huỷ kết bạn
+      <MenuItem onClick={removeFriend} sx={{ gap: "20px" }}>
+        {mutation.isLoading ? (
+          <LoadingWrapper>
+            <CircularLoading />
+          </LoadingWrapper>
+        ) : (
+          <>
+            <PersonOffIcon />
+            Huỷ kết bạn
+          </>
+        )}
       </MenuItem>
     </Menu>
   );

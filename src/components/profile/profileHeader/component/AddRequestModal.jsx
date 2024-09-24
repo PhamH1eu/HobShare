@@ -12,6 +12,7 @@ import { styled } from "@mui/system";
 import { useUserStore } from "src/store/userStore";
 import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
 import useAddFriendMutation from "src/shared/hooks/mutation/friend/useAddFriendMutation";
+import CircularLoading from "src/shared/components/Loading";
 
 const CenteredBox = styled(Box)({
   display: "flex",
@@ -35,9 +36,22 @@ const WarningText = styled(Typography)({
 });
 
 const StyledButton = styled(Button)({
+  backgroundColor: "#e8e4ec",
   marginTop: "20px",
   width: "200px",
 });
+
+const LoadingWrapper = styled(Box)`
+  span {
+    width: 24px !important;
+    height: 24px !important;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+`;
 
 const MAX_CHAR_COUNT = 100;
 
@@ -58,8 +72,9 @@ const AddRequestModal = ({ open, handleClose, receiverId }) => {
     }
   };
 
-  const sendReq = () => {
-    mutation.mutate({
+  const sendReq = async () => {
+    if (mutation.isLoading) return;
+    await mutation.mutateAsync({
       receiverId: receiverId,
       description: description,
     });
@@ -88,8 +103,14 @@ const AddRequestModal = ({ open, handleClose, receiverId }) => {
           {charCount === MAX_CHAR_COUNT && (
             <WarningText>Đã đạt giới hạn số lượng kí tự tối đa</WarningText>
           )}
-          <StyledButton variant="contained" color="primary" onClick={sendReq}>
-            Gửi yêu cầu
+          <StyledButton variant="contained" onClick={sendReq}>
+            {mutation.isLoading ? (
+              <LoadingWrapper>
+                <CircularLoading />
+              </LoadingWrapper>
+            ) : (
+              "Gửi yêu cầu"
+            )}
           </StyledButton>
         </CenteredBox>
       </DialogContent>

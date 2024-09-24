@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import PersonAddDisabledIcon from "@mui/icons-material/PersonAddDisabled";
 import useDenyFriendRequestMutation from "src/shared/hooks/mutation/friend/useDenyFriendRequestMutation";
+import CircularLoading from "src/shared/components/Loading";
 
 const Deny = styled.button`
   position: absolute;
@@ -17,15 +18,36 @@ const Deny = styled.button`
   cursor: pointer;
 `;
 
+const LoadingWrapper = styled.div`
+  span {
+    width: 24px !important;
+    height: 24px !important;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+`;
+
 const DenyButton = ({ senderId }) => {
   const mutation = useDenyFriendRequestMutation();
   const deny = () => {
+    if (mutation.isLoading) return;
     mutation.mutate({ senderId: senderId });
   };
   return (
     <Deny onClick={deny}>
-      <PersonAddDisabledIcon />
-      Từ chối
+      {mutation.isLoading ? (
+        <LoadingWrapper>
+          <CircularLoading />
+        </LoadingWrapper>
+      ) : (
+        <>
+          <PersonAddDisabledIcon />
+          Từ chối
+        </>
+      )}
     </Deny>
   );
 };

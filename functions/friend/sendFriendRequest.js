@@ -25,7 +25,7 @@ exports.sendFriendRequest = functions.https.onCall(async (data, context) => {
         }
         
         const fromUserData = fromUserSnapshot.data();
-        const senderName = fromUserData.name || 'Unknown';    // Ensure there's a default value
+        const senderName = fromUserData.username || 'Unknown';    // Ensure there's a default value
         const senderAvatar = fromUserData.avatar || '';       // Optional avatar field
 
         // Check if a request already exists (in the recipient's collection)

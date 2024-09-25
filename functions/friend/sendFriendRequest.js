@@ -58,13 +58,14 @@ exports.sendFriendRequest = functions.https.onCall(async (data, context) => {
 
         const notificationRef = db.collection("notifications").doc(toUserId).collection("notifications").doc();
         batch.set(notificationRef, {
-            content: `${senderName} đã gửi lời mời kết bạn cho bạn`,  // Notification content
+            content: `đã gửi lời mời kết bạn cho bạn`,  // Notification content
             createdAt: admin.firestore.FieldValue.serverTimestamp(),
+            additional: description,
             isRead: false,
             sourceImage: senderAvatar || 'default-avatar-url',         // Sender's avatar URL
             sourceName: senderName || 'Unknown User',                  // Sender's name
             type: 'friend_request',                                         // Type of notification
-            url: `/profile/${toUserId}`,                                       // URL to sender's profile
+            url: `/profile/${fromUserId}`,                                       // URL to sender's profile
         });
 
         // Commit the batch operation

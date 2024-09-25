@@ -48,13 +48,13 @@ exports.acceptFriendRequest = functions.https.onCall(async (data, context) => {
     // Add a notification for the sender (fromUserId) about the friend request acceptance
     const notificationRef = db.collection("notifications").doc(fromUserId).collection("notifications").doc(); // New notification document ID
     batch.set(notificationRef, {
-      content: `${toUserData.username} đã chấp nhận lời mời kết bạn của bạn`, // Notification content
+      content: `đã chấp nhận lời mời kết bạn của bạn`, // Notification content
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       isRead: false,
       sourceImage: toUserData.avatar || 'default-avatar-url', // User's avatar (or default)
       sourceName: toUserData.username || 'Unknown User',          // User's name
       type: 'friend_request_accepted',                       // Type of notification
-      url: `/user/${toUserId}`,                              // URL to recipient's profile
+      url: `/profile/${toUserId}`,                              // URL to recipient's profile
     });
 
     // Commit Firestore batch operation

@@ -1,30 +1,24 @@
 const functions = require("firebase-functions");
 const neo4jDriver = require("../util/neo4jconfig");
 
-// Callable function to fetch all friends of the current user
-exports.getAllFriends = functions.https.onCall(async (data, context) => {
-  if (!context.auth) {
-    throw new functions.https.HttpsError(
-      "unauthenticated",
-      "Request must be authenticated."
-    );
-  }
+exports.getAllFriendsOfUser = functions.https.onCall(async (data, context) => {
+  const userId = data.userId; // Pass the userId in the data
 
-  const userId = context.auth.uid; // The authenticated user's ID
-
+  // Neo4j session
   const session = neo4jDriver.session();
+
   try {
-    // Query to get all friends of the current user based on the FRIEND relationship
+    // Query to find all friends and their friendship timestamps
     const result = await session.run(
       `
-            MATCH (user:User {id: $userId})-[friendship:FRIEND]->(friend:User)
+      MATCH (user:User {id: $userId})-[friendship:FRIEND]->(friend:User)
       RETURN friend.id AS friendId, friend.name AS friendName, friend.avatar AS friendAvatar, 
              friendship.since AS friendshipSince
-            `,
+      `,
       { userId }
     );
 
-    // Extract the list of friends from the query result
+    // Extract friends and their friendship timestamps
     const friends = result.records.map((record) => ({
       id: record.get("friendId"),
       name: record.get("friendName"),
@@ -32,12 +26,12 @@ exports.getAllFriends = functions.https.onCall(async (data, context) => {
       friendshipSince: record.get("friendshipSince"),
     }));
 
-    return friends;
+    return { success: true, friends };
   } catch (error) {
     console.error("Error fetching friends:", error);
     throw new functions.https.HttpsError(
       "internal",
-      "Unable to fetch friends."
+      "Unable to fetch friends for user."
     );
   } finally {
     await session.close();

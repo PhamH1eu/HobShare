@@ -21,6 +21,7 @@ import useReceivedRequest from "src/shared/hooks/fetch/friend/useReceivedRequest
 import CircularLoading from "src/shared/components/Loading";
 import AcceptButton from "../../../shared/components/friend_button/AcceptButton";
 import DenyButton from "../../../shared/components/friend_button/DenyButton";
+import useSpecificUserFriend from "src/shared/hooks/fetch/friend/useSpecificUserFriend";
 
 const HeaderWrapper = styled.div`
   width: 100%;
@@ -229,6 +230,7 @@ const ProfileHeader = () => {
   const { userId } = useParams();
   const isViewingOwnProfile = userId === currentUserId;
   const { data: user } = useUserInfo(userId);
+  const { friends } = useSpecificUserFriend(userId);
 
   const [isHovered, setIsHovered] = useState(false);
   const [isWallpaperHovered, setIsWallpaperHovered] = useState(false);
@@ -312,7 +314,7 @@ const ProfileHeader = () => {
           )}
           <TextWrapper>
             <Name>{user.username}</Name>
-            <Friends>329 người bạn</Friends>
+            <Friends>{friends.length} người bạn</Friends>
           </TextWrapper>
         </InfoWrapper>
         {!isViewingOwnProfile && <Actions />}

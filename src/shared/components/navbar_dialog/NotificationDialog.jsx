@@ -136,6 +136,7 @@ const NotificationDialog = ({
   const read = async (item) => {
     handleNotiClose();
     handleMenuClose();
+    if (item.isRead) return;
     setLoadingNoti(true);
 
     if (unreadNotis === 0) {

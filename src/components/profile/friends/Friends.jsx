@@ -1,8 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 import { Avatar, Tab, Tabs, Box } from "@mui/material";
-import useUserFriend from "src/shared/hooks/fetch/friend/useUserFriend";
 import CircularLoading from "src/shared/components/Loading";
+import { useNavigate, useParams } from "react-router-dom";
+import useSpecificUserFriend from "src/shared/hooks/fetch/friend/useSpecificUserFriend";
 
 const Container = styled.div`
   width: 600px;
@@ -35,6 +36,11 @@ const FriendItem = styled.div`
 const FriendDetails = styled.div`
   display: flex;
   align-items: center;
+
+  img {
+    cursor: pointer;
+    filter: brightness(0.8);
+  }
 `;
 
 const FriendInfo = styled.div`
@@ -51,77 +57,20 @@ const CommonFriends = styled.div`
   color: #606770;
 `;
 
-const friendsList = [
-  {
-    name: "Lê Bá Trường",
-    mutualFriends: 33,
-    avatar: "https://i.pravatar.cc/40?u=1",
-  },
-  {
-    name: "Nguyễn Đăng Hải",
-    mutualFriends: 69,
-    avatar: "https://i.pravatar.cc/40?u=2",
-  },
-  {
-    name: "Đỗ Sáng",
-    mutualFriends: 39,
-    avatar: "https://i.pravatar.cc/40?u=3",
-  },
-  {
-    name: "Thu Nhân",
-    mutualFriends: 51,
-    avatar: "https://i.pravatar.cc/40?u=4",
-  },
-  {
-    name: "Tuấn Anh-nichan",
-    mutualFriends: 44,
-    avatar: "https://i.pravatar.cc/40?u=5",
-  },
-  {
-    name: "Nguyen Trung Hieu",
-    mutualFriends: 19,
-    avatar: "https://i.pravatar.cc/40?u=6",
-  },
-  {
-    name: "Thu Hieu",
-    mutualFriends: 5,
-    avatar: "https://i.pravatar.cc/40?u=7",
-  },
-];
-
-const recentFriendsList = [
-  {
-    name: "Lê Bá Trường",
-    mutualFriends: 33,
-    avatar: "https://i.pravatar.cc/40?u=1",
-  },
-  {
-    name: "Nguyễn Đăng Hải",
-    mutualFriends: 69,
-    avatar: "https://i.pravatar.cc/40?u=2",
-  },
-  {
-    name: "Đỗ Sáng",
-    mutualFriends: 39,
-    avatar: "https://i.pravatar.cc/40?u=3",
-  },
-  {
-    name: "Thu Nhân",
-    mutualFriends: 51,
-    avatar: "https://i.pravatar.cc/40?u=4",
-  },
-];
-
 function FriendsTabPanel({ friends }) {
+  const navigate = useNavigate();
   return (
     <Box>
       {friends.map((friend, index) => (
         <FriendItem key={index}>
           <FriendDetails>
-            <Avatar src={friend.avatar} />
+            <Avatar
+              src={friend.avatar}
+              onClick={() => navigate(`/profile/${friend.id}`)}
+            />
             <FriendInfo>
               <FriendName>{friend.name}</FriendName>
-              <CommonFriends>{friend.mutualFriends} bạn chung</CommonFriends>
+              <CommonFriends>10 bạn chung</CommonFriends>
             </FriendInfo>
           </FriendDetails>
         </FriendItem>
@@ -130,10 +79,30 @@ function FriendsTabPanel({ friends }) {
   );
 }
 
+const filterAndSortRecentFriends = (friends) => {
+  const now = new Date();
+
+  // Filter elements that have a friendshipSince within the last 2 days
+  const recentFriends = friends.filter((friend) => {
+    const friendshipDate = new Date(friend.friendshipSince);
+    // @ts-ignore
+    const diffInDays = (now - friendshipDate) / (1000 * 60 * 60 * 24); // Convert milliseconds to days
+    return diffInDays <= 2; // Only keep friends added in the last 2 days
+  });
+
+  // Sort the friends by friendshipSince, from latest to earliest
+  recentFriends.sort(
+    // @ts-ignore
+    (a, b) => new Date(b.friendshipSince) - new Date(a.friendshipSince)
+  );
+
+  return recentFriends;
+};
+
 const Friends = () => {
+  const { userId } = useParams();
   const [tabValue, setTabValue] = React.useState(0);
-  const { friends, isLoading } = useUserFriend();
-  console.log(friends);
+  const { friends, isLoading } = useSpecificUserFriend(userId);
 
   if (isLoading) {
     return (
@@ -161,8 +130,10 @@ const Friends = () => {
         <Tab label="Đã thêm gần đây" />
       </StyledTabs>
 
-      {tabValue === 0 && <FriendsTabPanel friends={friendsList} />}
-      {tabValue === 1 && <FriendsTabPanel friends={recentFriendsList} />}
+      {tabValue === 0 && <FriendsTabPanel friends={friends} />}
+      {tabValue === 1 && (
+        <FriendsTabPanel friends={filterAndSortRecentFriends(friends)} />
+      )}
     </Container>
   );
 };

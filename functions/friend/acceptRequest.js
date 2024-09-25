@@ -56,6 +56,9 @@ exports.acceptFriendRequest = functions.https.onCall(async (data, context) => {
       type: 'friend_request_accepted',                       // Type of notification
       url: `/profile/${toUserId}`,                              // URL to recipient's profile
     });
+    batch.update(db.collection("notifications").doc(fromUserId), {
+      unreadNotis: admin.firestore.FieldValue.increment(1),
+    });
 
     // Commit Firestore batch operation
     await batch.commit();

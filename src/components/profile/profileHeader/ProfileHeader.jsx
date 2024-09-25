@@ -11,16 +11,16 @@ import { useState } from "react";
 import uploadSpecificImage from "src/shared/helper/uploadAvatar";
 
 import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
-import AddButton from "./component/AddButton";
-import CancelButton from "./component/CancelButton";
-import FriendButton from "./component/FriendButton";
-import MessageButton from "./component/MessageButton";
+import AddButton from "../../../shared/components/friend_button/AddButton";
+import CancelButton from "../../../shared/components/friend_button/CancelButton";
+import FriendButton from "../../../shared/components/friend_button/FriendButton";
+import MessageButton from "../../../shared/components/friend_button/MessageButton";
 import useUserFriend from "src/shared/hooks/fetch/friend/useUserFriend";
 import useSentRequest from "src/shared/hooks/fetch/friend/useSentRequest";
 import useReceivedRequest from "src/shared/hooks/fetch/friend/useReceivedRequest";
 import CircularLoading from "src/shared/components/Loading";
-import AcceptButton from "./component/AcceptButton";
-import DenyButton from "./component/DenyButton";
+import AcceptButton from "../../../shared/components/friend_button/AcceptButton";
+import DenyButton from "../../../shared/components/friend_button/DenyButton";
 
 const HeaderWrapper = styled.div`
   width: 100%;
@@ -146,9 +146,19 @@ const ActionWrapper = styled.div`
   padding: 10px;
   width: 100px;
   height: 40px;
+
+  span {
+    width: 24px !important;
+    height: 24px !important;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
 `;
 
-const renderAction = () => {
+const Actions = () => {
   const { userId } = useParams();
   const { friends, isLoading } = useUserFriend();
   const { sentRequests, isLoadingSent } = useSentRequest();
@@ -165,29 +175,53 @@ const renderAction = () => {
   // @ts-ignore
   if (friends.some((friend) => friend.id === userId)) {
     return (
-      <>
+      <div
+        style={{
+          position: "absolute",
+          right: "20px",
+          bottom: "40px",
+          display: "flex",
+          gap: "10px",
+        }}
+      >
         <FriendButton friendId={userId} />
-        <MessageButton />
-      </>
+        <MessageButton userId={userId} />
+      </div>
     );
   }
 
   // @ts-ignore
   if (sentRequests.some((request) => request.id === userId)) {
-    return <CancelButton receiverId={userId} />;
+    return (
+      <div style={{ position: "absolute", right: "20px", bottom: "40px" }}>
+        <CancelButton receiverId={userId} />
+      </div>
+    );
   }
 
   // @ts-ignore
   if (receivedRequests.some((request) => request.id === userId)) {
     return (
-      <>
+      <div
+        style={{
+          position: "absolute",
+          right: "20px",
+          bottom: "40px",
+          display: "flex",
+          gap: "10px",
+        }}
+      >
         <AcceptButton receiverId={userId} />
         <DenyButton senderId={userId} />
-      </>
+      </div>
     );
   }
 
-  return <AddButton receiverId={userId} />;
+  return (
+    <div style={{ position: "absolute", right: "20px", bottom: "40px" }}>
+      <AddButton receiverId={userId} />
+    </div>
+  );
 };
 
 const ProfileHeader = () => {
@@ -281,7 +315,7 @@ const ProfileHeader = () => {
             <Friends>329 người bạn</Friends>
           </TextWrapper>
         </InfoWrapper>
-        {!isViewingOwnProfile && renderAction()}
+        {!isViewingOwnProfile && <Actions />}
       </WallImage>
     </HeaderWrapper>
   );

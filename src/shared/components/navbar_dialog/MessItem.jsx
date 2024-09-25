@@ -30,7 +30,7 @@ const MessItem = ({ chat, handleSelect }) => {
         onClick={() => handleSelect(chat)}
       >
         <ListItemAvatar>
-          <Avatar src={chat.user.avatar} receiverId={chat.receiverId} />
+          <Avatar src={chat.user?.avatar} receiverId={chat.receiverId} />
         </ListItemAvatar>
         <Typography>
           <ListItemText

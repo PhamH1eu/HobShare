@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import { Avatar, Tab, Tabs, Box } from "@mui/material";
+import useUserFriend from "src/shared/hooks/fetch/friend/useUserFriend";
+import CircularLoading from "src/shared/components/Loading";
 
 const Container = styled.div`
   width: 600px;
@@ -130,6 +132,17 @@ function FriendsTabPanel({ friends }) {
 
 const Friends = () => {
   const [tabValue, setTabValue] = React.useState(0);
+  const { friends, isLoading } = useUserFriend();
+  console.log(friends);
+
+  if (isLoading) {
+    return (
+      <Container>
+        <Header>Bạn bè</Header>
+        <CircularLoading />
+      </Container>
+    );
+  }
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);

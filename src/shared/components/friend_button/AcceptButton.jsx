@@ -1,12 +1,9 @@
 import styled from "styled-components";
-import PersonAddDisabledIcon from "@mui/icons-material/PersonAddDisabled";
-import useDenyFriendRequestMutation from "src/shared/hooks/mutation/friend/useDenyFriendRequestMutation";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import useAcceptRequestMutation from "src/shared/hooks/mutation/friend/useAcceptRequestMutation";
 import CircularLoading from "src/shared/components/Loading";
 
-const Deny = styled.button`
-  position: absolute;
-  right: 20px;
-  bottom: 40px;
+const Accept = styled.button`
   background-color: #e8e4ec;
   border: none;
   border-radius: 8px;
@@ -30,26 +27,27 @@ const LoadingWrapper = styled.div`
   }
 `;
 
-const DenyButton = ({ senderId }) => {
-  const mutation = useDenyFriendRequestMutation();
-  const deny = () => {
+const AcceptButton = ({ receiverId }) => {
+  const mutation = useAcceptRequestMutation();
+  const accept = () => {
     if (mutation.isLoading) return;
-    mutation.mutate({ senderId: senderId });
+    mutation.mutate({ fromUserId: receiverId });
   };
+
   return (
-    <Deny onClick={deny}>
+    <Accept onClick={accept}>
       {mutation.isLoading ? (
         <LoadingWrapper>
           <CircularLoading />
         </LoadingWrapper>
       ) : (
         <>
-          <PersonAddDisabledIcon />
-          Từ chối
+          <PersonAddIcon />
+          Chấp nhận
         </>
       )}
-    </Deny>
+    </Accept>
   );
 };
 
-export default DenyButton;
+export default AcceptButton;

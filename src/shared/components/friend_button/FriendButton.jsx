@@ -8,9 +8,6 @@ import useRemoveFriendMutation from "src/shared/hooks/mutation/friend/useRemoveF
 import CircularLoading from "src/shared/components/Loading";
 
 const Friend = styled.button`
-  position: absolute;
-  right: 140px;
-  bottom: 40px;
   background-color: #e8e4ec;
   border: none;
   border-radius: 8px;

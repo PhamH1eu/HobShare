@@ -9,15 +9,16 @@ exports.createUserNode = functions.firestore
 
     const name = userData.username || ""; // Extract name field from Firestore
     const email = userData.email || ""; // Extract email field from Firestore
+    const avatar = userData.avatar || "";
 
     const session = neo4jDriver.session();
     try {
       // Create the user node in Neo4j
       await session.run(
         `
-                CREATE (u:User {id: $userId, name: $name, email: $email})
+                CREATE (u:User {id: $userId, name: $name, email: $email, avatar: $avatar})
                 `,
-        { userId, name, email }
+        { userId, name, email, avatar }
       );
 
       console.log(`Neo4j user node created for userId: ${userId}`);

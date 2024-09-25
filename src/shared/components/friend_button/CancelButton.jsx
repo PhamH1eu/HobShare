@@ -1,12 +1,9 @@
 import styled from "styled-components";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import useAcceptRequestMutation from "src/shared/hooks/mutation/friend/useAcceptRequestMutation";
+import PersonAddDisabledIcon from "@mui/icons-material/PersonAddDisabled";
+import useCancelFriendRequestMutation from "src/shared/hooks/mutation/friend/useCancelFriendRequestMutation";
 import CircularLoading from "src/shared/components/Loading";
 
-const Accept = styled.button`
-  position: absolute;
-  right: 140px;
-  bottom: 40px;
+const Cancel = styled.button`
   background-color: #e8e4ec;
   border: none;
   border-radius: 8px;
@@ -30,27 +27,27 @@ const LoadingWrapper = styled.div`
   }
 `;
 
-const AcceptButton = ({ receiverId }) => {
-  const mutation = useAcceptRequestMutation();
-  const accept = () => {
+const CancelButton = ({ receiverId }) => {
+  const mutation = useCancelFriendRequestMutation();
+  const cancel = () => {
     if (mutation.isLoading) return;
-    mutation.mutate({ fromUserId: receiverId });
+    mutation.mutate({ receiverId });
   };
 
   return (
-    <Accept onClick={accept}>
+    <Cancel onClick={cancel}>
       {mutation.isLoading ? (
         <LoadingWrapper>
           <CircularLoading />
         </LoadingWrapper>
       ) : (
         <>
-          <PersonAddIcon />
-          Chấp nhận
+          <PersonAddDisabledIcon />
+          Huỷ yêu cầu
         </>
       )}
-    </Accept>
+    </Cancel>
   );
 };
 
-export default AcceptButton;
+export default CancelButton;

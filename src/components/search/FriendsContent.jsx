@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import styled from "styled-components";
 
 import useModal from "src/shared/hooks/util/useModal";
-import AddRequestModal from "../profile/profileHeader/component/AddRequestModal";
+import AddRequestModal from "../../shared/components/friend_button/AddRequestModal";
 import { Configure, Hits, Index } from "react-instantsearch";
 import { HitUser } from "./component/HitUser";
 

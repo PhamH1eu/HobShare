@@ -1,16 +1,12 @@
 import styled from "styled-components";
 import MarkEmailUnreadIcon from "@mui/icons-material/MarkEmailUnread";
 import useChatList from "src/shared/hooks/listen/useChatList";
-import { useParams } from "react-router-dom";
 import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
 import AddUserToChat from "src/services/chat/AddUserToChat";
 import { useUserStore } from "src/store/userStore";
 import { useChatDialogStore } from "src/store/chatDialogStore";
 
 const Message = styled.button`
-  position: absolute;
-  right: 20px;
-  bottom: 40px;
   background-color: #6ec924;
   color: white;
   border: none;
@@ -23,12 +19,11 @@ const Message = styled.button`
   cursor: pointer;
 `;
 
-const MessageButton = () => {
+const MessageButton = ({userId}) => {
   const { chats } = useChatList();
   const addChat = useChatDialogStore((state) => state.addChat);
 
   const { currentUserId } = useUserStore();
-  const { userId } = useParams();
   const { data: currentUser } = useUserInfo(currentUserId);
   const { data: user } = useUserInfo(userId);
   const didInboxed = chats.find((chat) => chat.user.id === user.id);

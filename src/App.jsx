@@ -18,11 +18,23 @@ import { onMessage } from "firebase/messaging";
 import toast from "react-hot-toast";
 import { NotifiComponent } from "./shared/components/noti/NotifiComponent";
 import { updateUserToken } from "./services/UserToken";
+import { useQueryClient } from "react-query";
 
 const App = () => {
+  const queryClient = useQueryClient();
   useEffect(() => {
     generateToken();
     onMessage(messaging, (payload) => {
+      switch (payload.data.type) {
+        case "friend_request":
+          queryClient.invalidateQueries("received");
+          break;
+        case "friend_request_accepted":
+          queryClient.invalidateQueries("sent");
+          queryClient.invalidateQueries("friend");
+          break;
+      }
+
       toast((t) => (
         <NotifiComponent
           message={{

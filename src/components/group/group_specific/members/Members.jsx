@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { Avatar, Box } from "@mui/material";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { useParams } from "react-router-dom";
 import useGroupInfo from "src/shared/hooks/fetch/group/useGroupInfo";
 import useMembers from "src/shared/hooks/fetch/group/useMembers";
@@ -9,6 +8,16 @@ import { GroupService, UserService } from "src/services/SubDatabaseService";
 import { LoadingButton } from "@mui/lab";
 import { useState } from "react";
 import { useQueryClient } from "react-query";
+import AcceptButton from "src/shared/components/friend_button/AcceptButton";
+import AddButton from "src/shared/components/friend_button/AddButton";
+import CancelButton from "src/shared/components/friend_button/CancelButton";
+import DenyButton from "src/shared/components/friend_button/DenyButton";
+import MessageButton from "src/shared/components/friend_button/MessageButton";
+import useReceivedRequest from "src/shared/hooks/fetch/friend/useReceivedRequest";
+import useSentRequest from "src/shared/hooks/fetch/friend/useSentRequest";
+import useUserFriend from "src/shared/hooks/fetch/friend/useUserFriend";
+import StyledLink from "src/shared/components/StyledLink";
+import { useUserStore } from "src/store/userStore";
 
 const Container = styled.div`
   width: 600px;
@@ -55,6 +64,10 @@ const FriendDetails = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
+
+  img:hover {
+    filter: brightness(0.8);
+  }
 `;
 
 const FriendInfo = styled.div`
@@ -69,19 +82,6 @@ const FriendName = styled.div`
 const CommonFriends = styled.div`
   font-size: 14px;
   color: #606770;
-`;
-
-const AddFriend = styled.button`
-  margin-left: auto;
-  background-color: #6ec924;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 10px;
-  font-size: 0.9rem;
-  display: flex;
-  gap: 5px;
-  cursor: pointer;
 `;
 
 const KickButton = styled(LoadingButton)`
@@ -100,6 +100,77 @@ const KickButton = styled(LoadingButton)`
     background-color: #c4c4c4;
   }
 `;
+
+const ActionWrapper = styled.div`
+  margin-left: auto;
+  border-radius: 8px;
+  padding: 10px;
+  width: 100px;
+  height: 40px;
+
+  span {
+    width: 24px !important;
+    height: 24px !important;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+`;
+
+const Actions = ({ userId }) => {
+  const { currentUserId } = useUserStore();
+  const { friends, isLoading } = useUserFriend();
+  const { sentRequests, isLoadingSent } = useSentRequest();
+  const { receivedRequests, isLoadingReceived } = useReceivedRequest();
+
+  if (currentUserId === userId) {
+    return null;
+  }
+
+  if (isLoading || isLoadingSent || isLoadingReceived) {
+    return (
+      <ActionWrapper>
+        <CircularLoading />
+      </ActionWrapper>
+    );
+  }
+
+  // @ts-ignore
+  if (friends.some((friend) => friend.id === userId)) {
+    return (
+      <div style={{ marginLeft: "auto" }}>
+        <MessageButton userId={userId} />
+      </div>
+    );
+  }
+
+  // @ts-ignore
+  if (sentRequests.some((request) => request.id === userId)) {
+    return (
+      <div style={{ marginLeft: "auto" }}>
+        <CancelButton receiverId={userId} />
+      </div>
+    );
+  }
+
+  // @ts-ignore
+  if (receivedRequests.some((request) => request.id === userId)) {
+    return (
+      <div style={{ marginLeft: "auto", display: "flex", gap: "10px" }}>
+        <AcceptButton receiverId={userId} />
+        <DenyButton senderId={userId} />
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ marginLeft: "auto" }}>
+      <AddButton receiverId={userId} />
+    </div>
+  );
+};
 
 const Member = ({ member }) => {
   const queryClient = useQueryClient();
@@ -123,18 +194,14 @@ const Member = ({ member }) => {
 
   return (
     <FriendDetails>
-      <Avatar src={member.avatar} />
+      <StyledLink to={`/profile/${member.userId}`}>
+        <Avatar src={member.avatar} />
+      </StyledLink>
       <FriendInfo>
         <FriendName>{member.username}</FriendName>
         <CommonFriends>12 bạn chung</CommonFriends>
       </FriendInfo>
-      <AddFriend>
-        <PersonAddIcon
-          // @ts-ignore
-          color="white"
-        />
-        Thêm bạn bè
-      </AddFriend>
+      <Actions userId={member.userId} />
       {isAdmin && (
         <KickButton
           loading={loading}
@@ -163,15 +230,16 @@ const Admins = ({ admins }) => {
   return (
     <Box>
       {admins.map((admin, index) => (
-        <FriendItem key={index}>
-          <FriendDetails>
+        <FriendDetails key={index}>
+          <StyledLink to={`/profile/${admin.userId}`}>
             <Avatar src={admin.avatar} />
-            <FriendInfo>
-              <FriendName>{admin.username}</FriendName>
-              <CommonFriends>12 bạn chung</CommonFriends>
-            </FriendInfo>
-          </FriendDetails>
-        </FriendItem>
+          </StyledLink>
+          <FriendInfo>
+            <FriendName>{admin.username}</FriendName>
+            <CommonFriends>12 bạn chung</CommonFriends>
+          </FriendInfo>
+          <Actions userId={admin.userId} />
+        </FriendDetails>
       ))}
     </Box>
   );

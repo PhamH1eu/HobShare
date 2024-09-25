@@ -2,6 +2,8 @@ import styled from "styled-components";
 import UserCard from "./component/Card";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
+import useSuggestedFriend from "src/shared/hooks/fetch/friend/useSuggestedFriend";
+import CircularLoading from "src/shared/components/Loading";
 
 const Wrapper = styled.div`
   margin-top: 20px;
@@ -16,40 +18,17 @@ const Wrapper = styled.div`
   }
 `;
 
-const friends = [
-  {
-    name: "Nichan Ikuyo",
-    avatar:
-      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
-    mutualFriends: 13,
-  },
-  {
-    name: "Nichan Ikuyo",
-    avatar:
-      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
-    mutualFriends: 13,
-  },
-  {
-    name: "Nichan Ikuyo",
-    avatar:
-      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
-    mutualFriends: 13,
-  },
-  {
-    name: "Nichan Ikuyo",
-    avatar:
-      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
-    mutualFriends: 13,
-  },
-  {
-    name: "Nichan Ikuyo",
-    avatar:
-      "https://cellphones.com.vn/sforum/wp-content/uploads/2024/01/avartar-anime-52.jpg",
-    mutualFriends: 13,
-  },
-];
-
 const FriendsRecommend = () => {
+  const { users, isLoading } = useSuggestedFriend();
+
+  if (isLoading) {
+    return (
+      <Wrapper>
+        <span>Những người bạn có thể biết</span>
+        <CircularLoading />
+      </Wrapper>
+    );
+  }
   return (
     <Wrapper>
       <span>Những người bạn có thể biết</span>
@@ -58,7 +37,7 @@ const FriendsRecommend = () => {
         slidesPerView={4}
         style={{ maxWidth: "43vw", padding: "18px" }}
       >
-        {friends.map((friend, index) => (
+        {users.map((friend, index) => (
           <SwiperSlide key={index}>
             <UserCard user={friend} />
           </SwiperSlide>

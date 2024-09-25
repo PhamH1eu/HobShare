@@ -4,9 +4,6 @@ import useModal from "src/shared/hooks/util/useModal";
 import AddRequestModal from "./AddRequestModal";
 
 const AddFriend = styled.button`
-  position: absolute;
-  right: 20px;
-  bottom: 40px;
   background-color: #e8e4ec;
   border: none;
   border-radius: 8px;

@@ -21,7 +21,11 @@ import StyledLink from "src/shared/components/StyledLink";
 import { LoadingButton } from "@mui/lab";
 import { styled as MuiStyled } from "@mui/material";
 
-import { SavedService } from "src/services/SubDatabaseService";
+import {
+  GroupService,
+  SavedService,
+  UserService,
+} from "src/services/SubDatabaseService";
 import { useUserStore } from "src/store/userStore";
 import { PostService } from "src/services/DatabaseService";
 import { PostService as LikeService } from "src/services/SubDatabaseService";
@@ -229,7 +233,7 @@ const Post = ({ postId, initComt, isAdminGroup }) => {
   const { post, likeCount, isLike, isRefetching, isLoading } =
     useSinglePost(postId);
   const { currentUserId } = useUserStore();
-  
+
   const mutation = useLikeMutation({ isLike, postId, authorId: post.authorId });
   const handleLike = async () => {
     mutation.mutate();
@@ -259,6 +263,11 @@ const Post = ({ postId, initComt, isAdminGroup }) => {
   const handleDeletePost = async () => {
     setLoading(true);
     await PostService.delete(postId);
+    if (post.groupId) {
+      await GroupService.removeSubCollection(`${post.groupId}/posts/${postId}`);
+    } else {
+      await UserService.removeSubCollection(`${currentUserId}/posts/${postId}`);
+    }
     await LikeService.removeCollection(`${postId}/comments`);
     queryClient.invalidateQueries("posts");
     setLoading(false);

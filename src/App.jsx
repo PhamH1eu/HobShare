@@ -44,6 +44,7 @@ const App = () => {
             createdAt: payload.data.createdAt,
             sourceName: payload.data.sourceName,
             sourceImage: payload.data.sourceImage,
+            additional: payload.data.additional,
           }}
           t={t}
         />

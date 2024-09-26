@@ -32,6 +32,7 @@ exports.sendUserNotification = functions.firestore
         createdAt: notificationData.createdAt.toDate().toISOString(),
         sourceName: notificationData.sourceName,
         sourceImage: notificationData.sourceImage,
+        additional: notificationData.additional
       },
       webpush: {
         fcmOptions: {

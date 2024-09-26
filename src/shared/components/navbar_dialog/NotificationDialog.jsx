@@ -196,6 +196,8 @@ const NotificationDialog = ({
   };
 
   const renderListNoti = (noti) => {
+    console.log(noti);
+
     return noti.map((item, index) => (
       <StyledLink key={index} to={item.url} onClick={() => read(item)}>
         <StyledListItem alignItems="flex-start">
@@ -205,30 +207,38 @@ const NotificationDialog = ({
               {renderIcon(item.type)}
             </AvatarWrapper>
           </ListItemAvatar>
-          <ListItemText
-            primary={
-              <Typography variant="body2">
-                <strong>{item.sourceName}</strong>
-                <span
-                  style={{
-                    color: item.isRead ? "#65676b" : "black",
-                    marginLeft: "4px",
-                    fontWeight: item.isRead ? "normal" : "600",
-                  }}
-                >
-                  {item.content}
-                </span>
-              </Typography>
-            }
-            secondary={
-              <DynamicTag isRead={item.isRead}>
-                {timeDiff(
-                  item.createdAt.seconds * 1000 +
-                    item.createdAt.nanoseconds / 1000000
-                )}
-              </DynamicTag>
-            }
-          />
+          <span>
+            <ListItemText
+              primary={
+                <Typography variant="body2">
+                  <strong>{item.sourceName}</strong>
+                  <span
+                    style={{
+                      color: item.isRead ? "#65676b" : "black",
+                      marginLeft: "4px",
+                      fontWeight: item.isRead ? "normal" : "600",
+                    }}
+                  >
+                    {item.content}
+                  </span>
+                  {item.additional ? (
+                    <span>
+                      :<br></br>
+                      {item.additional}
+                    </span>
+                  ) : null}
+                </Typography>
+              }
+              secondary={
+                <DynamicTag isRead={item.isRead}>
+                  {timeDiff(
+                    item.createdAt.seconds * 1000 +
+                      item.createdAt.nanoseconds / 1000000
+                  )}
+                </DynamicTag>
+              }
+            />
+          </span>
           {!item.isRead && (
             <div
               style={{

@@ -101,7 +101,10 @@ export const NotifiComponent = ({ message, t }) => {
           <ProfileImage src={message.sourceImage} alt="Profile" />
           <TextContainer>
             <div>
-              <UserName>{message.sourceName}</UserName> {message.content}
+              <UserName>{message.sourceName + " "}</UserName>
+              {message.content}
+              <br />
+              {message.additional}
             </div>
             <TimeLabel>{timeDiff(newNotiDate)}</TimeLabel>
           </TextContainer>

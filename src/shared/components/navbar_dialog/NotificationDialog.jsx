@@ -196,8 +196,6 @@ const NotificationDialog = ({
   };
 
   const renderListNoti = (noti) => {
-    console.log(noti);
-
     return noti.map((item, index) => (
       <StyledLink key={index} to={item.url} onClick={() => read(item)}>
         <StyledListItem alignItems="flex-start">

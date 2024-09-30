@@ -2,8 +2,6 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 import ProfileHeader from "./profileHeader/ProfileHeader";
-import NewPostInput from "src/components/home/NewsFeed/new_post/NewPostInput";
-import Post from "src/components/home/NewsFeed/component/Post";
 import Description from "./information/Description";
 import Information from "./information/Information";
 import Members from "./members/Members";
@@ -18,7 +16,7 @@ import Requests from "./request/Requests";
 import useGroupInfo from "src/shared/hooks/fetch/group/useGroupInfo";
 import { useUserStore } from "src/store/userStore";
 import useGroupStatus from "src/shared/hooks/fetch/group/useGroupStatus";
-import useGroupPosts from "src/shared/hooks/fetch/group/useGroupPosts";
+import GroupNewsFeed from "./newsfeed/GroupNewsFeed";
 
 const Wrapper = styled.div`
   display: flex;
@@ -56,30 +54,15 @@ const TabsHeader = styled.div`
   }
 `;
 
-const NoPosts = styled.div`
-  margin-top: 20px;
-  background-color: white;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100px;
-  font-size: 20px;
-  font-weight: 600;
-`;
-
 const GroupLanding = () => {
   const { currentUserId } = useUserStore();
   const { groupId } = useParams();
-  const { isLoading, isAdmin, group } = useGroupInfo(groupId);
+  const { isAdmin, isLoading } = useGroupInfo(groupId);
   const { status, isLoadingStatus } = useGroupStatus({
     groupId,
     currentUserId,
     isAdmin,
   });
-
-  const { posts, isLoading: isPostLoading } = useGroupPosts(groupId);
 
   const [value, setValue] = useState("1");
 
@@ -87,7 +70,7 @@ const GroupLanding = () => {
     setValue(newValue);
   };
 
-  if (isLoading || isPostLoading || isLoadingStatus) {
+  if (isLoadingStatus || isLoading) {
     return (
       <Wrapper>
         <CircularLoading />
@@ -120,25 +103,7 @@ const GroupLanding = () => {
           <TabPanel value="2" sx={{ padding: 0, width: "70%" }}>
             <Main>
               <MainContent>
-                <NewPostInput
-                  groupId={groupId}
-                  groupName={group.name}
-                  groupWallpaper={group.wallpaper}
-                />
-                <div>
-                  {posts.length > 0 ? (
-                    posts.map((post, index) => (
-                      <Post
-                        key={index}
-                        postId={post.id}
-                        initComt={undefined}
-                        isAdminGroup={isAdmin}
-                      />
-                    ))
-                  ) : (
-                    <NoPosts>Chưa có bài viết nào</NoPosts>
-                  )}
-                </div>
+                <GroupNewsFeed></GroupNewsFeed>
               </MainContent>
               <Info>
                 <div style={{ width: "25vw", position: "sticky", top: "32px" }}>

@@ -1,6 +1,10 @@
 const admin = require("firebase-admin");
 const functions = require("firebase-functions");
 const neo4jDriver = require("../util/neo4jconfig");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+
+const geminiconfig = functions.config().gemini;
+const genAI = new GoogleGenerativeAI(geminiconfig.api_key);
 
 exports.onPostCreated = functions.firestore
   .document("posts/{postId}")
@@ -33,19 +37,24 @@ exports.onPostCreated = functions.firestore
       await Promise.all([...promises, ...promiseCreateTags]);
     }
 
+    const model = genAI.getGenerativeModel({ model: "text-embedding-004" });
+    const response = await model.embedContent(data.text);
+    const embedding = response.embedding;
+    console.log(embedding.values);
+
     try {
       if (data.groupId) {
         // Create Post node and link to Group node
         await session.run(
           `
             MATCH (g:Group {id: $groupId})
-            CREATE (p:Post {id: $postId, content: $content})
+            CREATE (p:Post {id: $postId, embedding: $embedding})
             CREATE (g)-[:HAVE]->(p)
           `,
           {
             groupId: data.groupId,
             postId: postId,
-            content: data.text || "",
+            embedding: embedding.values || []
           }
         );
       } else {
@@ -53,13 +62,13 @@ exports.onPostCreated = functions.firestore
         await session.run(
           `
             MATCH (u:User {id: $userId})
-            CREATE (p:Post {id: $postId, content: $content})
+            CREATE (p:Post {id: $postId, embedding: $embedding})
             CREATE (u)-[:WRITE]->(p)
           `,
           {
             userId: data.authorId,
             postId: postId,
-            content: data.text || "",
+            embedding: embedding.values || []
           }
         );
       }

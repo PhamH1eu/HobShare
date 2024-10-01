@@ -22,7 +22,7 @@ export const ChatList = () => {
     setSearch(e.target.value);
   };
   const filteredChats = chats.filter((chat) =>
-    chat.user.username.toLowerCase().includes(search.toLowerCase())
+    chat.receiverName.toLowerCase().includes(search.toLowerCase())
   );
 
   const handleSelect = async (chat) => {
@@ -33,7 +33,7 @@ export const ChatList = () => {
     });
     //pop up chat in screen
     if (chatId === chat.chatId) return;
-    changeChat(chat.chatId, chat.user, currentUser);
+    changeChat(chat.chatId, chat, currentUser);
   };
 
   return (
@@ -64,9 +64,9 @@ export const ChatList = () => {
                   : "transparent",
             }}
           >
-            <Avatar src={chat.user.avatar} receiverId={chat.receiverId} />
+            <Avatar src={chat.receiverAvatar} receiverId={chat.receiverId} />
             <div className="text">
-              <span>{chat.user.username}</span>
+              <span>{chat.receiverName}</span>
               <p style={{ fontWeight: chat?.isSeen ? "normal" : "bold" }}>
                 {chat.lastMessage}
               </p>

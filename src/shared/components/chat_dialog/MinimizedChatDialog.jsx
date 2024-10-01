@@ -151,7 +151,7 @@ const ChatMinimezed = ({ chat }) => {
           invisible={false}
           onClick={() => {
             // @ts-ignore
-            UpdateChat(currentUserId, chat.user.id, chat.chatId, message.text);
+            UpdateChat(currentUserId, chat.receiverId, chat.chatId, message.text);
             maximizeChat(chat);
           }}
         >
@@ -164,7 +164,7 @@ const ChatMinimezed = ({ chat }) => {
           >
             <Avatar
               alt="avatar"
-              src={chat.user.avatar}
+              src={chat.receiverAvatar}
               sx={{ width: 50, height: 50 }}
             />
           </NotificationBadge>

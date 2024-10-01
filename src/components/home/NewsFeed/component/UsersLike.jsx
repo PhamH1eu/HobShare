@@ -19,19 +19,6 @@ const style = {
   padding: "12px",
 };
 
-// Modal Overlay
-const ModalOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-`;
-
 // Modal Container
 const ModalContainer = styled.div`
   padding: 0 10px 10px 10px;

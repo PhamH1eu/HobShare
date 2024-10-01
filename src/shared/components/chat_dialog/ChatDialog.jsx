@@ -195,8 +195,8 @@ const ChatDialog = ({ chat }) => {
   const handleSend = async () => {
     await Promise.all([
       //pass video list
-      SendMessage(currentUser, chatId, text, imgList, videoList),
-      UpdateChat(currentUserId, user.id, chatId, text),
+      SendMessage(currentUser, chat.chatId, text, imgList, videoList),
+      UpdateChat(currentUserId, chat.receiverId, chat.chatId, text),
     ]);
     setImgList([]);
     setVideoList([]);
@@ -211,11 +211,6 @@ const ChatDialog = ({ chat }) => {
 
   const { currentUserId } = useUserStore();
   const { data: currentUser } = useUserInfo(currentUserId);
-  const { chatId, user } = chat;
-
-  const isBlocking =
-    user.blocked?.includes(currentUserId) ||
-    currentUser.blocked?.includes(user.id);
 
   const [messages, setMessages] = useState([]);
 
@@ -223,13 +218,13 @@ const ChatDialog = ({ chat }) => {
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
 
-  useListenChat(chatId, setMessages, setLastMessageTimestamp, setHasMore);
+  useListenChat(chat.chatId, setMessages, setLastMessageTimestamp, setHasMore);
 
   function load() {
     if (loading) return;
     if (!lastMessageTimestamp) return;
     loadMoreMessages(
-      chatId,
+      chat.chatId,
       lastMessageTimestamp,
       setLastMessageTimestamp,
       messages,
@@ -243,15 +238,15 @@ const ChatDialog = ({ chat }) => {
     if (inView) scrollDown();
   }, [messages, inView, scrollDown]);
 
-  const { online, timeOff } = useListenOnline(user.id);
+  const { online, timeOff } = useListenOnline(chat.receiverId);
 
   return (
     <Wrapper>
       <Header>
-        <Avatar src={chat.user.avatar} />
-        <StyledLink to={"/profile/" + chat.user.id}>
+        <Avatar src={chat.receiverAvatar} />
+        <StyledLink to={"/profile/" + chat.receiverId}>
           <Box sx={{ marginLeft: 1, cursor: "pointer", paddingRight: "5px" }}>
-            <Box fontWeight="bold">{chat.user.username}</Box>
+            <Box fontWeight="bold">{chat.receiverName}</Box>
             <Box fontSize="small" color="gray">
               {!timeOff
                 ? ""
@@ -407,7 +402,6 @@ const ChatDialog = ({ chat }) => {
         <IconButton
           color="primary"
           onClick={() => setOpen(!open)}
-          disabled={isBlocking}
         >
           <EmojiEmotions color="primary" />
           <div className="picker">
@@ -420,8 +414,7 @@ const ChatDialog = ({ chat }) => {
           </div>
         </IconButton>
         <CustomInput
-          placeholder={isBlocking ? "Bạn đã bị chặn" : "Gửi tin nhắn..."}
-          disabled={isBlocking}
+          placeholder="Gửi tin nhắn..."
           value={text}
           onChange={(e) => setText(e.target.value)}
           onPasteCapture={(e) => {
@@ -435,7 +428,7 @@ const ChatDialog = ({ chat }) => {
           }}
           onKeyDown={handleKeyPress}
         />
-        <IconButton color="primary" disabled={isBlocking} onClick={handleSend}>
+        <IconButton color="primary" onClick={handleSend}>
           <Send color="primary" />
         </IconButton>
       </InputContainer>

@@ -39,9 +39,9 @@ const Contact = ({ contact }) => {
   return (
     <ContactItem onClick={() => addChat(contact)}>
       <AvatarWrapper>
-        <Avatar src={contact.user.avatar} receiverId={contact.receiverId} />
+        <Avatar src={contact.receiverAvatar} receiverId={contact.receiverId} />
       </AvatarWrapper>
-      <ContactName>{contact.user.username}</ContactName>
+      <ContactName>{contact.receiverName}</ContactName>
     </ContactItem>
   );
 };

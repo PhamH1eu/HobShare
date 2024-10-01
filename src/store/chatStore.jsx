@@ -6,36 +6,14 @@ export const useChatStore = create((set) => ({
   message: [],
   isCurrentUserBlocked: false,
   isReceiverBlocked: false,
-  changeChat: (chatId, user, currentUser) => {
-    // CHECK IF CURRENT USER IS BLOCKED
-    if (user.blocked.includes(currentUser.id)) {
-      return set({
-        chatId,
-        message: [],
-        user: null,
-        isCurrentUserBlocked: true,
-        isReceiverBlocked: false,
-      });
-    }
-
-    // CHECK IF RECEIVER IS BLOCKED
-    else if (currentUser.blocked.includes(user.id)) {
-      return set({
-        chatId,
-        message: [],
-        user: user,
-        isCurrentUserBlocked: false,
-        isReceiverBlocked: true,
-      });
-    } else {
-      return set({
-        message: [],
-        chatId,
-        user,
-        isCurrentUserBlocked: false,
-        isReceiverBlocked: false,
-      });
-    }
+  changeChat: (chatId, user) => {
+    return set({
+      message: [],
+      chatId,
+      user,
+      isCurrentUserBlocked: false,
+      isReceiverBlocked: false,
+    });
   },
 
   changeBlock: () => {
@@ -52,5 +30,5 @@ export const useChatStore = create((set) => ({
   },
   setMessages: (newMess) => {
     set(() => ({ message: newMess }));
-  }
+  },
 }));

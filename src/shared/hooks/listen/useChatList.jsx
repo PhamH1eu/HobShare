@@ -1,10 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  onSnapshot,
-  collection,
-  query,
-  getDocs,
-} from "firebase/firestore";
+import { onSnapshot, collection, query, getDocs } from "firebase/firestore";
 import { db } from "src/lib/firebase";
 import { useUserStore } from "src/store/userStore";
 import { UserService } from "src/services/DatabaseService";
@@ -27,12 +22,12 @@ const useChatList = () => {
       });
       //get user info of each chat, assign last message info to
       const promises = items.map(async (item) => {
-        const userDoc = await UserService.get(item.receiverId);
-        const user = userDoc.data();
+        // const userDoc = await UserService.get(item.receiverId);
+        // const user = userDoc.data();
 
         return {
           ...item,
-          user,
+          // user,
         };
       });
       //query all user info

@@ -39,21 +39,6 @@ const Hashtag = styled.div`
   }
 `;
 
-const tag = [
-  {
-    tag: "#12",
-    count: 2,
-  },
-  {
-    tag: "#typescript",
-    count: 3,
-  },
-  {
-    tag: "#react",
-    count: 4,
-  },
-];
-
 const NewRecommend = () => {
   const { tags, isLoading } = usePopularHashtags();
   if (isLoading)

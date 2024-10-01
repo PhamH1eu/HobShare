@@ -4,11 +4,9 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
-import InputBase from "@mui/material/InputBase";
 import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
 import SmsIcon from "@mui/icons-material/Sms";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Avatar from "@mui/material/Avatar";
@@ -26,46 +24,7 @@ import useUserInfo from "../hooks/fetch/user/useUserInfo";
 import useChatList from "../hooks/listen/useChatList";
 import useListenNotifications from "../hooks/listen/useListenNotifications";
 import { useQueryClient } from "react-query";
-import { SearchBox } from "react-instantsearch";
 import CustomSearchBox from "src/components/search/component/CustomSearchBox";
-
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: "20px",
-  backgroundColor: "rgba(240,242,245,255)",
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: "100%",
-  [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(3),
-    width: "auto",
-  },
-}));
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    borderRadius: "10px",
-    [theme.breakpoints.up("md")]: {
-      width: "20ch",
-    },
-  },
-}));
 
 const StyledMenu = styled(Menu)(() => ({
   "& .MuiPaper-root": {
@@ -193,11 +152,6 @@ const NavBar = () => {
       <MenuItem onClick={logout}>Đăng xuất</MenuItem>
     </Menu>
   );
-
-  const [inputValue, setInputValue] = useState("");
-  const handleSearch = (e) => {
-    setInputValue(e.target.value);
-  };
 
   const { chats } = useChatList();
   const unreadChats = chats.filter((chat) => !chat.isSeen).length;

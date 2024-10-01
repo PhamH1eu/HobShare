@@ -30,7 +30,7 @@ const MessItem = ({ chat, handleSelect }) => {
         onClick={() => handleSelect(chat)}
       >
         <ListItemAvatar>
-          <Avatar src={chat.user?.avatar} receiverId={chat.receiverId} />
+          <Avatar src={chat.receiverAvatar} receiverId={chat.receiverId} />
         </ListItemAvatar>
         <Typography>
           <ListItemText
@@ -43,7 +43,7 @@ const MessItem = ({ chat, handleSelect }) => {
                   marginLeft: "5px",
                 }}
               >
-                {chat.user.username}
+                {chat.receiverName}
               </Typography>
             }
             secondary={

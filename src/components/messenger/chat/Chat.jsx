@@ -71,8 +71,6 @@ export const Chat = () => {
   const {
     chatId,
     user,
-    isCurrentUserBlocked,
-    isReceiverBlocked,
     setMessages: setMessageStore,
   } = useChatStore();
   const [messages, setMessages] = useState([]);
@@ -135,7 +133,7 @@ export const Chat = () => {
     await Promise.all([
       //pass video list
       SendMessage(currentUser, chatId, text, imgList, videoList),
-      UpdateChat(currentUserId, user.id, chatId, text),
+      UpdateChat(currentUserId, user.receiverId, chatId, text),
     ]);
   };
 
@@ -162,11 +160,11 @@ export const Chat = () => {
   return (
     <div className="chat">
       <div className="top">
-        <StyledLink to={"/profile/" + user.id}>
+        <StyledLink to={"/profile/" + user.receiverId}>
           <div className="user">
-            <img src={user?.avatar || "./avatar.png"} alt="" />
+            <img src={user?.receiverAvatar || "./avatar.png"} alt="" />
             <div className="texts">
-              <span>{user?.username}</span>
+              <span>{user?.receiverName}</span>
             </div>
           </div>
         </StyledLink>
@@ -320,11 +318,7 @@ export const Chat = () => {
           </div>
           <input
             type="text"
-            placeholder={
-              isCurrentUserBlocked || isReceiverBlocked
-                ? "Tin nhắn đang bị chặn"
-                : "Gửi tin nhắn..."
-            }
+            placeholder="Gửi tin nhắn..."
             value={text}
             onChange={(e) => setText(e.target.value)}
             onPasteCapture={(e) => {
@@ -337,7 +331,6 @@ export const Chat = () => {
               ]);
             }}
             onKeyDown={handleKeyPress}
-            disabled={isCurrentUserBlocked || isReceiverBlocked}
           />
           <div className="emoji">
             <SentimentSatisfiedAltIcon
@@ -355,7 +348,6 @@ export const Chat = () => {
           </div>
           <button
             className="sendButton"
-            disabled={isCurrentUserBlocked || isReceiverBlocked}
             onClick={handleSend}
           >
             Gửi

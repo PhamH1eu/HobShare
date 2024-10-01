@@ -10,7 +10,6 @@ import {
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { LoadingButton } from "@mui/lab";
 import { useState } from "react";
-import upload from "src/shared/helper/upload";
 import { ActivitiesService, UserService } from "src/services/DatabaseService";
 import { useUserStore } from "src/store/userStore";
 import { useQueryClient } from "react-query";

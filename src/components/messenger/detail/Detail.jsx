@@ -1,7 +1,5 @@
 import { useChatStore } from "src/store/chatStore";
-import { useUserStore } from "src/store/userStore";
 import { useInfoShowStore } from "src/store/infoShowStore";
-import BlockUser from "src/services/chat/BlockUser";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -9,26 +7,16 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import CircularLoading from "src/shared/components/Loading";
 import "./detail.css";
 import useListenOnline from "src/shared/hooks/listen/useListenOnline";
-import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
 
 export const Detail = () => {
   const {
     user,
-    isCurrentUserBlocked,
-    isReceiverBlocked,
-    changeBlock,
     message,
   } = useChatStore();
-  const { online, timeOff } = useListenOnline(user.id);
+  
+  const { online, timeOff } = useListenOnline(user.receiverId);
 
-  const { currentUserId } = useUserStore();
-  const { data: currentUser } = useUserInfo(currentUserId);
   const isShow = useInfoShowStore((state) => state.isShow);
-
-  const handleBlock = async () => {
-    BlockUser(user, isReceiverBlocked, currentUser);
-    changeBlock();
-  };
 
   function extractMediaUrls(data) {
     const urls = [];
@@ -59,8 +47,8 @@ export const Detail = () => {
   return isShow ? (
     <div className="detail">
       <div className="user">
-        <img src={user?.avatar || "./avatar.png"} alt="" />
-        <h2>{user?.username}</h2>
+        <img src={user?.receiverAvatar || "./avatar.png"} alt="" />
+        <h2>{user?.receiverName}</h2>
         <h3 style={{ fontWeight: "500", color: "#7d7e81" }}>
           {!timeOff
             ? "Đã lâu không hoạt động"
@@ -70,27 +58,6 @@ export const Detail = () => {
         </h3>
       </div>
       <div className="info">
-        <div className="option">
-          <Accordion defaultExpanded>
-            <AccordionSummary
-              style={{ padding: "0", fontWeight: "500" }}
-              expandIcon={<KeyboardArrowDownIcon />}
-            >
-              <div className="title">
-                <span>Quyền riêng tư & hỗ trợ</span>
-              </div>
-            </AccordionSummary>
-            <AccordionDetails>
-              <button onClick={handleBlock}>
-                {isCurrentUserBlocked
-                  ? "Bạn đã bị chặn"
-                  : isReceiverBlocked
-                  ? "Bỏ chặn"
-                  : "Chặn người này"}
-              </button>
-            </AccordionDetails>
-          </Accordion>
-        </div>
         <div className="option">
           <Accordion defaultExpanded>
             <AccordionSummary

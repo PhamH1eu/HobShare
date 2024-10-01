@@ -37,7 +37,7 @@ const GroupNewsFeed = () => {
 
   useEffect(() => {
     const expires = Number(
-      localStorage.getItem("Expires") ?? Date.now() + 60 * 1000
+      localStorage.getItem("Expires") ?? Date.now() + 10 * 1000
     );
     localStorage.setItem("Expires", expires.toString());
 
@@ -49,13 +49,13 @@ const GroupNewsFeed = () => {
           window.location.reload();
           //increase affinity
           timeLeft = timeLeft - t;
-          countdown(60 * 1000);
+          countdown(10 * 1000);
         }, t);
       } else {
         localStorage.removeItem("Expires");
       }
     };
-    countdown(timeLeft % (60 * 1000) || 60 * 1000);
+    countdown(timeLeft % (10 * 1000) || 10 * 1000);
     return () => {
       clearTimeout(tid);
     };

@@ -26,7 +26,7 @@ const MessageButton = ({userId}) => {
   const { currentUserId } = useUserStore();
   const { data: currentUser } = useUserInfo(currentUserId);
   const { data: user } = useUserInfo(userId);
-  const didInboxed = chats.find((chat) => chat.user.id === user.id);
+  const didInboxed = chats.find((chat) => chat.receiverId === user.id);
 
   const handleAddUser = async () => {
     if (didInboxed === undefined) {

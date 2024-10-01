@@ -52,7 +52,6 @@ const GroupCreationPage = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [selectedUsers, setSelectedUsers] = useState([]);
-  console.log("🚀 ~ GroupCreationPage ~ selectedUsers:", selectedUsers)
   const [wallpaper, setWallpaper] = useState({
     file: null,
     url: null,
@@ -89,10 +88,9 @@ const GroupCreationPage = () => {
           },
         ],
       }),
-      GroupService.batchWrite(`${uid}/members`, selectedUsers),
       ...selectedUsers.map((user) => {
         return UserService.createSubCollection(
-          `${user.user.id}/joinedgroups/${uid}`,
+          `${user.receiverId}/joinedgroups/${uid}`,
           {
             groupId: uid,
             name: name,
@@ -106,6 +104,7 @@ const GroupCreationPage = () => {
         wallpaper: wallpaperurl,
       }),
     ]);
+    await GroupService.batchWrite(`${uid}/members`, selectedUsers);
     setLoading(false);
     navigate(`/group/${uid}`);
   };

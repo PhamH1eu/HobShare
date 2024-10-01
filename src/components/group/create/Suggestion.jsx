@@ -89,14 +89,14 @@ const FriendSuggestions = ({ selectedUsers, setSelectedUsers }) => {
 
   const [inputValue, setInputValue] = useState("");
   const handleSelectUser = (user) => {
-    if (!selectedUsers.some((u) => u.user.id === user.user.id)) {
+    if (!selectedUsers.some((u) => u.receiverId === user.receiverId)) {
       setSelectedUsers([...selectedUsers, user]);
       setInputValue("");
     }
   };
   const handleRemoveUser = (userToRemove) => {
     setSelectedUsers(
-      selectedUsers.filter((user) => user.user.id !== userToRemove.user.id)
+      selectedUsers.filter((user) => user.receiverId !== userToRemove.receiverId)
     );
   };
 
@@ -126,9 +126,9 @@ const FriendSuggestions = ({ selectedUsers, setSelectedUsers }) => {
               <StyledChip
                 key={index}
                 avatar={
-                  <Avatar alt={user.user.username} src={user.user.avatar} />
+                  <Avatar alt={user.receiverName} src={user.receiverAvatar} />
                 }
-                label={user.user.username}
+                label={user.receiverName}
                 onDelete={() => handleRemoveUser(user)}
                 size="medium"
               />
@@ -154,7 +154,7 @@ const FriendSuggestions = ({ selectedUsers, setSelectedUsers }) => {
             </Typography>
             {chats
               .filter((suggestion) =>
-                suggestion.user.username
+                suggestion.receiverName
                   .toLowerCase()
                   .includes(inputValue.toLowerCase())
               )
@@ -163,10 +163,10 @@ const FriendSuggestions = ({ selectedUsers, setSelectedUsers }) => {
                   key={index}
                   onClick={() => handleSelectUser(suggestion)}
                 >
-                  <AvatarWrapper src={suggestion.user.avatar} />
+                  <AvatarWrapper src={suggestion.receiverAvatar} />
                   <Box>
                     <Typography variant="body1">
-                      {suggestion.user.username}
+                      {suggestion.receiverName}
                     </Typography>
                     <Typography variant="body2" color="textSecondary">
                       6 bạn chung

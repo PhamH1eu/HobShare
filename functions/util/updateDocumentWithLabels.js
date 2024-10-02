@@ -1,5 +1,9 @@
 const admin = require("firebase-admin");
 const functions = require("firebase-functions");
+const neo4jDriver = require("./neo4jconfig");
+const axios = require("axios");
+
+const geminiconfig = functions.config().gemini;
 
 exports.updateDocumentWithLabels = functions.firestore
   .document("imageLabels/{docId}")
@@ -41,6 +45,50 @@ exports.updateDocumentWithLabels = functions.firestore
 
       // Reference to the target document
       const docRef = admin.firestore().collection(namecollection).doc(docId);
+      const postDoc = await docRef.get();
+      const postData = postDoc.data();
+
+      const apiKey = geminiconfig.api_key;
+      const geminiApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent`;
+      const mergedText = postData.text + " " + topDescriptions.join(" ");
+      const response = await axios.post(
+        geminiApiUrl,
+        {
+          content: {
+            parts: [
+              {
+                text: mergedText,
+              },
+            ],
+          },
+          outputDimensionality: 256,
+        },
+        {
+          params: {
+            key: apiKey,
+          },
+        }
+      );
+      const session = neo4jDriver.session();
+      try {
+        await session.run(
+          `
+        MATCH (n:Post { id: $docId })
+        SET n.embedding = $embedding,
+            n.labels = $labels
+        RETURN n
+      `,
+          {
+            docId: docId,
+            embedding: response.embedding.values,
+          }
+        );
+        console.log(`Successfully updated node with docId ${docId} in Neo4j`);
+      } catch (neo4jError) {
+        console.error("Error updating Neo4j:", neo4jError);
+      } finally {
+        await session.close();
+      }
 
       // Write the top descriptions to the target document
       await docRef.update({ labels: topDescriptions });

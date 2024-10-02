@@ -1,10 +1,9 @@
 const admin = require("firebase-admin");
 const functions = require("firebase-functions");
 const neo4jDriver = require("../util/neo4jconfig");
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const axios = require("axios");
 
 const geminiconfig = functions.config().gemini;
-const genAI = new GoogleGenerativeAI(geminiconfig.api_key);
 
 exports.onPostCreated = functions.firestore
   .document("posts/{postId}")
@@ -37,10 +36,32 @@ exports.onPostCreated = functions.firestore
       await Promise.all([...promises, ...promiseCreateTags]);
     }
 
-    const model = genAI.getGenerativeModel({ model: "text-embedding-004" });
-    const response = await model.embedContent(data.text);
-    const embedding = response.embedding;
-    console.log(embedding.values);
+    const apiKey = geminiconfig.api_key;
+    const geminiApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent`;
+
+    var embedding;
+    if (!data.hasImage) {
+      const response = await axios.post(
+        geminiApiUrl,
+        {
+          content: {
+            parts: [
+              {
+                text: data.text,
+              },
+            ],
+          },
+          outputDimensionality: 256,
+        },
+        {
+          params: {
+            key: apiKey,
+          },
+        }
+      );
+      embedding = response.embedding.values;
+      console.log(embedding);
+    }
 
     try {
       if (data.groupId) {
@@ -54,7 +75,7 @@ exports.onPostCreated = functions.firestore
           {
             groupId: data.groupId,
             postId: postId,
-            embedding: embedding.values || []
+            embedding: embedding || [],
           }
         );
       } else {
@@ -68,12 +89,14 @@ exports.onPostCreated = functions.firestore
           {
             userId: data.authorId,
             postId: postId,
-            embedding: embedding.values || []
+            embedding: embedding || [],
           }
         );
       }
     } catch (error) {
       console.error("Error updating document with labels", error);
+    } finally {
+      await session.close();
     }
 
     return null;

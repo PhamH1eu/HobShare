@@ -45,5 +45,3 @@ exports.onMemberLeft = onMemberLeft.onMemberLeft;
 
 exports.createUserNode = createUserNode.createUserNode;
 exports.onUserUpdateActivity = onUserUpdateActivity.onUserUpdateActivity;
-
-//FIXME: append post tags with image labels

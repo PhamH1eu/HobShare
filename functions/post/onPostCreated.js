@@ -59,8 +59,7 @@ exports.onPostCreated = functions.firestore
           },
         }
       );
-      embedding = response.embedding.values;
-      console.log(embedding);
+      embedding = response.data.embedding.values;
     }
 
     try {

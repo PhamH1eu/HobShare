@@ -1,5 +1,8 @@
 const functions = require("firebase-functions");
 const neo4jDriver = require("../util/neo4jconfig"); // Neo4j config file
+const axios = require("axios");
+
+const geminiconfig = functions.config().gemini;
 
 exports.onUserUpdateActivity = functions.firestore
   .document("users/{userId}")
@@ -24,15 +27,37 @@ exports.onUserUpdateActivity = functions.firestore
       .filter((fav) => fav.formatted_capption) // Only take objects with a formatted_caption key
       .map((fav) => fav.formatted_capption); // Extract the formatted_caption value
 
+    const apiKey = geminiconfig.api_key;
+    const geminiApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent`;
+
+    const response = await axios.post(
+      geminiApiUrl,
+      {
+        content: {
+          parts: [
+            {
+              text: formattedCaptions.join(" "),
+            },
+          ],
+        },
+        outputDimensionality: 256,
+      },
+      {
+        params: {
+          key: apiKey,
+        },
+      }
+    );
     // Sync the formatted captions array back to the Neo4j user node
     const session = neo4jDriver.session();
     try {
       await session.run(
         `
           MERGE (u:User {id: $userId})
-          SET u.favoriteCaptions = $formattedCaptions
+          SET u.favoriteCaptions = $formattedCaptions,
+              u.embedding = $embedding
         `,
-        { userId, formattedCaptions }
+        { userId, embedding: response.data.embedding.values || [], formattedCaptions }
       );
 
       console.log(`Updated favorite captions for user ${userId} in Neo4j.`);

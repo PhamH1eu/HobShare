@@ -22,6 +22,8 @@ const getAllFriendsOfUser = require("./friend/getAllFriendsOfUser");
 const createUserNode = require("./user/createUserNeo4j");
 const onUserUpdateActivity = require("./user/onUserUpdateActivity");
 
+const findSimilarUsers = require("./recommend/findSimilarUsers");
+
 admin.initializeApp();
 
 exports.sendUserNotification = sendUserNotification.sendUserNotification;
@@ -45,3 +47,5 @@ exports.onMemberLeft = onMemberLeft.onMemberLeft;
 
 exports.createUserNode = createUserNode.createUserNode;
 exports.onUserUpdateActivity = onUserUpdateActivity.onUserUpdateActivity;
+
+exports.findSimilarUsers = findSimilarUsers.findSimilarUsers;

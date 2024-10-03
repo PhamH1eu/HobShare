@@ -80,7 +80,7 @@ exports.updateDocumentWithLabels = functions.firestore
       `,
           {
             docId: docId,
-            embedding: response.embedding.values,
+            embedding: response.data.embedding.values,
           }
         );
         console.log(`Successfully updated node with docId ${docId} in Neo4j`);

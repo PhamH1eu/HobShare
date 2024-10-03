@@ -225,7 +225,7 @@ const NewModal = ({ open, onClose, groupId, groupName, groupWallpaper }) => {
       authorAvatar: currentUser.avatar,
       ...(text !== "" && { text: text }),
       ...(selectedFile?.type.startsWith("video/") && { video: res }),
-      hasImage: selectedFile?.type.startsWith("image/"),
+      hasImage: selectedFile?.type.startsWith("image/") ? true : false,
       ...(location && { location: location }),
       ...(selectedFriends.length > 0 && {
         stayingWith: selectedFriends.map((friend) => {

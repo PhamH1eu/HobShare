@@ -7,7 +7,6 @@ import { useUserStore } from "src/store/userStore";
 import { useQueryClient } from "react-query";
 import { UserService } from "src/services/DatabaseService";
 import { geohashForLocation } from "geofire-common";
-import useRecNewUsers from "src/shared/hooks/fetch/recommend/useNewUsersRec";
 
 const HomePage = styled.div`
   display: flex;
@@ -22,8 +21,6 @@ const HomePage = styled.div`
 const Home = () => {
   const queryClient = useQueryClient();
   const { currentUserId } = useUserStore();
-  const { friends, isLoading } = useRecNewUsers();
-  console.log(friends);
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(async (position) => {

@@ -2,20 +2,29 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { CardActionArea, CardActions, Button } from "@mui/material";
+import { CardActionArea, CardActions, Button, Skeleton } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { useNavigate } from "react-router-dom";
 import useModal from "src/shared/hooks/util/useModal";
 import AddRequestModal from "src/shared/components/friend_button/AddRequestModal";
 import useSentRequest from "src/shared/hooks/fetch/friend/useSentRequest";
 import useCancelFriendRequestMutation from "src/shared/hooks/mutation/friend/useCancelFriendRequestMutation";
-import CircularLoading from "src/shared/components/Loading";
+import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
 
-export default function UserCard({ user }) {
+export default function UserCard({ userId }) {
   const navigate = useNavigate();
   const { open, handleClose, handleOpen } = useModal();
   const { sentRequests, isLoadingSent } = useSentRequest();
   const mutation = useCancelFriendRequestMutation();
+  const { data: user, isLoading } = useUserInfo(userId);
+
+  if (isLoading) {
+    return (
+      <Card sx={{ maxWidth: "11vw" }}>
+        <Skeleton variant="rounded" animation="wave" height="222px" />
+      </Card>
+    );
+  }
 
   return (
     <Card sx={{ maxWidth: "11vw" }}>
@@ -46,7 +55,7 @@ export default function UserCard({ user }) {
         style={{ justifyContent: "center", padding: 0, paddingBottom: "10px" }}
       >
         {isLoadingSent ? (
-          <CircularLoading />
+          <Skeleton variant="rounded" animation="wave" />
         ) : sentRequests.some((request) => request.id === user.id) ? (
           <LoadingButton
             size="small"

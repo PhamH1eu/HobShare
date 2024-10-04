@@ -27,7 +27,7 @@ WHERE jaccardIndex > 0  // Optional: Only return results with some similarity
 // Return results
 RETURN u2.id AS similarUser, jaccardIndex
 ORDER BY jaccardIndex DESC
-LIMIT 10;
+LIMIT 5;
 
 `;
 

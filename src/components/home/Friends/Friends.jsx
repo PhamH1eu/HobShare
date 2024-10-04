@@ -8,6 +8,7 @@ import useChatList from "src/shared/hooks/listen/useChatList";
 import Contact from "./Contact";
 import { useChatDialogStore } from "src/store/chatDialogStore";
 import { useEffect } from "react";
+import { Box, Skeleton } from "@mui/material";
 
 const groupChats = [];
 
@@ -69,11 +70,35 @@ const SearchBar = styled.div`
   }
 `;
 
+const ContactItem = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 5px;
+  gap: 10px;
+`;
+
+const ContactName = styled.span`
+  flex-grow: 1;
+  font-size: 14px;
+  font-weight: 500;
+`;
+
+const AvatarWrapper = styled(Box)(() => ({
+  position: "relative",
+  cursor: "pointer",
+  "&:hover .close-button": {
+    display: "flex",
+  },
+}));
+
+const array = [1, 2, 3, 4, 5, 6, 7, 1, 2, 3, 4];
+
 const Friends = () => {
   const minimizedChats = useChatDialogStore((state) => state.minimizedChats);
   const addChat = useChatDialogStore((state) => state.addChat);
 
-  const { chats } = useChatList();
+  const { chats, loading } = useChatList();
   useEffect(() => {
     if (
       chats[0] &&
@@ -83,6 +108,42 @@ const Friends = () => {
       addChat(chats[0]);
     }
   }, [chats]);
+
+  if (loading) {
+    return (
+      <ContactList>
+        <SearchBar>
+          <h2>Người liên hệ</h2>
+          <IconButton style={{ width: "40px", height: "40px" }}>
+            <SearchIcon
+              // @ts-ignore
+              color="greyIcon"
+            />
+          </IconButton>
+        </SearchBar>
+        {array.map((_, index) => (
+          <ContactItem key={index}>
+            <AvatarWrapper>
+              <Skeleton
+                animation="wave"
+                variant="circular"
+                width="40px"
+                height="40px"
+              ></Skeleton>
+            </AvatarWrapper>
+            <ContactName>
+              <Skeleton
+                animation="wave"
+                variant="rounded"
+                width="180px"
+                height="40px"
+              ></Skeleton>
+            </ContactName>
+          </ContactItem>
+        ))}
+      </ContactList>
+    );
+  }
 
   return (
     <ContactList>

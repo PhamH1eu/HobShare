@@ -6,11 +6,11 @@ import {
   CardContent,
   CardActions,
   Avatar,
+  Skeleton,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
 import { Link } from "react-router-dom";
-import CircularLoading from "src/shared/components/Loading";
 
 import useModal from "src/shared/hooks/util/useModal";
 import SaveToCollectionModal from "./modal/SaveItemToCollection";
@@ -125,17 +125,17 @@ const SavedItemList = ({ currentCollection }) => {
 
   if (isLoading) {
     return (
-      <Box
-        sx={{
-          marginTop: "20px",
-          marginBottom: "20px",
-          display: "flex",
-          padding: "16px",
-          width: "65vw",
-        }}
-      >
-        <CircularLoading />
-      </Box>
+      <Skeleton animation="wave" height="150px">
+        <Box
+          sx={{
+            marginTop: "20px",
+            marginBottom: "20px",
+            display: "flex",
+            padding: "16px",
+            width: "65vw",
+          }}
+        ></Box>
+      </Skeleton>
     );
   }
 

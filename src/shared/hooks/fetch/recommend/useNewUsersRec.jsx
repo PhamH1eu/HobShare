@@ -16,7 +16,7 @@ const useRecNewUsers = () => {
   );
 
   return {
-    friends: data || [],
+    friends: data?.similarUsers || [],
     isLoading: isLoading,
   };
 };

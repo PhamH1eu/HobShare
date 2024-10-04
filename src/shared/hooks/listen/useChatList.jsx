@@ -12,10 +12,10 @@ const useChatList = () => {
   const { currentUserId } = useUserStore();
 
   useEffect(() => {
+    setLoading(true);
     const q = query(collection(db, "userchats", currentUserId, "chat"));
 
     const unsub = onSnapshot(q, async (querySnapshot) => {
-      setLoading(true);
       var items = [];
       querySnapshot.docs.forEach((doc) => {
         items.push(doc.data());

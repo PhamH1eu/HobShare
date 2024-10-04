@@ -2,8 +2,8 @@ import styled from "styled-components";
 import UserCard from "./component/Card";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import useSuggestedFriend from "src/shared/hooks/fetch/friend/useSuggestedFriend";
-import CircularLoading from "src/shared/components/Loading";
+import useRecNewUsers from "src/shared/hooks/fetch/recommend/useNewUsersRec";
+import { Skeleton } from "@mui/material";
 
 const Wrapper = styled.div`
   margin-top: 20px;
@@ -19,27 +19,60 @@ const Wrapper = styled.div`
 `;
 
 const FriendsRecommend = () => {
-  const { users, isLoading } = useSuggestedFriend();
+  const { friends, isLoading } = useRecNewUsers();
 
   if (isLoading) {
     return (
       <Wrapper>
-        <span>Những người bạn có thể biết</span>
-        <CircularLoading />
+        <span>Những người có chung sở thích với bạn</span>
+        <div
+          style={{
+            maxWidth: "43vw",
+            padding: "18px",
+            gap: "20px",
+            display: "flex",
+          }}
+        >
+          <Skeleton
+            variant="rounded"
+            animation="wave"
+            height="220px"
+            width="124px"
+          />
+          <Skeleton
+            variant="rounded"
+            animation="wave"
+            height="220px"
+            width="124px"
+          />
+          <Skeleton
+            variant="rounded"
+            animation="wave"
+            height="220px"
+            width="124px"
+          />
+          <Skeleton
+            variant="rounded"
+            animation="wave"
+            height="220px"
+            width="124px"
+          />
+        </div>
       </Wrapper>
     );
   }
+
   return (
     <Wrapper>
-      <span>Những người bạn có thể biết</span>
+      <span>Những người có chung sở thích với bạn</span>
       <Swiper
         spaceBetween={20}
         slidesPerView={4}
         style={{ maxWidth: "43vw", padding: "18px" }}
       >
-        {users.map((friend, index) => (
+        {friends.map((friend, index) => (
           <SwiperSlide key={index}>
-            <UserCard user={friend} />
+            <UserCard userId={friend.id} />
           </SwiperSlide>
         ))}
       </Swiper>

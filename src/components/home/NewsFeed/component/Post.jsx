@@ -9,7 +9,7 @@ import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import Comments from "./Comments";
 
 import Modal from "@mui/material/Modal";
-import { Box, IconButton } from "@mui/material";
+import { Box, IconButton, Skeleton } from "@mui/material";
 import BookmarksIcon from "@mui/icons-material/Bookmarks";
 import BackspaceIcon from "@mui/icons-material/Backspace";
 import CircularLoading from "src/shared/components/Loading";
@@ -40,14 +40,6 @@ const PostWrapper = styled.div`
   background-color: white;
   border-radius: 10px;
   margin: 25px 0;
-`;
-
-const PostLoading = styled.div`
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
-  background-color: white;
-  border-radius: 10px;
-  margin: 25px 0;
-  min-height: 300px;
 `;
 
 const PostHeader = styled.div`
@@ -293,9 +285,54 @@ const Post = ({ postId, initComt, isAdminGroup }) => {
 
   if (isLoading) {
     return (
-      <PostLoading>
-        <CircularLoading />
-      </PostLoading>
+      <PostWrapper>
+        <PostHeader>
+          <Skeleton
+            animation="wave"
+            variant="circular"
+            style={{ marginRight: "15px" }}
+          >
+            <ProfilePic />
+          </Skeleton>
+          <PostInfo>
+            <PostTagging>
+              <Skeleton
+                animation="wave"
+                variant="rounded"
+                width="120px"
+                style={{ marginBottom: "5px" }}
+              />
+            </PostTagging>
+            <PostTime>
+              <Skeleton animation="wave" variant="rounded" width="80px" />
+            </PostTime>
+          </PostInfo>
+          <Marked>
+            <Skeleton animation="wave" variant="rounded" width="20px" />
+          </Marked>
+        </PostHeader>
+        <div style={{ margin: "15px" }}>
+          <Skeleton animation="wave" variant="rounded" width="400px" />
+        </div>
+        <div style={{ margin: "15px" }}>
+          <Skeleton animation="wave" variant="rounded" width="300px" />
+        </div>
+        <PostFooter>
+          <Divider flexItem variant="middle" color="#bdbdbd" />
+          <PostActions>
+            <PostAction>
+              <Skeleton animation="wave" variant="circular" width="30px" />
+            </PostAction>
+            <PostAction>
+              <Skeleton animation="wave" variant="circular" width="30px" />
+            </PostAction>
+            <PostAction>
+              <Skeleton animation="wave" variant="circular" width="30px" />
+            </PostAction>
+          </PostActions>
+        </PostFooter>
+        <Divider flexItem variant="middle" color="#bdbdbd" />
+      </PostWrapper>
     );
   }
 

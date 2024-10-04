@@ -11,6 +11,7 @@ import {
   Divider,
   Box,
   ListItemButton,
+  Skeleton,
 } from "@mui/material";
 import LayersClearIcon from "@mui/icons-material/LayersClear";
 import AllInboxIcon from "@mui/icons-material/AllInbox";
@@ -18,7 +19,6 @@ import AllInboxIcon from "@mui/icons-material/AllInbox";
 import useModal from "src/shared/hooks/util/useModal";
 import AddNewCollectionModal from "./modal/AddNewCollection";
 import useCollections from "src/shared/hooks/fetch/saved/useCollections";
-import CircularLoading from "src/shared/components/Loading";
 import { SavedService } from "src/services/SubDatabaseService";
 import { useUserStore } from "src/store/userStore";
 import { LoadingButton } from "@mui/lab";
@@ -122,7 +122,13 @@ const SavedPage = () => {
 
         <List>
           {isLoading ? (
-            <CircularLoading />
+            <div
+              style={{ gap: "10px", display: "flex", flexDirection: "column" }}
+            >
+              <Skeleton animation="wave" variant="rounded" height="40px" />
+              <Skeleton animation="wave" variant="rounded" height="40px" />
+              <Skeleton animation="wave" variant="rounded" height="40px" />
+            </div>
           ) : (
             collections.map((item, index) => (
               <React.Fragment key={index}>

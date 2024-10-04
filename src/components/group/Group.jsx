@@ -8,6 +8,7 @@ import {
   Button,
   Divider,
   Avatar,
+  Skeleton,
 } from "@mui/material";
 import { Home, Explore } from "@mui/icons-material";
 
@@ -16,7 +17,6 @@ import GroupRecommend from "./component/GroupRecommend";
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "src/store/userStore";
 import useUserGroup from "src/shared/hooks/fetch/user/useUserGroups";
-import CircularLoading from "src/shared/components/Loading";
 import useMembersCount from "src/shared/hooks/fetch/group/useMemberCount";
 import StyledLink from "src/shared/components/StyledLink";
 
@@ -110,7 +110,12 @@ const a11yProps = (index) => {
 
 const Members = ({ groupId }) => {
   const { membersCount, isLoading } = useMembersCount(groupId);
-  if (isLoading) return <CircularLoading />;
+  if (isLoading)
+    return (
+      <Typography variant="caption" color="textSecondary">
+        <Skeleton animation="wave" variant="rounded" width="80px" />
+      </Typography>
+    );
   return (
     <Typography variant="caption" color="textSecondary">
       {membersCount} thành viên
@@ -128,7 +133,148 @@ const GroupWithSidebar = () => {
     setValue(newValue);
   };
 
-  if (isLoading) return <CircularLoading />;
+  if (isLoading)
+    return (
+      <Box
+        sx={{
+          backgroundColor: "#f0f2f5",
+          marginTop: "64px",
+          overflowX: "hidden",
+          width: "100%",
+        }}
+      >
+        <Sidebar>
+          <Typography
+            style={{ fontWeight: "600", fontSize: "1.5rem" }}
+            variant="h6"
+            gutterBottom
+          >
+            Nhóm
+          </Typography>
+          <Tabs
+            orientation="vertical"
+            value={value}
+            onChange={handleChange}
+            indicatorColor="primary"
+            textColor="primary"
+          >
+            <TabsContainer
+              icon={<Home />}
+              iconPosition="start"
+              label="Bảng feed của bạn"
+              {...a11yProps(0)}
+            />
+            <TabsContainer
+              icon={<Explore />}
+              iconPosition="start"
+              label="Khám phá"
+              {...a11yProps(1)}
+            />
+          </Tabs>
+          <CustomButton
+            onClick={() => navigate("/group/create")}
+            variant="contained"
+          >
+            + Tạo nhóm mới
+          </CustomButton>
+          <Divider sx={{ marginY: 2 }} />
+          <Typography
+            sx={{ fontWeight: "600", fontSize: "1.2rem" }}
+            variant="subtitle1"
+          >
+            Nhóm do bạn quản lý
+          </Typography>
+          <GroupContainer>
+            <Skeleton animation="wave" variant="rounded">
+              <Avatar variant="rounded" sx={{ width: 48, height: 48 }} />
+            </Skeleton>
+            <GroupDetails>
+              <Skeleton animation="wave" variant="rounded">
+                <Typography sx={{ fontWeight: "600" }} variant="body2">
+                  1233333333333333333333
+                </Typography>
+              </Skeleton>
+              <Skeleton
+                animation="wave"
+                variant="rounded"
+                style={{ marginTop: "4px" }}
+                width="80px"
+              />
+            </GroupDetails>
+          </GroupContainer>
+          <GroupContainer>
+            <Skeleton animation="wave" variant="rounded">
+              <Avatar variant="rounded" sx={{ width: 48, height: 48 }} />
+            </Skeleton>
+            <GroupDetails>
+              <Skeleton animation="wave" variant="rounded">
+                <Typography sx={{ fontWeight: "600" }} variant="body2">
+                  1233333333333333333333
+                </Typography>
+              </Skeleton>
+              <Skeleton
+                animation="wave"
+                variant="rounded"
+                style={{ marginTop: "4px" }}
+                width="80px"
+              />
+            </GroupDetails>
+          </GroupContainer>
+          <Divider sx={{ marginY: 1 }} />
+          <Typography
+            sx={{ fontWeight: "600", fontSize: "1.2rem" }}
+            variant="subtitle1"
+          >
+            Nhóm bạn đã tham gia
+          </Typography>
+          <GroupContainer>
+            <Skeleton animation="wave" variant="rounded">
+              <Avatar variant="rounded" sx={{ width: 48, height: 48 }} />
+            </Skeleton>
+            <GroupDetails>
+              <Skeleton animation="wave" variant="rounded">
+                <Typography sx={{ fontWeight: "600" }} variant="body2">
+                  1233333333333333333333
+                </Typography>
+              </Skeleton>
+              <Skeleton
+                animation="wave"
+                variant="rounded"
+                style={{ marginTop: "4px" }}
+                width="80px"
+              />
+            </GroupDetails>
+          </GroupContainer>
+          <GroupContainer>
+            <Skeleton animation="wave" variant="rounded">
+              <Avatar variant="rounded" sx={{ width: 48, height: 48 }} />
+            </Skeleton>
+            <GroupDetails>
+              <Skeleton animation="wave" variant="rounded">
+                <Typography sx={{ fontWeight: "600" }} variant="body2">
+                  1233333333333333333333
+                </Typography>
+              </Skeleton>
+              <Skeleton
+                animation="wave"
+                variant="rounded"
+                style={{ marginTop: "4px" }}
+                width="80px"
+              />
+            </GroupDetails>
+          </GroupContainer>
+        </Sidebar>
+
+        <MainContent>
+          <TabPanel value={value} index={0}>
+            <GroupNewsFeed />
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            <GroupRecommend />
+          </TabPanel>
+        </MainContent>
+      </Box>
+    );
 
   return (
     <Box

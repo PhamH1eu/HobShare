@@ -5,11 +5,11 @@ import {
   Typography,
   Button,
   IconButton,
+  Skeleton,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import CloseIcon from "@mui/icons-material/Close";
 import useMembersCount from "src/shared/hooks/fetch/group/useMemberCount";
-import CircularLoading from "src/shared/components/Loading";
 import { useNavigate } from "react-router-dom";
 
 // Styled components
@@ -44,7 +44,17 @@ const GroupCard = ({ group }) => {
   const { membersCount, isLoading } = useMembersCount(group.id);
   const navigate = useNavigate();
 
-  if (isLoading) return <CircularLoading />;
+  if (isLoading)
+    return (
+      <StyledCard>
+        <Skeleton
+          width="260px"
+          height="270px"
+          animation="wave"
+          variant="rounded"
+        ></Skeleton>
+      </StyledCard>
+    );
 
   return (
     <StyledCard>

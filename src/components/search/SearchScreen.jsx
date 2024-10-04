@@ -3,6 +3,7 @@ import { Box, Tab, Tabs, Typography } from "@mui/material";
 import styled from "styled-components";
 import PostContent from "./PostContent";
 import FriendsContent from "./FriendsContent";
+import GroupsContent from "./GroupsContent";
 
 const Sidebar = styled(Box)`
   position: fixed;
@@ -84,12 +85,13 @@ const SearchScreen = () => {
         >
           <Tab label={<TabLabel>Bài viết</TabLabel>} value="baiviet" />
           <Tab label={<TabLabel>Mọi người</TabLabel>} value="moinguoi" />
+          <Tab label={<TabLabel>Nhóm</TabLabel>} value="nhom" />
         </Tabs>
       </Sidebar>
       <ContentArea>
         {selectedTab === "baiviet" && <PostContent />}
         {selectedTab === "moinguoi" && <FriendsContent />}
-        {/* Add more components for other tabs */}
+        {selectedTab === "nhom" && <GroupsContent />}
       </ContentArea>
     </MainLayout>
   );

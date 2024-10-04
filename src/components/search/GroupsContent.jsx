@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import styled from "styled-components";
 
 import { Configure, Hits, Index } from "react-instantsearch";
-import { HitUser } from "./component/HitUser";
+import { HitGroup } from "./component/HitGroup";
 
 const Container = styled(Box)`
   display: flex;
@@ -14,14 +14,14 @@ const Wrapper = styled(Box)`
   width: 60%;
 `;
 
-const FriendsContent = () => {
+const GroupsContent = () => {
   return (
     <Container>
       <Wrapper>
         <div className="ais-InstantSearch">
-          <Index indexName="user_index">
+          <Index indexName="group-index">
             <Configure hitsPerPage={100} />
-            <Hits hitComponent={({ hit }) => <HitUser hit={hit} />} />
+            <Hits hitComponent={({ hit }) => <HitGroup hit={hit} />} />
           </Index>
         </div>
       </Wrapper>
@@ -29,4 +29,4 @@ const FriendsContent = () => {
   );
 };
 
-export default FriendsContent;
+export default GroupsContent;

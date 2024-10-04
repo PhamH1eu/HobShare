@@ -89,7 +89,9 @@ class SubDatabaseService {
   getDocument = async (path) => {
     const docRef = doc(db, this.collection, path);
     const docSnap = await getDoc(docRef);
-    return docSnap.data();
+    if (docSnap.exists()) {
+      return docSnap.data();
+    } else return null;
   };
 
   getAll = async () => {

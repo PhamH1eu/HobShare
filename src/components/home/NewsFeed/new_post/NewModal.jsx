@@ -196,7 +196,6 @@ const NewModal = ({ open, onClose, groupId, groupName, groupWallpaper }) => {
       url: URL.createObjectURL(event.target.files[0]),
       type: event.target.files[0].type,
     });
-    console.log(event.target.files[0].type);
   };
   const handleRemoveFile = () => {
     setSelectedFile(null);

@@ -22,6 +22,7 @@ const getAllFriendsOfUser = require("./friend/getAllFriendsOfUser");
 const createUserNode = require("./user/createUserNeo4j");
 const onUserUpdateActivity = require("./user/onUserUpdateActivity");
 
+const getFriendPosts = require("./recommend/getFriendPosts");
 const getUserGroupPosts = require("./recommend/getUserGroupPosts");
 const findSimilarUsers = require("./recommend/findSimilarUsers");
 const recommendedGroups = require("./recommend/recommendGroups");
@@ -50,6 +51,7 @@ exports.onMemberLeft = onMemberLeft.onMemberLeft;
 exports.createUserNode = createUserNode.createUserNode;
 exports.onUserUpdateActivity = onUserUpdateActivity.onUserUpdateActivity;
 
+exports.getFriendPosts = getFriendPosts.getFriendPosts;
 exports.getUserGroupPosts = getUserGroupPosts.getUserGroupPosts;
 exports.findSimilarUsers = findSimilarUsers.findSimilarUsers;
 exports.recommendedGroups = recommendedGroups.recommendGroups;

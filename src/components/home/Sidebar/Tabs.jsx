@@ -94,10 +94,9 @@ const Tabs = () => {
           className={`${
             currentUser.location?.denyExposingLocation ? "disabled" : ""
           }`}
-          onClick={() => console.log("Location")}
         >
           <PinDropIcon className="location" />
-          <span>Sở thích gần bạn</span>
+          <span>Xung quanh bạn</span>
         </MenuItem>
       </StyledLink>
       <StyledLink to="/group">

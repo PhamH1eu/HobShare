@@ -48,7 +48,6 @@ const Activities = () => {
   const newActivities = activities.filter((item) =>
     !currentUser.favorite.some((x) => x.id === item.id)
   );
-  console.log(currentUser.favorite, "-", activities);
 
   return (
     <div className="activity">

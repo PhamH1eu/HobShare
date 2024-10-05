@@ -2,12 +2,12 @@ import { httpsCallable } from "firebase/functions";
 import { useQuery } from "react-query";
 import { functions } from "src/lib/firebase";
 
-const useSpecificUserFriend = (userId) => {
+const useFriendsPosts = () => {
   const { data, isLoading } = useQuery(
-    ["user_friend", userId],
+    "friends_recent_posts",
     () => {
-      const getAllFriends = httpsCallable(functions, "getAllFriendsOfUser");
-      return getAllFriends({ userId }).then((result) => result.data);
+      const findFriendPosts = httpsCallable(functions, "getFriendPosts");
+      return findFriendPosts().then((result) => result.data);
     },
     {
       refetchOnWindowFocus: false,
@@ -16,9 +16,9 @@ const useSpecificUserFriend = (userId) => {
   );
 
   return {
-    friends: data?.friends || [],
+    posts: data?.postIds || [],
     isLoading: isLoading,
   };
 };
 
-export default useSpecificUserFriend;
+export default useFriendsPosts;

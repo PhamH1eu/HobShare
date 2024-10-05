@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
 import { useUserStore } from "src/store/userStore";
-import { IconButton } from "@mui/material";
+import { IconButton, Skeleton } from "@mui/material";
 import { styled as MuiStyled } from "@mui/material";
 
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
@@ -230,7 +230,7 @@ const ProfileHeader = () => {
   const { userId } = useParams();
   const isViewingOwnProfile = userId === currentUserId;
   const { data: user } = useUserInfo(userId);
-  const { friends } = useSpecificUserFriend(userId);
+  const { friends, isLoading } = useSpecificUserFriend(userId);
 
   const [isHovered, setIsHovered] = useState(false);
   const [isWallpaperHovered, setIsWallpaperHovered] = useState(false);
@@ -314,7 +314,13 @@ const ProfileHeader = () => {
           )}
           <TextWrapper>
             <Name>{user.username}</Name>
-            <Friends>{friends.length} người bạn</Friends>
+            <Friends>
+              {isLoading ? (
+                <Skeleton width="60px" height="20px" animation="wave" />
+              ) : (
+                friends.length + " người bạn"
+              )}
+            </Friends>
           </TextWrapper>
         </InfoWrapper>
         {!isViewingOwnProfile && <Actions />}

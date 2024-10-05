@@ -1,10 +1,10 @@
 import CircularLoading from "src/shared/components/Loading";
 import Post from "src/components/home/NewsFeed/component/Post";
-import usePosts from "src/shared/hooks/fetch/post/usePosts";
 import { Typography } from "@mui/material";
+import useRecentGroupsPosts from "src/shared/hooks/fetch/group/useRecentGroupsPosts";
 
 const GroupNewsFeed = () => {
-  const { posts, isLoading } = usePosts();
+  const { posts, isLoading } = useRecentGroupsPosts();
 
   return (
     <div
@@ -19,7 +19,7 @@ const GroupNewsFeed = () => {
         <div>
           {posts.map((post, index) => (
             // @ts-ignore
-            <Post key={index} postId={post.id} />
+            <Post key={index} postId={post} />
           ))}
         </div>
       )}

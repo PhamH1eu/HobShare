@@ -257,6 +257,7 @@ const Post = ({ postId, initComt, isAdminGroup }) => {
     await PostService.delete(postId);
     if (post.groupId) {
       await GroupService.removeSubCollection(`${post.groupId}/posts/${postId}`);
+      queryClient.invalidateQueries(["groupposts", post.groupId]);
     } else {
       await UserService.removeSubCollection(`${currentUserId}/posts/${postId}`);
     }

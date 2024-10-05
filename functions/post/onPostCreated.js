@@ -63,18 +63,20 @@ exports.onPostCreated = functions.firestore
     }
 
     try {
+      const createdAtISO = data.createdAt.toDate().toISOString();
       if (data.groupId) {
         // Create Post node and link to Group node
         await session.run(
           `
             MATCH (g:Group {id: $groupId})
-            CREATE (p:Post {id: $postId, embedding: $embedding})
+            CREATE (p:Post {id: $postId, embedding: $embedding, createdAt: $createdAtISO})
             CREATE (g)-[:HAVE]->(p)
           `,
           {
             groupId: data.groupId,
             postId: postId,
             embedding: embedding || [],
+            createdAtISO: createdAtISO,
           }
         );
       } else {
@@ -82,13 +84,14 @@ exports.onPostCreated = functions.firestore
         await session.run(
           `
             MATCH (u:User {id: $userId})
-            CREATE (p:Post {id: $postId, embedding: $embedding})
+            CREATE (p:Post {id: $postId, embedding: $embedding, createdAt: $createdAtISO})
             CREATE (u)-[:WRITE]->(p)
           `,
           {
             userId: data.authorId,
             postId: postId,
             embedding: embedding || [],
+            createdAtISO: createdAtISO,
           }
         );
       }

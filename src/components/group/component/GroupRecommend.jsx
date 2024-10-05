@@ -7,12 +7,24 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 
 import GroupCard from "./Card";
-import useGroups from "src/shared/hooks/fetch/group/useGroups";
 import CircularLoading from "src/shared/components/Loading";
+import useRecNewGroups from "src/shared/hooks/fetch/recommend/recommendGroup";
 
 const GroupRecommend = () => {
-  const { groups, isLoading } = useGroups();
+  const { groups, isLoading } = useRecNewGroups();
   if (isLoading) return <CircularLoading />;
+
+  // Initialize the first nine and the rest arrays
+  let famousGroups, restGroups;
+
+  if (groups.length < 9) {
+    famousGroups = groups; // Take the entire array if less than 9 elements
+    restGroups = []; // Set restOfArray to an empty array
+  } else {
+    famousGroups = groups.slice(0, 9); // Get the first 9 elements
+    restGroups = groups.slice(9); // Get the rest of the elements
+  }
+
   return (
     <Box sx={{ padding: "0 24px", width: "calc(100vw-340px)" }}>
       {/* First section: Swiper for sliding groups */}
@@ -32,7 +44,7 @@ const GroupRecommend = () => {
           marginBottom: 2,
         }}
       >
-        Dựa trên sở thích của bạn
+        Nhóm mà bạn bè của bạn cũng tham gia
       </Typography>
       <div style={{ display: "flex", alignItems: "center" }}>
         <button className="my-swiper-button-prev">
@@ -50,9 +62,9 @@ const GroupRecommend = () => {
           }}
           modules={[Navigation]} // Include Navigation module
         >
-          {groups.map((group) => {
+          {famousGroups.map((group) => {
             return (
-              <SwiperSlide key={group.id}>
+              <SwiperSlide key={group.groupId}>
                 <GroupCard group={group} />
               </SwiperSlide>
             );
@@ -74,9 +86,9 @@ const GroupRecommend = () => {
         Gợi ý khác
       </Typography>
       <Grid container spacing={2} sx={{ padding: "0 44px" }}>
-        {groups.map((group) => {
+        {restGroups.map((group) => {
           return (
-            <Grid key={group.id} item xs={12} sm={6} md={4}>
+            <Grid key={group.groupId} item xs={12} sm={6} md={4}>
               <GroupCard group={group} />
             </Grid>
           );

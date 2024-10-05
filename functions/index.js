@@ -23,6 +23,7 @@ const createUserNode = require("./user/createUserNeo4j");
 const onUserUpdateActivity = require("./user/onUserUpdateActivity");
 
 const findSimilarUsers = require("./recommend/findSimilarUsers");
+const recommendedGroups = require("./recommend/recommendGroups");
 
 admin.initializeApp();
 
@@ -49,3 +50,4 @@ exports.createUserNode = createUserNode.createUserNode;
 exports.onUserUpdateActivity = onUserUpdateActivity.onUserUpdateActivity;
 
 exports.findSimilarUsers = findSimilarUsers.findSimilarUsers;
+exports.recommendedGroups = recommendedGroups.recommendGroups;

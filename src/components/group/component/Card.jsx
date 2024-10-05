@@ -5,11 +5,9 @@ import {
   Typography,
   Button,
   IconButton,
-  Skeleton,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import CloseIcon from "@mui/icons-material/Close";
-import useMembersCount from "src/shared/hooks/fetch/group/useMemberCount";
 import { useNavigate } from "react-router-dom";
 
 // Styled components
@@ -41,34 +39,21 @@ const StyledIconButton = styled(IconButton)({
 });
 
 const GroupCard = ({ group }) => {
-  const { membersCount, isLoading } = useMembersCount(group.id);
   const navigate = useNavigate();
-
-  if (isLoading)
-    return (
-      <StyledCard>
-        <Skeleton
-          width="260px"
-          height="270px"
-          animation="wave"
-          variant="rounded"
-        ></Skeleton>
-      </StyledCard>
-    );
 
   return (
     <StyledCard>
       <StyledIconButton>
         <CloseIcon />
       </StyledIconButton>
-      <StyledCardMedia image={group.wallpaper} title={group.name} />
+      <StyledCardMedia image={group.wallpaper} title={group.groupName} />
       <CardContent>
-        <Typography variant="h6">{group.name}</Typography>
+        <Typography variant="h6">{group.groupName}</Typography>
         <Typography variant="body2" color="textSecondary">
-          {membersCount} thành viên • 10 bài viết/ngày
+          {group.memberCount} thành viên
         </Typography>
         <StyledButton
-          onClick={() => navigate(`/group/${group.id}`)}
+          onClick={() => navigate(`/group/${group.groupId}`)}
           variant="contained"
           color="primary"
         >

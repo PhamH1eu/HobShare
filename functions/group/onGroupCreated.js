@@ -21,12 +21,13 @@ exports.onGroupCreated = functions.firestore
       // Create the Group node in Neo4j
       await session.run(
         `
-          CREATE (g:Group {id: $groupId, name: $name, description: $description})
+          CREATE (g:Group {id: $groupId, name: $name, wallpaper: $wallpaper , description: $description})
         `,
         {
           groupId: groupId,
           name: groupData.name || null, // Assuming there is a name field
           description: groupData.description || null, // Assuming there is a description field
+          wallpaper: groupData.wallpaper || null, // Assuming there is a wallpaper field
         }
       );
       console.log(`Group node with ID ${groupId} created in Neo4j`);

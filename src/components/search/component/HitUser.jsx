@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { getPropertyByPath } from "instantsearch.js/es/lib/utils";
 import StyledLink from "src/shared/components/StyledLink";
 import AcceptButton from "src/shared/components/friend_button/AcceptButton";
-import AddButton from "src/shared/components/friend_button/AddButton";
 import CancelButton from "src/shared/components/friend_button/CancelButton";
 import DenyButton from "src/shared/components/friend_button/DenyButton";
 import MessageButton from "src/shared/components/friend_button/MessageButton";
@@ -13,6 +12,7 @@ import useReceivedRequest from "src/shared/hooks/fetch/friend/useReceivedRequest
 import useSentRequest from "src/shared/hooks/fetch/friend/useSentRequest";
 import useUserFriend from "src/shared/hooks/fetch/friend/useUserFriend";
 import { useUserStore } from "src/store/userStore";
+import SpecialAddButton from "./SpecialAddButton";
 
 const FriendContainer = styled(Box)`
   background-color: #ffffff;
@@ -51,7 +51,7 @@ const ActionWrapper = styled.div`
   }
 `;
 
-const Actions = ({ userId }) => {
+const Actions = ({ userId, handleOpen }) => {
   const { currentUserId } = useUserStore();
   const { friends, isLoading } = useUserFriend();
   const { sentRequests, isLoadingSent } = useSentRequest();
@@ -99,12 +99,12 @@ const Actions = ({ userId }) => {
 
   return (
     <div style={{ marginLeft: "auto" }}>
-      <AddButton receiverId={userId} />
+      <SpecialAddButton handleOpen={handleOpen} />
     </div>
   );
 };
 
-export const HitUser = ({ hit }) => {
+export const HitUser = ({ hit, handleOpen }) => {
   return (
     <FriendContainer>
       <FriendInfo>
@@ -132,7 +132,10 @@ export const HitUser = ({ hit }) => {
           )}
         </FriendDetails>
       </FriendInfo>
-      <Actions userId={getPropertyByPath(hit, "objectID")}/>
+      <Actions
+        userId={getPropertyByPath(hit, "objectID")}
+        handleOpen={handleOpen}
+      />
     </FriendContainer>
   );
 };

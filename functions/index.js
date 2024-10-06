@@ -6,6 +6,10 @@ const onMemberLeft = require("./group/onMemberLeft");
 
 const onPostCreated = require("./post/onPostCreated");
 const onPostDeleted = require("./post/onPostDeleted");
+const onCommentAdded = require("./post/onCommentAdded");
+const onCommentDeleted = require("./post/onCommentDeleted");
+const onPostLiked = require("./post/onPostLiked");
+const onLikeDeleted = require("./post/onLikeDeleted");
 const countHashtagPosts = require("./post/countHashtagPosts");
 
 const sendUserNotification = require("./util/sendUserNotification");
@@ -26,6 +30,8 @@ const getFriendPosts = require("./recommend/getFriendPosts");
 const getUserGroupPosts = require("./recommend/getUserGroupPosts");
 const findSimilarUsers = require("./recommend/findSimilarUsers");
 const recommendedGroups = require("./recommend/recommendGroups");
+const recommendedPostsByAffinity = require("./recommend/recommendPostsByAffinity");
+const recommendedPostsByEmbedding = require("./recommend/recommendPostsByEmbedding");
 
 admin.initializeApp();
 
@@ -34,6 +40,8 @@ exports.updateDocumentWithLabels = updateDocumentWithLabels.updateDocumentWithLa
 
 exports.onPostCreated = onPostCreated.onPostCreated;
 exports.onPostDeleted = onPostDeleted.onPostDeleted;
+exports.onCommentAdded = onCommentAdded.onCommentAdded;
+exports.onPostLiked = onPostLiked.onPostLiked;
 exports.countHashtagPosts = countHashtagPosts.countHashtagPosts;
 
 exports.sendFriendRequest = sendFriendRequest.sendFriendRequest;
@@ -55,3 +63,5 @@ exports.getFriendPosts = getFriendPosts.getFriendPosts;
 exports.getUserGroupPosts = getUserGroupPosts.getUserGroupPosts;
 exports.findSimilarUsers = findSimilarUsers.findSimilarUsers;
 exports.recommendedGroups = recommendedGroups.recommendGroups;
+exports.recommendedPostsByAffinity = recommendedPostsByAffinity.recommendPostsByAffinity;
+exports.recommendedPostsByEmbedding = recommendedPostsByEmbedding.recommendPostsByEmbedding;

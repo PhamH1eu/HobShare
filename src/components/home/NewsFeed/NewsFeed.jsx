@@ -33,7 +33,7 @@ const NewsFeed = () => {
         <div>
           {posts.map((post, index) => (
             // @ts-ignore
-            <Post key={index} postId={post.id} />
+            <Post key={index} postId={post} />
           ))}
         </div>
       )}

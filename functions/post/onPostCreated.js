@@ -79,6 +79,13 @@ exports.onPostCreated = functions.firestore
             createdAtISO: createdAtISO,
           }
         );
+
+        // Create a Firestore document in the group's posts collection
+        await db.doc(`groups/${data.groupId}/posts/${postId}`).set({
+          ...data, // Use the existing post data
+          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+          postId: postId,
+        });
       } else {
         // Create Post node and link to User node
         await session.run(
@@ -94,6 +101,13 @@ exports.onPostCreated = functions.firestore
             createdAtISO: createdAtISO,
           }
         );
+
+        // Create a Firestore document in the user's posts collection
+        await db.doc(`users/${data.authorId}/posts/${postId}`).set({
+          ...data, // Use the existing post data
+          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+          postId: postId,
+        });
       }
     } catch (error) {
       console.error("Error updating document with labels", error);

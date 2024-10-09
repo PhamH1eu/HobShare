@@ -3,6 +3,8 @@ const admin = require("firebase-admin");
 const onGroupCreated = require("./group/onGroupCreated");
 const onMemberJoined = require("./group/onMemberJoined");
 const onMemberLeft = require("./group/onMemberLeft");
+const onAdminUpdated = require("./group/onAdminUpdated");
+const onGroupDeleted = require("./group/onGroupDeleted");
 
 const onPostCreated = require("./post/onPostCreated");
 const onPostDeleted = require("./post/onPostDeleted");
@@ -43,6 +45,8 @@ exports.onPostDeleted = onPostDeleted.onPostDeleted;
 exports.onCommentAdded = onCommentAdded.onCommentAdded;
 exports.onPostLiked = onPostLiked.onPostLiked;
 exports.countHashtagPosts = countHashtagPosts.countHashtagPosts;
+exports.onLikeDeleted = onLikeDeleted.onLikeDeleted;
+exports.onCommentDeleted = onCommentDeleted.onCommentDeleted;
 
 exports.sendFriendRequest = sendFriendRequest.sendFriendRequest;
 exports.cancelFriendRequest = cancelFriendRequest.cancelFriendRequest;
@@ -55,6 +59,8 @@ exports.getAllFriendsOfUser = getAllFriendsOfUser.getAllFriendsOfUser;
 exports.onGroupCreated = onGroupCreated.onGroupCreated;
 exports.onMemberJoined = onMemberJoined.onMemberJoined;
 exports.onMemberLeft = onMemberLeft.onMemberLeft;
+exports.onAdminUpdated = onAdminUpdated.onAdminUpdated;
+exports.onGroupDeleted = onGroupDeleted.onGroupDeleted;
 
 exports.createUserNode = createUserNode.createUserNode;
 exports.onUserUpdateActivity = onUserUpdateActivity.onUserUpdateActivity;

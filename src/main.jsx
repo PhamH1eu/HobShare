@@ -3,6 +3,7 @@ import App from "./App.jsx";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 import "./index.css";
 
 const queryClient = new QueryClient();
@@ -33,6 +34,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
         <App />
+        <ReactQueryDevtools initialIsOpen={true} />
       </ThemeProvider>
     </QueryClientProvider>
   </BrowserRouter>

@@ -160,6 +160,13 @@ class SubDatabaseService {
     });
   };
 
+  replaceArray = async (path, data, value) => {
+    const docRef = doc(db, this.collection, path);
+    return await updateDoc(docRef, {
+      [data]: value,
+    });
+  };
+
   count = async (path) => {
     const q = collection(db, this.collection, path);
     const snapshot = await getCountFromServer(q);

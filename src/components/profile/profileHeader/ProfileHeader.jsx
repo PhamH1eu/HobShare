@@ -110,6 +110,7 @@ const TextWrapper = styled.div`
 `;
 
 const Name = styled.p`
+  width: max-content;
   font-size: 2.7rem;
   font-weight: 700;
 `;

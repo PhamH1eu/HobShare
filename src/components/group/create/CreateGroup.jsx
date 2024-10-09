@@ -88,21 +88,6 @@ const GroupCreationPage = () => {
           },
         ],
       }),
-      ...selectedUsers.map((user) => {
-        return UserService.createSubCollection(
-          `${user.receiverId}/joinedgroups/${uid}`,
-          {
-            groupId: uid,
-            name: name,
-            wallpaper: wallpaperurl,
-          }
-        );
-      }),
-      UserService.createSubCollection(`${currentUserId}/admingroups/${uid}`, {
-        groupId: uid,
-        name: name,
-        wallpaper: wallpaperurl,
-      }),
     ]);
     await GroupService.batchWrite(`${uid}/members`, selectedUsers);
     setLoading(false);

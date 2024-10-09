@@ -35,31 +35,31 @@ const GroupNewsFeed = () => {
   const { isLoading, isAdmin, group } = useGroupInfo(groupId);
   const { posts, isLoading: isPostLoading } = useGroupPosts(groupId);
 
-  useEffect(() => {
-    const expires = Number(
-      localStorage.getItem("Expires") ?? Date.now() + 10 * 1000
-    );
-    localStorage.setItem("Expires", expires.toString());
+  // useEffect(() => {
+  //   const expires = Number(
+  //     localStorage.getItem("Expires") ?? Date.now() + 10 * 1000
+  //   );
+  //   localStorage.setItem("Expires", expires.toString());
 
-    let tid;
-    let timeLeft = expires - Date.now();
-    const countdown = (t) => {
-      if (timeLeft > 0) {
-        tid = window.setTimeout(() => {
-          window.location.reload();
-          //increase affinity
-          timeLeft = timeLeft - t;
-          countdown(10 * 1000);
-        }, t);
-      } else {
-        localStorage.removeItem("Expires");
-      }
-    };
-    countdown(timeLeft % (10 * 1000) || 10 * 1000);
-    return () => {
-      clearTimeout(tid);
-    };
-  }, []);
+  //   let tid;
+  //   let timeLeft = expires - Date.now();
+  //   const countdown = (t) => {
+  //     if (timeLeft > 0) {
+  //       tid = window.setTimeout(() => {
+  //         window.location.reload();
+  //         //increase affinity
+  //         timeLeft = timeLeft - t;
+  //         countdown(10 * 1000);
+  //       }, t);
+  //     } else {
+  //       localStorage.removeItem("Expires");
+  //     }
+  //   };
+  //   countdown(timeLeft % (10 * 1000) || 10 * 1000);
+  //   return () => {
+  //     clearTimeout(tid);
+  //   };
+  // }, []);
 
   if (isLoading || isPostLoading) {
     return (

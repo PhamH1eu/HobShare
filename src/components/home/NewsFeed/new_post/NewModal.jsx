@@ -250,18 +250,6 @@ const NewModal = ({ open, onClose, groupId, groupName, groupWallpaper }) => {
       );
       await PostService.update(resID.id, { image: url });
     }
-    if (groupId && groupName && groupWallpaper) {
-      await GroupService.createSubCollection(`${groupId}/posts/${resID.id}`, {
-        id: resID.id,
-      });
-    } else {
-      await UserService.createSubCollection(
-        `${currentUserId}/posts/${resID.id}`,
-        {
-          id: resID.id,
-        }
-      );
-    }
     setText("");
     setHashtags([]);
     setSelectedFile(null);

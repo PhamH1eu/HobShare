@@ -5,6 +5,7 @@ import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
 import AddUserToChat from "src/services/chat/AddUserToChat";
 import { useUserStore } from "src/store/userStore";
 import { useChatDialogStore } from "src/store/chatDialogStore";
+import { Skeleton } from "@mui/material";
 
 const Message = styled.button`
   background-color: #6ec924;
@@ -19,14 +20,14 @@ const Message = styled.button`
   cursor: pointer;
 `;
 
-const MessageButton = ({userId}) => {
+const MessageButton = ({ userId }) => {
   const { chats } = useChatList();
   const addChat = useChatDialogStore((state) => state.addChat);
 
   const { currentUserId } = useUserStore();
   const { data: currentUser } = useUserInfo(currentUserId);
-  const { data: user } = useUserInfo(userId);
-  const didInboxed = chats.find((chat) => chat.receiverId === user.id);
+  const { data: user, isLoading } = useUserInfo(userId);
+  const didInboxed = chats.find((chat) => chat?.receiverId === user?.id);
 
   const handleAddUser = async () => {
     if (didInboxed === undefined) {
@@ -39,6 +40,9 @@ const MessageButton = ({userId}) => {
       addChat(didInboxed);
     }
   };
+
+  if (isLoading)
+    return <Skeleton variant="rounded" width="80px" height="35px" />;
 
   return (
     <Message onClick={handleAddUser}>

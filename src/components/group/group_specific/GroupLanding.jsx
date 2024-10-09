@@ -116,9 +116,11 @@ const GroupLanding = () => {
         <TabPanel value="3" sx={{ padding: 0 }}>
           <Members />
         </TabPanel>
-        <TabPanel value="4" sx={{ padding: 0 }}>
-          <Requests />
-        </TabPanel>
+        {isAdmin && (
+          <TabPanel value="4" sx={{ padding: 0 }}>
+            <Requests />
+          </TabPanel>
+        )}
       </Wrapper>
     </TabContext>
   );

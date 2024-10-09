@@ -16,7 +16,7 @@ import useDialog from "src/shared/hooks/util/useDialog";
 import useModal from "src/shared/hooks/util/useModal";
 import { useNavigate, useParams } from "react-router-dom";
 import { useUserStore } from "src/store/userStore";
-import { GroupService, UserService } from "src/services/SubDatabaseService";
+import { GroupService } from "src/services/SubDatabaseService";
 import useGroupInfo from "src/shared/hooks/fetch/group/useGroupInfo";
 import { LoadingButton } from "@mui/lab";
 import { useState } from "react";
@@ -60,21 +60,16 @@ const DeleteModal = ({ open, onClose }) => {
   const [loading, setLoading] = useState(false);
   const { groupId } = useParams();
   const { group } = useGroupInfo(groupId);
-  const { currentUserId } = useUserStore();
   const navigate = useNavigate();
   const handleDelete = async () => {
     setLoading(true);
     await Promise.all([
-      UserService.removeSubCollection(
-        `${currentUserId}/admingroups/${groupId}`
-      ),
-      GroupService.removeSubCollection(`${groupId}`),
       GroupService.removeCollection(`${groupId}/pendingRequests`),
-      GroupService.removeCollection(`${groupId}/posts`),
+      GroupService.removeSubCollection(`${groupId}`),
     ]);
     setLoading(false);
     onClose();
-    navigate("/group");
+    navigate("/");
   };
 
   return (
@@ -117,9 +112,6 @@ const LeaveDialog = ({ open, onClose }) => {
   const handleLeave = async () => {
     await GroupService.removeSubCollection(
       `${groupId}/members/${currentUserId}`
-    );
-    await UserService.removeSubCollection(
-      `${currentUserId}/joinedgroups/${groupId}`
     );
     window.location.reload();
   };

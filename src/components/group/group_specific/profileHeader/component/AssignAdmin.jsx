@@ -126,6 +126,7 @@ const NewAdminModal = ({ open, onClose }) => {
   const handleClick = (item) => {
     setError("");
     setNewAdmin(item);
+    console.log(item);
   };
   //cleanup
   useEffect(() => {
@@ -139,29 +140,12 @@ const NewAdminModal = ({ open, onClose }) => {
       setError("Vui lòng chọn quản trị viên mới");
     }
     setLoading(true);
-    await GroupService.removeDataFromArray(
-      `${groupId}`,
-      "admins",
-      group.admins[0]
-    );
-    await GroupService.addDataToArray(`${groupId}`, "admins", {
-      avatar: newAdmin.avatar,
-      userId: newAdmin.userId,
-      username: newAdmin.username,
-    });
-    await Promise.all([
-      UserService.removeSubCollection(
-        `${currentUserId}/admingroups/${groupId}`
-      ),
-      UserService.removeSubCollection(
-        `${newAdmin.userId}/joinedgroups/${groupId}`
-      ),
-      UserService.createSubCollection(
-        `${newAdmin.userId}/admingroups/${groupId}`
-      ),
-      await GroupService.removeSubCollection(
-        `${groupId}/members/${newAdmin.userId}`
-      ),
+    await GroupService.replaceArray(`${groupId}`, "admins", [
+      {
+        avatar: newAdmin.avatar,
+        userId: newAdmin.userId,
+        username: newAdmin.username,
+      },
     ]);
     setLoading(false);
     onClose();

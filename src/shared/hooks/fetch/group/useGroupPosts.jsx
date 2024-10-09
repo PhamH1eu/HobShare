@@ -7,7 +7,7 @@ const useGroupPosts = (groupId) => {
   );
 
   return {
-    posts,
+    posts: posts || [],
     isLoading,
   };
 };

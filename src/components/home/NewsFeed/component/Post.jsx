@@ -255,14 +255,13 @@ const Post = ({ postId, initComt, isAdminGroup }) => {
   const handleDeletePost = async () => {
     setLoading(true);
     await PostService.delete(postId);
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     if (post.groupId) {
-      await GroupService.removeSubCollection(`${post.groupId}/posts/${postId}`);
       queryClient.invalidateQueries(["groupposts", post.groupId]);
     } else {
-      await UserService.removeSubCollection(`${currentUserId}/posts/${postId}`);
+      queryClient.invalidateQueries(["userposts", currentUserId]);
     }
     await LikeService.removeCollection(`${postId}/comments`);
-    queryClient.invalidateQueries("posts");
     setLoading(false);
     handleCloseDeleteModal();
   };
@@ -283,6 +282,10 @@ const Post = ({ postId, initComt, isAdminGroup }) => {
   const location = useLocation();
   const isNotGroupPath = location.pathname.startsWith("/group/");
   const [isExpanded, setIsExpanded] = useState(false);
+
+  if (!post.authorId) {
+    return null;
+  }
 
   if (isLoading) {
     return (

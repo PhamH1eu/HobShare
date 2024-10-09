@@ -123,14 +123,6 @@ function RequestTabPanel({ pendingRequests }) {
       `${groupId}/members/${request.userId}`,
       request
     );
-    await UserService.createSubCollection(
-      `${request.userId}/joinedgroups/${groupId}`,
-      {
-        groupId: groupId,
-        name: group.name,
-        wallpaper: group.wallpaper,
-      }
-    );
     queryClient.invalidateQueries("pendingRequests");
     queryClient.invalidateQueries("members");
     queryClient.invalidateQueries("membersCount");

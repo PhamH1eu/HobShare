@@ -1,8 +1,18 @@
 const functions = require("firebase-functions");
 const neo4jDriver = require("../util/neo4jconfig");
 
-const jaccardSimilarityQuery = `
-MATCH (u1:User {id: "XB0sIFdXOmN3waXjQE7kzSyVNyo2"})
+exports.findSimilarUsers = functions.https.onCall(async (data, context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError(
+      "unauthenticated",
+      "Request must be authenticated."
+    );
+  }
+
+  const currentUserId = context.auth.uid;
+
+  const jaccardSimilarityQuery = `
+MATCH (u1:User {id: $currentUserId})
 WITH u1
 
 // Find users that are not friends and have favorite captions
@@ -30,16 +40,6 @@ ORDER BY jaccardIndex DESC
 LIMIT 5;
 
 `;
-
-exports.findSimilarUsers = functions.https.onCall(async (data, context) => {
-  if (!context.auth) {
-    throw new functions.https.HttpsError(
-      "unauthenticated",
-      "Request must be authenticated."
-    );
-  }
-
-  const currentUserId = context.auth.uid;
 
   const session = neo4jDriver.session();
 

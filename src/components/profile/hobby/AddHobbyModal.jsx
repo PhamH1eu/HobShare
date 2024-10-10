@@ -13,7 +13,6 @@ import { useState } from "react";
 import { ActivitiesService, UserService } from "src/services/DatabaseService";
 import { useUserStore } from "src/store/userStore";
 import { useQueryClient } from "react-query";
-import formatString from "src/shared/helper/formatString";
 import uploadLabeledImage from "src/shared/helper/uploadLabeledImage";
 
 const AddHobbyModal = ({ open, handleClose }) => {

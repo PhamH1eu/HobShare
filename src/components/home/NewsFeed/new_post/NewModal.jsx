@@ -24,7 +24,6 @@ import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
 import { PostService } from "src/services/DatabaseService";
 
 import upload from "src/shared/helper/upload";
-import { GroupService, UserService } from "src/services/SubDatabaseService";
 import uploadLabeledImage from "src/shared/helper/uploadLabeledImage";
 
 const ModalContainer = MuiStyled(Box)`

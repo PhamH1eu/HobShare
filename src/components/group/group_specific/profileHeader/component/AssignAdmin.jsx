@@ -16,9 +16,7 @@ import { LoadingButton } from "@mui/lab";
 
 import useMembers from "src/shared/hooks/fetch/group/useMembers";
 import { useParams } from "react-router-dom";
-import { GroupService, UserService } from "src/services/SubDatabaseService";
-import useGroupInfo from "src/shared/hooks/fetch/group/useGroupInfo";
-import { useUserStore } from "src/store/userStore";
+import { GroupService } from "src/services/SubDatabaseService";
 
 const StyledDialogTitle = styled(DialogTitle)({
   display: "flex",
@@ -107,9 +105,7 @@ const Error = styled.p`
 
 const NewAdminModal = ({ open, onClose }) => {
   const [loading, setLoading] = useState(false);
-  const { currentUserId } = useUserStore();
   const { groupId } = useParams();
-  const { group } = useGroupInfo(groupId);
   const { members } = useMembers(groupId);
 
   const [search, setSearchinput] = useState("");

@@ -12,7 +12,6 @@ import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import { GroupService } from "src/services/SubDatabaseService";
-import { UserService } from "src/services/SubDatabaseService";
 
 import uploadSpecificImage from "src/shared/helper/uploadAvatar";
 

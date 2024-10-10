@@ -5,10 +5,9 @@ import HowToRegIcon from "@mui/icons-material/HowToReg";
 import usePendingRequests from "src/shared/hooks/fetch/group/usePendingRequests";
 import { useParams } from "react-router-dom";
 import CircularLoading from "src/shared/components/Loading";
-import { GroupService, UserService } from "src/services/SubDatabaseService";
+import { GroupService } from "src/services/SubDatabaseService";
 import { useQueryClient } from "react-query";
 import { useState } from "react";
-import useGroupInfo from "src/shared/hooks/fetch/group/useGroupInfo";
 
 const Container = styled.div`
   width: 600px;
@@ -110,7 +109,6 @@ const KickButton = styled(LoadingButton)`
 function RequestTabPanel({ pendingRequests }) {
   const queryClient = useQueryClient();
   const { groupId } = useParams();
-  const { group } = useGroupInfo(groupId);
   const [loadingAccept, setLoadingAccept] = useState(false);
   const [loadingDeny, setLoadingDeny] = useState(false);
 

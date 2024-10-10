@@ -24,8 +24,8 @@ exports.onUserUpdateActivity = functions.firestore
 
     // Extract the "formatted_caption" from each object in the favorite array
     const formattedCaptions = updatedFavorites
-      .filter((fav) => fav.formatted_capption) // Only take objects with a formatted_caption key
-      .map((fav) => fav.formatted_capption); // Extract the formatted_caption value
+      .filter((fav) => fav.caption) // Only take objects with a formatted_caption key
+      .map((fav) => fav.caption); // Extract the formatted_caption value
 
     const apiKey = geminiconfig.api_key;
     const geminiApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent`;

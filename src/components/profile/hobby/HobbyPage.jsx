@@ -166,7 +166,6 @@ const HobbiesPage = () => {
   const addHobby = async (hit) => {
     const newHobby = {
       caption: hit.caption,
-      formatted_capption: hit.formatted_capption,
       image: hit.image,
       id: hit.objectID,
     };

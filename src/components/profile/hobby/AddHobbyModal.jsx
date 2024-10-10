@@ -45,7 +45,6 @@ const AddHobbyModal = ({ open, handleClose }) => {
     setLoading(true);
     const newHobby = {
       caption: caption,
-      formatted_capption: formatString(caption),
     };
     const resID = await ActivitiesService.create(newHobby);
     const res = await uploadLabeledImage(image.file, resID.id, "activities");

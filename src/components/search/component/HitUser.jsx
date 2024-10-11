@@ -1,4 +1,4 @@
-import { Box, Typography, Avatar } from "@mui/material";
+import { Box, Typography, Avatar, Skeleton } from "@mui/material";
 import styled from "styled-components";
 
 import { getPropertyByPath } from "instantsearch.js/es/lib/utils";
@@ -13,6 +13,7 @@ import useSentRequest from "src/shared/hooks/fetch/friend/useSentRequest";
 import useUserFriend from "src/shared/hooks/fetch/friend/useUserFriend";
 import { useUserStore } from "src/store/userStore";
 import SpecialAddButton from "./SpecialAddButton";
+import useCommonFriend from "src/shared/hooks/fetch/friend/useCommonFriend";
 
 const FriendContainer = styled(Box)`
   background-color: #ffffff;
@@ -104,7 +105,23 @@ const Actions = ({ userId, handleOpen }) => {
   );
 };
 
+const CommonFriend = ({ userId }) => {
+  const { commonsFriend, isLoading } = useCommonFriend(userId);
+
+  return isLoading ? (
+    <Skeleton variant="rounded" animation="wave" width="60px" height="20px" />
+  ) : (
+    <Typography variant="body2" color="textSecondary">
+      {commonsFriend} bạn chung
+    </Typography>
+  );
+};
+
 export const HitUser = ({ hit, handleOpen }) => {
+  const { currentUserId } = useUserStore();
+
+  if (getPropertyByPath(hit, "objectID") == currentUserId) return null;
+
   return (
     <FriendContainer>
       <FriendInfo>
@@ -117,9 +134,7 @@ export const HitUser = ({ hit, handleOpen }) => {
               {getPropertyByPath(hit, "username")}
             </Typography>
           </StyledLink>
-          <Typography variant="body2" color="textSecondary">
-            24 mutual friends
-          </Typography>
+          <CommonFriend userId={getPropertyByPath(hit, "objectID")} />
           {getPropertyByPath(hit, "bio.education") && (
             <Typography variant="body2" color="textSecondary">
               Học tập tại {getPropertyByPath(hit, "bio.education")}

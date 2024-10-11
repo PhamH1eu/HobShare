@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Avatar, Box } from "@mui/material";
+import { Avatar, Box, Skeleton } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
 import usePendingRequests from "src/shared/hooks/fetch/group/usePendingRequests";
@@ -8,6 +8,7 @@ import CircularLoading from "src/shared/components/Loading";
 import { GroupService } from "src/services/SubDatabaseService";
 import { useQueryClient } from "react-query";
 import { useState } from "react";
+import useCommonFriend from "src/shared/hooks/fetch/friend/useCommonFriend";
 
 const Container = styled.div`
   width: 600px;
@@ -106,6 +107,16 @@ const KickButton = styled(LoadingButton)`
   }
 `;
 
+const CommonFriend = ({ userId }) => {
+  const { commonsFriend, isLoading } = useCommonFriend(userId);
+
+  return isLoading ? (
+    <Skeleton variant="rounded" animation="wave" width="60px" height="20px" />
+  ) : (
+    <CommonFriends>{commonsFriend} bạn chung</CommonFriends>
+  );
+};
+
 function RequestTabPanel({ pendingRequests }) {
   const queryClient = useQueryClient();
   const { groupId } = useParams();
@@ -144,7 +155,7 @@ function RequestTabPanel({ pendingRequests }) {
             <Avatar src={request.avatar} />
             <FriendInfo>
               <FriendName>{request.username}</FriendName>
-              <CommonFriends>11 bạn chung</CommonFriends>
+              <CommonFriend userId={request.userId} />
             </FriendInfo>
             <Accept
               loading={loadingAccept}

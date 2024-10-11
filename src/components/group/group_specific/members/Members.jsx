@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Avatar, Box } from "@mui/material";
+import { Avatar, Box, Skeleton } from "@mui/material";
 import { useParams } from "react-router-dom";
 import useGroupInfo from "src/shared/hooks/fetch/group/useGroupInfo";
 import useMembers from "src/shared/hooks/fetch/group/useMembers";
@@ -18,6 +18,7 @@ import useSentRequest from "src/shared/hooks/fetch/friend/useSentRequest";
 import useUserFriend from "src/shared/hooks/fetch/friend/useUserFriend";
 import StyledLink from "src/shared/components/StyledLink";
 import { useUserStore } from "src/store/userStore";
+import useCommonFriend from "src/shared/hooks/fetch/friend/useCommonFriend";
 
 const Container = styled.div`
   width: 600px;
@@ -176,6 +177,8 @@ const Member = ({ member }) => {
   const queryClient = useQueryClient();
   const { groupId } = useParams();
   const { isAdmin } = useGroupInfo(groupId);
+  const { commonsFriend, isLoading } = useCommonFriend(member.userId);
+  const { currentUserId } = useUserStore();
 
   const [loading, setLoading] = useState(false);
 
@@ -199,7 +202,16 @@ const Member = ({ member }) => {
       </StyledLink>
       <FriendInfo>
         <FriendName>{member.username}</FriendName>
-        <CommonFriends>12 bạn chung</CommonFriends>
+        {isLoading ? (
+          <Skeleton
+            variant="rounded"
+            animation="wave"
+            width="60px"
+            height="20px"
+          />
+        ) : currentUserId === member.userId ? null : (
+          <CommonFriends>{commonsFriend} bạn chung</CommonFriends>
+        )}
       </FriendInfo>
       <Actions userId={member.userId} />
       {isAdmin && (
@@ -227,6 +239,9 @@ function FriendsTabPanel({ users }) {
 }
 
 const Admins = ({ admins }) => {
+  const { commonsFriend, isLoading } = useCommonFriend(admins.userId);
+  const { currentUserId } = useUserStore();
+
   return (
     <Box>
       {admins.map((admin, index) => (
@@ -236,7 +251,16 @@ const Admins = ({ admins }) => {
           </StyledLink>
           <FriendInfo>
             <FriendName>{admin.username}</FriendName>
-            <CommonFriends>12 bạn chung</CommonFriends>
+            {isLoading ? (
+              <Skeleton
+                variant="rounded"
+                animation="wave"
+                width="60px"
+                height="20px"
+              />
+            ) : currentUserId === admin.userId ? null : (
+              <CommonFriends>{commonsFriend} bạn chung</CommonFriends>
+            )}
           </FriendInfo>
           <Actions userId={admin.userId} />
         </FriendDetails>

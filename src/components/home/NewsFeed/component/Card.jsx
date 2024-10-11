@@ -10,6 +10,7 @@ import AddRequestModal from "src/shared/components/friend_button/AddRequestModal
 import useSentRequest from "src/shared/hooks/fetch/friend/useSentRequest";
 import useCancelFriendRequestMutation from "src/shared/hooks/mutation/friend/useCancelFriendRequestMutation";
 import useUserInfo from "src/shared/hooks/fetch/user/useUserInfo";
+import useCommonFriend from "src/shared/hooks/fetch/friend/useCommonFriend";
 
 export default function UserCard({ userId }) {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ export default function UserCard({ userId }) {
   const { sentRequests, isLoadingSent } = useSentRequest();
   const mutation = useCancelFriendRequestMutation();
   const { data: user, isLoading } = useUserInfo(userId);
+  const { commonsFriend, isLoading: isLoadingCommon } = useCommonFriend(userId);
 
   if (isLoading) {
     return (
@@ -46,9 +48,18 @@ export default function UserCard({ userId }) {
           >
             {user.username}
           </Typography>
-          <Typography gutterBottom variant="caption" component="div">
-            10 bạn chung
-          </Typography>
+          {isLoadingCommon ? (
+            <Skeleton
+              variant="rounded"
+              animation="wave"
+              width="60px"
+              height="20px"
+            />
+          ) : (
+            <Typography gutterBottom variant="caption" component="div">
+              {commonsFriend} bạn chung
+            </Typography>
+          )}
         </CardContent>
       </CardActionArea>
       <CardActions

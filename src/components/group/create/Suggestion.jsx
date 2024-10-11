@@ -168,9 +168,6 @@ const FriendSuggestions = ({ selectedUsers, setSelectedUsers }) => {
                     <Typography variant="body1">
                       {suggestion.receiverName}
                     </Typography>
-                    <Typography variant="body2" color="textSecondary">
-                      6 bạn chung
-                    </Typography>
                   </Box>
                 </SuggestionItem>
               ))}

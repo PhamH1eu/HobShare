@@ -1,9 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import { Avatar, Tab, Tabs, Box } from "@mui/material";
+import { Avatar, Tab, Tabs, Box, Skeleton } from "@mui/material";
 import CircularLoading from "src/shared/components/Loading";
 import { useNavigate, useParams } from "react-router-dom";
 import useSpecificUserFriend from "src/shared/hooks/fetch/friend/useSpecificUserFriend";
+import useCommonFriend from "src/shared/hooks/fetch/friend/useCommonFriend";
+import { useUserStore } from "src/store/userStore";
 
 const Container = styled.div`
   width: 600px;
@@ -57,6 +59,17 @@ const CommonFriends = styled.div`
   color: #606770;
 `;
 
+const CommonFriend = ({ userId }) => {
+  const { commonsFriend, isLoading } = useCommonFriend(userId);
+  const { currentUserId } = useUserStore();
+
+  return isLoading ? (
+    <Skeleton variant="rounded" animation="wave" width="60px" height="20px" />
+  ) : currentUserId === userId ? null : (
+    <CommonFriends>{commonsFriend} bạn chung</CommonFriends>
+  );
+};
+
 function FriendsTabPanel({ friends }) {
   const navigate = useNavigate();
   return (
@@ -70,7 +83,7 @@ function FriendsTabPanel({ friends }) {
             />
             <FriendInfo>
               <FriendName>{friend.name}</FriendName>
-              <CommonFriends>10 bạn chung</CommonFriends>
+              <CommonFriend userId={friend.id} />
             </FriendInfo>
           </FriendDetails>
         </FriendItem>

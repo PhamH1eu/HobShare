@@ -24,6 +24,7 @@ const removeFriend = require("./friend/removeFriend");
 const getAllFriends = require("./friend/getAllFriends");
 const denyFriendRequest = require("./friend/denyFriendRequest");
 const getAllFriendsOfUser = require("./friend/getAllFriendsOfUser");
+const getCommonFriendsCount = require("./friend/getCommonFriends");
 
 const createUserNode = require("./user/createUserNeo4j");
 const onUserUpdateActivity = require("./user/onUserUpdateActivity");
@@ -55,6 +56,7 @@ exports.removeFriend = removeFriend.removeFriend;
 exports.getAllFriends = getAllFriends.getAllFriends;
 exports.denyFriendRequest = denyFriendRequest.denyFriendRequest;
 exports.getAllFriendsOfUser = getAllFriendsOfUser.getAllFriendsOfUser;
+exports.getCommonFriendsCount = getCommonFriendsCount.getCommonFriendsCount;
 
 exports.onGroupCreated = onGroupCreated.onGroupCreated;
 exports.onMemberJoined = onMemberJoined.onMemberJoined;

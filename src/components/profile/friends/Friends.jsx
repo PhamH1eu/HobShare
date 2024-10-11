@@ -60,13 +60,13 @@ const CommonFriends = styled.div`
 `;
 
 const CommonFriend = ({ userId }) => {
-  const { commonsFriend, isLoading } = useCommonFriend(userId);
+  const { commonFriends, isLoading } = useCommonFriend(userId);
   const { currentUserId } = useUserStore();
 
   return isLoading ? (
     <Skeleton variant="rounded" animation="wave" width="60px" height="20px" />
   ) : currentUserId === userId ? null : (
-    <CommonFriends>{commonsFriend} bạn chung</CommonFriends>
+    <CommonFriends>{commonFriends} bạn chung</CommonFriends>
   );
 };
 

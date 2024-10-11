@@ -34,7 +34,7 @@ const StyledCard = styled(Card)`
 const FriendRequestCard = ({ name, avatarUrl, senderId }) => {
   const mutationAccept = useAcceptRequestMutation();
   const mutationDeny = useDenyFriendRequestMutation();
-  const { commonsFriend, isLoading } = useCommonFriend(senderId);
+  const { commonFriends, isLoading } = useCommonFriend(senderId);
 
   const accept = () => {
     if (mutationAccept.isLoading) return;
@@ -66,7 +66,7 @@ const FriendRequestCard = ({ name, avatarUrl, senderId }) => {
               />
             ) : (
               <Typography variant="body2" color="text.secondary">
-                {commonsFriend} bạn chung
+                {commonFriends} bạn chung
               </Typography>
             )}
           </Box>

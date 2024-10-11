@@ -177,7 +177,7 @@ const Member = ({ member }) => {
   const queryClient = useQueryClient();
   const { groupId } = useParams();
   const { isAdmin } = useGroupInfo(groupId);
-  const { commonsFriend, isLoading } = useCommonFriend(member.userId);
+  const { commonFriends, isLoading } = useCommonFriend(member.userId);
   const { currentUserId } = useUserStore();
 
   const [loading, setLoading] = useState(false);
@@ -210,7 +210,7 @@ const Member = ({ member }) => {
             height="20px"
           />
         ) : currentUserId === member.userId ? null : (
-          <CommonFriends>{commonsFriend} bạn chung</CommonFriends>
+          <CommonFriends>{commonFriends} bạn chung</CommonFriends>
         )}
       </FriendInfo>
       <Actions userId={member.userId} />
@@ -239,7 +239,7 @@ function FriendsTabPanel({ users }) {
 }
 
 const Admins = ({ admins }) => {
-  const { commonsFriend, isLoading } = useCommonFriend(admins.userId);
+  const { commonFriends, isLoading } = useCommonFriend(admins.userId);
   const { currentUserId } = useUserStore();
 
   return (
@@ -259,7 +259,7 @@ const Admins = ({ admins }) => {
                 height="20px"
               />
             ) : currentUserId === admin.userId ? null : (
-              <CommonFriends>{commonsFriend} bạn chung</CommonFriends>
+              <CommonFriends>{commonFriends} bạn chung</CommonFriends>
             )}
           </FriendInfo>
           <Actions userId={admin.userId} />

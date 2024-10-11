@@ -18,7 +18,7 @@ export default function UserCard({ userId }) {
   const { sentRequests, isLoadingSent } = useSentRequest();
   const mutation = useCancelFriendRequestMutation();
   const { data: user, isLoading } = useUserInfo(userId);
-  const { commonsFriend, isLoading: isLoadingCommon } = useCommonFriend(userId);
+  const { commonFriends, isLoading: isLoadingCommon } = useCommonFriend(userId);
 
   if (isLoading) {
     return (
@@ -57,7 +57,7 @@ export default function UserCard({ userId }) {
             />
           ) : (
             <Typography gutterBottom variant="caption" component="div">
-              {commonsFriend} bạn chung
+              {commonFriends} bạn chung
             </Typography>
           )}
         </CardContent>

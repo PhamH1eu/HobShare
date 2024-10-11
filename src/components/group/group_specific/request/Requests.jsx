@@ -108,12 +108,12 @@ const KickButton = styled(LoadingButton)`
 `;
 
 const CommonFriend = ({ userId }) => {
-  const { commonsFriend, isLoading } = useCommonFriend(userId);
+  const { commonFriends, isLoading } = useCommonFriend(userId);
 
   return isLoading ? (
     <Skeleton variant="rounded" animation="wave" width="60px" height="20px" />
   ) : (
-    <CommonFriends>{commonsFriend} bạn chung</CommonFriends>
+    <CommonFriends>{commonFriends} bạn chung</CommonFriends>
   );
 };
 

@@ -106,13 +106,13 @@ const Actions = ({ userId, handleOpen }) => {
 };
 
 const CommonFriend = ({ userId }) => {
-  const { commonsFriend, isLoading } = useCommonFriend(userId);
+  const { commonFriends, isLoading } = useCommonFriend(userId);
 
   return isLoading ? (
     <Skeleton variant="rounded" animation="wave" width="60px" height="20px" />
   ) : (
     <Typography variant="body2" color="textSecondary">
-      {commonsFriend} bạn chung
+      {commonFriends} bạn chung
     </Typography>
   );
 };

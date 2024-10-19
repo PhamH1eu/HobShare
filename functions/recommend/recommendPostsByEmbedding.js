@@ -38,6 +38,7 @@ exports.recommendPostsByEmbedding = functions.https.onCall(
       WITH currentUser, post, 
            CASE WHEN currentNorm * postNorm <> 0 THEN dotProduct / (currentNorm * postNorm) ELSE 0 END AS cosineSimilarity
       RETURN post.id AS postId
+      ORDER BY cosineSimilarity DESC
       UNION
       MATCH (currentUser:User {id: $userId})
 

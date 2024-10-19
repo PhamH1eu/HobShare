@@ -7,6 +7,10 @@ const useUserPosts = (currentUserId) => {
     () => UserService.getAllSubCollection(`${currentUserId}/posts`)
   );
 
+  if (!isLoading) {
+    posts.sort((a, b) => b.createdAt - a.createdAt);
+  }
+
   return {
     posts,
     isLoading,

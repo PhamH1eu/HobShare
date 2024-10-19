@@ -74,8 +74,7 @@ exports.updateDocumentWithLabels = functions.firestore
         await session.run(
           `
         MATCH (n:Post { id: $docId })
-        SET n.embedding = $embedding,
-            n.labels = $labels
+        SET n.embedding = $embedding
         RETURN n
       `,
           {

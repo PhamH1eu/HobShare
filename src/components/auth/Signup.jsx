@@ -9,7 +9,10 @@ import uploadSpecificImage from "src/shared/helper/uploadAvatar";
 
 import styled from "styled-components";
 import { useQueryClient } from "react-query";
-import { NotificationService } from "src/services/SubDatabaseService";
+import {
+  NotificationService,
+  SavedService,
+} from "src/services/SubDatabaseService";
 
 const Form = styled.form`
   color: #1b1b1b;
@@ -134,28 +137,29 @@ const Signup = () => {
         "wallpaper.jpg"
       );
 
-      await UserService.create(
-        {
-          username,
-          email,
-          avatar: avatarUrl,
-          wallpaper: wallpaperUrl,
-          id: res.user.uid,
-          blocked: [],
-        },
-        res.user.uid
-      );
-
-      await ChatService.create(
-        {
-          id: res.user.uid,
-        },
-        res.user.uid
-      );
-
-      await NotificationService.createSubCollection(res.user.uid, {
-        unreadNotis: 0,
-      });
+      await Promise.all([
+        UserService.create(
+          {
+            username,
+            email,
+            avatar: avatarUrl,
+            wallpaper: wallpaperUrl,
+            id: res.user.uid,
+            blocked: [],
+          },
+          res.user.uid
+        ),
+        SavedService.createSubCollection(res.user.uid, {}),
+        NotificationService.createSubCollection(res.user.uid, {
+          unreadNotis: 0,
+        }),
+        ChatService.create(
+          {
+            id: res.user.uid,
+          },
+          res.user.uid
+        ),
+      ]);
 
       setUserId(res.user.uid);
       setSignedUp(true);

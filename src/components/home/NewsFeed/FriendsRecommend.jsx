@@ -19,12 +19,12 @@ const Wrapper = styled.div`
 `;
 
 const FriendsRecommend = () => {
-  const { friends, isLoading } = useRecNewUsers();
+  const { friends, isLoading, basedOnLocation } = useRecNewUsers();
 
   if (isLoading) {
     return (
       <Wrapper>
-        <span>Những người có chung sở thích với bạn</span>
+        <span>Đang tìm bạn bè để gợi ý....</span>
         <div
           style={{
             maxWidth: "43vw",
@@ -62,9 +62,17 @@ const FriendsRecommend = () => {
     );
   }
 
+  if (friends.length === 0) {
+    return null;
+  }
+
   return (
     <Wrapper>
-      <span>Những người có chung sở thích với bạn</span>
+      {basedOnLocation ? (
+        <span>Những người ở gần bạn</span>
+      ) : (
+        <span>Những người có chung sở thích với bạn</span>
+      )}
       <Swiper
         spaceBetween={20}
         slidesPerView={4}

@@ -16,7 +16,10 @@ const useRecNewUsers = () => {
   );
 
   return {
-    friends: data?.similarUsers || [],
+    friends: data?.basedOnLocation
+      ? data?.nearestUsers
+      : data?.similarUsers || [],
+    basedOnLocation: data?.basedOnLocation || false,
     isLoading: isLoading,
   };
 };

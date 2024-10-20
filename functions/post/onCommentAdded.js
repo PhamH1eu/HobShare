@@ -18,6 +18,10 @@ exports.onCommentAdded = functions.firestore
       const postDoc = await postRef.get();
       const postData = postDoc.data();
 
+      await postRef.update({
+        priority: admin.firestore.FieldValue.increment(0.2),
+      });
+
       let targetNodeId, targetType;
 
       if (postData.groupId) {

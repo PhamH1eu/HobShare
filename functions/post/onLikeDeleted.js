@@ -11,14 +11,15 @@ exports.onLikeDeleted = functions.firestore
     const postId = context.params.postId;
 
     try {
-      const postSnapshot = await admin
-        .firestore()
-        .collection("posts")
-        .doc(postId)
-        .get();
+      const postRef = admin.firestore().collection("posts").doc(postId);
+      const postSnapshot = await postRef.get();
       const postData = postSnapshot.data();
       const groupId = postData.groupId || null;
       const authorId = postData.authorId;
+
+      await postRef.update({
+        priority: admin.firestore.FieldValue.increment(-0.1),
+      });
 
       // Determine target node (either a group or an author)
       const targetId = groupId ? groupId : authorId;

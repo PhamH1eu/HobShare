@@ -29,6 +29,10 @@ exports.onPostLiked = functions.firestore
         targetType = "User";
       }
 
+      await postRef.update({
+        priority: admin.firestore.FieldValue.increment(0.1),
+      });
+
       // Check if an affinity relationship already exists
       const result = await session.run(
         `

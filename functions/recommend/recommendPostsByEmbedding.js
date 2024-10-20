@@ -1,15 +1,35 @@
 const functions = require("firebase-functions");
+const admin = require("firebase-admin");
 const neo4jDriver = require("../util/neo4jconfig"); // Ensure this points to your Neo4j driver setup
 
 exports.recommendPostsByEmbedding = functions.https.onCall(
   async (data, context) => {
     const userId = context.auth.uid; // Get the current user's ID
+    const db = admin.firestore();
 
     if (!userId) {
       throw new functions.https.HttpsError(
         "unauthenticated",
         "User must be authenticated."
       );
+    }
+
+    const favoritesRef = db.collection("users").doc(userId);
+    const favoritesDoc = await favoritesRef.get();
+    const favorites = favoritesDoc.data().favorite;
+
+    if (favorites.length === 0 || !favorites) {
+      const postsSnapshot = await db
+        .collection("posts")
+        .orderBy("priority", "desc")
+        .get();
+
+      const popularPosts = [];
+      postsSnapshot.forEach((doc) => {
+        popularPosts.push(doc.id); // Assuming we return post IDs
+      });
+
+      return popularPosts;
     }
 
     const session = neo4jDriver.session();

@@ -13,6 +13,7 @@ const onCommentDeleted = require("./post/onCommentDeleted");
 const onPostLiked = require("./post/onPostLiked");
 const onLikeDeleted = require("./post/onLikeDeleted");
 const countHashtagPosts = require("./post/countHashtagPosts");
+const onScheduledTimeDecay = require("./post/onScheduledTimeDecay");
 
 const sendUserNotification = require("./util/sendUserNotification");
 const updateDocumentWithLabels = require("./util/updateDocumentWithLabels");
@@ -48,6 +49,7 @@ exports.onPostLiked = onPostLiked.onPostLiked;
 exports.countHashtagPosts = countHashtagPosts.countHashtagPosts;
 exports.onLikeDeleted = onLikeDeleted.onLikeDeleted;
 exports.onCommentDeleted = onCommentDeleted.onCommentDeleted;
+exports.onScheduledTimeDecay = onScheduledTimeDecay.onScheduledTimeDecay;
 
 exports.sendFriendRequest = sendFriendRequest.sendFriendRequest;
 exports.cancelFriendRequest = cancelFriendRequest.cancelFriendRequest;

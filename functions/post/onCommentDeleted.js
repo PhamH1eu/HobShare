@@ -13,14 +13,15 @@ exports.onCommentDeleted = functions.firestore
       const commentSnapshot = snap.data(); // The deleted comment document data
       const userId = commentSnapshot.userId;
 
-      const postSnapshot = await admin
-        .firestore()
-        .collection("posts")
-        .doc(postId)
-        .get();
+      const postRef = admin.firestore().collection("posts").doc(postId);
+      const postSnapshot = await postRef.get();
       const postData = postSnapshot.data();
       const groupId = postData.groupId || null;
       const authorId = postData.authorId;
+
+      await postRef.update({
+        priority: admin.firestore.FieldValue.increment(-0.2),
+      });
 
       // Determine target node (either a group or an author)
       const targetId = groupId ? groupId : authorId;

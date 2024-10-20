@@ -7,7 +7,7 @@ exports.onScheduledTimeDecay = functions.pubsub
     const db = admin.firestore();
     const postsRef = db.collection("posts");
     const now = admin.firestore.Timestamp.now(); // Current timestamp
-    const decayFactor = 1 / 6; // Decay factor for 6 days
+    const decayFactor = 0.1;
 
     try {
       // Get all posts
@@ -16,20 +16,24 @@ exports.onScheduledTimeDecay = functions.pubsub
       // Process each post
       snapshot.forEach(async (doc) => {
         const postData = doc.data();
-        const { createdAt, popularity } = postData; // Assuming popularity is P0
-        if (!createdAt || !popularity) return;
+        const { createdAt, priority } = postData;
+        if (!createdAt || !priority) return;
 
-        // Calculate the time difference in days since post creation
         const createdAtTime = createdAt.toDate();
-        const timeElapsedInDays =
-          (now.toDate() - createdAtTime) / (1000 * 60 * 60 * 24);
+        const nowTime = now.toDate();
 
-        // Apply the delayed exponential decay formula
-        const priority =
-          popularity * Math.exp(-decayFactor * timeElapsedInDays);
+        const timeElapsedInMs = nowTime.getTime() - createdAtTime.getTime();
+        const timeElapsedInDays = timeElapsedInMs / (1000 * 60 * 60 * 24);
 
-        // Update the post with the new priority field
-        await doc.ref.update({ priority });
+        if (timeElapsedInDays <= 2) {
+          return;
+        }
+
+        const daysAfterDelay = timeElapsedInDays - 2;
+
+        await doc.ref.update({
+          priority: priority * Math.exp(-decayFactor * daysAfterDelay),
+        });
 
         console.log(`Updated post ${doc.id} with new priority: ${priority}`);
       });

@@ -1,8 +1,9 @@
-import { Box, Typography, Button, Avatar } from "@mui/material";
+import { Box, Typography, Button, Avatar, Skeleton } from "@mui/material";
 import styled from "styled-components";
 
 import { getPropertyByPath } from "instantsearch.js/es/lib/utils";
 import { useNavigate } from "react-router-dom";
+import useMembersCount from "src/shared/hooks/fetch/group/useMemberCount";
 
 const GroupContainer = styled(Box)`
   background-color: #ffffff;
@@ -25,15 +26,23 @@ const GroupDetails = styled(Box)`
 
 export const HitGroup = ({ hit }) => {
   const navigate = useNavigate();
+  const { membersCount, isLoading } = useMembersCount(
+    getPropertyByPath(hit, "objectID")
+  );
+
   return (
     <GroupContainer>
       <GroupInfo>
         <Avatar src={getPropertyByPath(hit, "wallpaper")} />
         <GroupDetails>
           <Typography variant="h6">{getPropertyByPath(hit, "name")}</Typography>
-          <Typography variant="body2" color="textSecondary">
-            24 thành viên
-          </Typography>
+          {isLoading ? (
+            <Skeleton animation="wave" width={80} height={20} />
+          ) : (
+            <Typography variant="body2" color="textSecondary">
+              {membersCount} thành viên
+            </Typography>
+          )}
         </GroupDetails>
       </GroupInfo>
       <Button

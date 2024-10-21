@@ -17,12 +17,12 @@ const GroupRecommend = () => {
   // Initialize the first nine and the rest arrays
   let famousGroups, restGroups;
 
-  if (groups.length < 9) {
+  if (groups.length < 4) {
     famousGroups = groups; // Take the entire array if less than 9 elements
     restGroups = []; // Set restOfArray to an empty array
   } else {
-    famousGroups = groups.slice(0, 9); // Get the first 9 elements
-    restGroups = groups.slice(9); // Get the rest of the elements
+    famousGroups = groups.slice(0, 4); // Get the first 9 elements
+    restGroups = groups.slice(4); // Get the rest of the elements
   }
 
   return (

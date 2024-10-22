@@ -340,7 +340,7 @@ const Post = ({ postId, initComt, isAdminGroup }) => {
     setIsExpanded(!isExpanded);
   };
   const truncatedText =
-    post.text?.length > 130 ? `${post.text.substring(0, 130)}...` : post.text;
+    post.text?.length > 150 ? `${post.text.substring(0, 150)}...` : post.text;
 
   return (
     <PostWrapper>
@@ -435,7 +435,7 @@ const Post = ({ postId, initComt, isAdminGroup }) => {
         <div style={{ display: "flex" }}>
           <p style={{ padding: "10px", marginLeft: "5px" }}>
             {isExpanded ? post.text : truncatedText}
-            {post.text?.length > 130 && (
+            {post.text?.length > 150 && (
               <span
                 onClick={handleShowAll}
                 style={{

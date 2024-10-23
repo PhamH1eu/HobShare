@@ -57,7 +57,7 @@ exports.countHashtagPosts = functions.pubsub
       });
       const combinedTags = [...topHashtags, ...popularTags];
 
-      combinedTags.sort((a, b) => b.postCount - a.postCount);
+      combinedTags.sort((a, b) => a.postCount - b.postCount);
 
       // Keep only the top 3 hashtags
       const updatedPopularTags = combinedTags.slice(0, 3);

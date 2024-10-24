@@ -40,7 +40,7 @@ exports.countHashtagPosts = functions.pubsub
 
     try {
       const hashtagSnapshot = await hashtagCollectionRef
-        .orderBy("postCount")
+        .orderBy("postCount", "desc")
         .limit(3)
         .get();
       const topHashtags = [];
@@ -57,10 +57,17 @@ exports.countHashtagPosts = functions.pubsub
       });
       const combinedTags = [...topHashtags, ...popularTags];
 
-      combinedTags.sort((a, b) => a.postCount - b.postCount);
+      const uniqueTags = new Set();
+      const result = combinedTags.filter((item) => {
+        const duplicate = uniqueTags.has(item.id);
+        uniqueTags.add(item.id);
+        return !duplicate;
+      });
+
+      result.sort((a, b) => b.postCount - a.postCount);
 
       // Keep only the top 3 hashtags
-      const updatedPopularTags = combinedTags.slice(0, 3);
+      const updatedPopularTags = result.slice(0, 3);
 
       // 4. Update the 'populartags' collection
       const batch = db.batch();

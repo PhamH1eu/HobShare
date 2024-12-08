@@ -34,7 +34,7 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 export const messaging = getMessaging(app);
-export const functions = getFunctions(app);
+export const functions = getFunctions(app, "asia-southeast1");
 
 export const generateToken = async () => {
   const permission = await Notification.requestPermission();

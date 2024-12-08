@@ -12,7 +12,7 @@ exports.recommendPostsByAffinity = functions
       // Get the current timestamp and the timestamp for two days ago
       const currentTimestamp = new Date().toISOString(); // Current time in ISO format
       const twoDaysAgo = new Date(
-        Date.now() - 30 * 24 * 60 * 60 * 1000
+        Date.now() - 90 * 24 * 60 * 60 * 1000
       ).toISOString(); // 30 days ago in ISO format
 
       // Step 1: Match user with nodes (users or groups) they have an affinity with and filter posts by createdAt
@@ -34,7 +34,9 @@ exports.recommendPostsByAffinity = functions
         }
       );
 
-      const postIds = result.records.map((record) => record.get("postId"));
+      const postIds = result.records
+        .map((record) => record.get("postId"))
+        .filter((postId) => postId !== null);
       log("Recommended posts by affinity:", postIds);
 
       return postIds;

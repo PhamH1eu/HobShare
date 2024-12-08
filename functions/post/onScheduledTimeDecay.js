@@ -1,8 +1,9 @@
 const admin = require("firebase-admin");
 const functions = require("firebase-functions");
 
-exports.onScheduledTimeDecay = functions.pubsub
-  .schedule("every 24 hours") // Runs every 24 hours
+exports.onScheduledTimeDecay = functions
+  .region("asia-southeast1")
+  .pubsub.schedule("every 24 hours") // Runs every 24 hours
   .onRun(async (context) => {
     const db = admin.firestore();
     const postsRef = db.collection("posts");

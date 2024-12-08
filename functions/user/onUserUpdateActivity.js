@@ -4,8 +4,9 @@ const axios = require("axios");
 
 const geminiconfig = functions.config().gemini;
 
-exports.onUserUpdateActivity = functions.firestore
-  .document("users/{userId}")
+exports.onUserUpdateActivity = functions
+  .region("asia-southeast1")
+  .firestore.document("users/{userId}")
   .onUpdate(async (change, context) => {
     const beforeData = change.before.data();
     const afterData = change.after.data();
@@ -57,7 +58,11 @@ exports.onUserUpdateActivity = functions.firestore
           SET u.favoriteCaptions = $formattedCaptions,
               u.embedding = $embedding
         `,
-        { userId, embedding: response.data.embedding.values || [], formattedCaptions }
+        {
+          userId,
+          embedding: response.data.embedding.values || [],
+          formattedCaptions,
+        }
       );
 
       console.log(`Updated favorite captions for user ${userId} in Neo4j.`);

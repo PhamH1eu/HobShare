@@ -1,8 +1,9 @@
 const functions = require("firebase-functions");
 const neo4jDriver = require("../util/neo4jconfig"); // Ensure this points to your Neo4j driver setup
 
-exports.getCommonFriendsCount = functions.https.onCall(
-  async (data, context) => {
+exports.getCommonFriendsCount = functions
+  .region("asia-southeast1")
+  .https.onCall(async (data, context) => {
     const userId = context.auth.uid; // Get the current user's ID
     const receiverUserId = data.receiverUserId; // Get the target user's ID
 
@@ -36,5 +37,4 @@ exports.getCommonFriendsCount = functions.https.onCall(
     } finally {
       await session.close();
     }
-  }
-);
+  });

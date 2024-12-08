@@ -2,8 +2,9 @@ const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const neo4jDriver = require("../util/neo4jconfig"); // Your Neo4j config file
 
-exports.onPostDeleted = functions.firestore
-  .document("posts/{postId}")
+exports.onPostDeleted = functions
+  .region("asia-southeast1")
+  .firestore.document("posts/{postId}")
   .onDelete(async (snap, context) => {
     const postId = context.params.postId;
     const data = snap.data();

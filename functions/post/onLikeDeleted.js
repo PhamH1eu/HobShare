@@ -3,8 +3,9 @@ const admin = require("firebase-admin");
 const neo4jDriver = require("../util/neo4jconfig"); // Ensure this points to your Neo4j driver setup
 
 // Firestore Trigger: When a 'like' document is deleted
-exports.onLikeDeleted = functions.firestore
-  .document("posts/{postId}/like/{userId}")
+exports.onLikeDeleted = functions
+  .region("asia-southeast1")
+  .firestore.document("posts/{postId}/like/{userId}")
   .onDelete(async (snap, context) => {
     const session = neo4jDriver.session();
     const userId = context.params.userId;

@@ -1,8 +1,9 @@
 const admin = require("firebase-admin");
 const functions = require("firebase-functions");
 
-exports.countHashtagPosts = functions.pubsub
-  .schedule("every 12 hours")
+exports.countHashtagPosts = functions
+  .region("asia-southeast1")
+  .pubsub.schedule("every 12 hours")
   .onRun(async (context) => {
     const db = admin.firestore();
     const hashtagCollectionRef = db.collection("hashtag");

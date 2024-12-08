@@ -3,8 +3,9 @@ const admin = require("firebase-admin");
 const neo4jDriver = require("../util/neo4jconfig"); // Ensure this points to your Neo4j driver setup
 
 // Firestore Trigger: When a 'comment' document is deleted
-exports.onCommentDeleted = functions.firestore
-  .document("posts/{postId}/comments/{comId}")
+exports.onCommentDeleted = functions
+  .region("asia-southeast1")
+  .firestore.document("posts/{postId}/comments/{comId}")
   .onDelete(async (snap, context) => {
     const session = neo4jDriver.session();
     const postId = context.params.postId;

@@ -2,8 +2,9 @@ const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const neo4jDriver = require("../util/neo4jconfig"); // Ensure this points to your Neo4j driver setup
 
-exports.recommendPostsByEmbedding = functions.https.onCall(
-  async (data, context) => {
+exports.recommendPostsByEmbedding = functions
+  .region("asia-southeast1")
+  .https.onCall(async (data, context) => {
     const userId = context.auth.uid; // Get the current user's ID
     const db = admin.firestore();
 
@@ -99,5 +100,4 @@ exports.recommendPostsByEmbedding = functions.https.onCall(
     } finally {
       await session.close();
     }
-  }
-);
+  });

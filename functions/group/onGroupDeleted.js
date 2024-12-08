@@ -2,8 +2,9 @@ const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const neo4jDriver = require("../util/neo4jconfig"); // Ensure this points to your Neo4j driver setup
 
-exports.onGroupDeleted = functions.firestore
-  .document("groups/{groupId}")
+exports.onGroupDeleted = functions
+  .region("asia-southeast1")
+  .firestore.document("groups/{groupId}")
   .onDelete(async (snap, context) => {
     const groupId = context.params.groupId;
     const groupData = snap.data();
@@ -40,7 +41,7 @@ exports.onGroupDeleted = functions.firestore
           `Successfully deleted all posts related to group ${groupId}`
         );
       }
-      
+
       await batch.commit();
       // Delete the group node in Neo4j
       await session.run(

@@ -2,8 +2,9 @@ const functions = require("firebase-functions");
 const neo4jDriver = require("../util/neo4jconfig");
 const admin = require("firebase-admin");
 
-exports.onGroupCreated = functions.firestore
-  .document("groups/{groupId}")
+exports.onGroupCreated = functions
+  .region("asia-southeast1")
+  .firestore.document("groups/{groupId}")
   .onCreate(async (snap, context) => {
     const groupId = context.params.groupId;
     const groupData = snap.data();

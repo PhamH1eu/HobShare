@@ -5,8 +5,9 @@ const axios = require("axios");
 
 const geminiconfig = functions.config().gemini;
 
-exports.onPostCreated = functions.firestore
-  .document("posts/{postId}")
+exports.onPostCreated = functions
+  .region("asia-southeast1")
+  .firestore.document("posts/{postId}")
   .onCreate(async (snap, context) => {
     const db = admin.firestore();
     const postId = context.params.postId;

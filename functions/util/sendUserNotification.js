@@ -1,8 +1,9 @@
 const admin = require("firebase-admin");
 const functions = require("firebase-functions");
 
-exports.sendUserNotification = functions.firestore
-  .document("notifications/{userId}/notifications/{notiId}")
+exports.sendUserNotification = functions
+  .region("asia-southeast1")
+  .firestore.document("notifications/{userId}/notifications/{notiId}")
   .onCreate(async (snapshot, context) => {
     const db = admin.firestore();
     const userId = context.params.userId;
@@ -32,7 +33,7 @@ exports.sendUserNotification = functions.firestore
         createdAt: notificationData.createdAt.toDate().toISOString(),
         sourceName: notificationData.sourceName,
         sourceImage: notificationData.sourceImage,
-        additional: notificationData.additional
+        additional: notificationData.additional,
       },
       webpush: {
         fcmOptions: {

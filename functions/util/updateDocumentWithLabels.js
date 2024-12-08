@@ -5,8 +5,9 @@ const axios = require("axios");
 
 const geminiconfig = functions.config().gemini;
 
-exports.updateDocumentWithLabels = functions.firestore
-  .document("imageLabels/{docId}")
+exports.updateDocumentWithLabels = functions
+  .region("asia-southeast1")
+  .firestore.document("imageLabels/{docId}")
   .onCreate(async (snapshot, context) => {
     const data = snapshot.data();
     const filePath = data.file; // e.g., 'gs://reactchat-3358f.appspot.com/namecollection/docId.png'

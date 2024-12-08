@@ -2,8 +2,9 @@ const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const neo4jDriver = require("../util/neo4jconfig"); // Neo4j config file
 
-exports.onAdminUpdated = functions.firestore
-  .document("groups/{groupId}")
+exports.onAdminUpdated = functions
+  .region("asia-southeast1")
+  .firestore.document("groups/{groupId}")
   .onUpdate(async (change, context) => {
     const groupId = context.params.groupId;
     const groupData = change.after.data();
@@ -32,9 +33,9 @@ exports.onAdminUpdated = functions.firestore
     try {
       // If there's an old admin, delete their admin doc and remove the relationship in Neo4j
       if (oldAdmin && oldAdmin.userId) {
-        const oldAdminDocRef = admin.firestore().doc(
-          `users/${oldAdmin.userId}/admingroups/${groupId}`
-        );
+        const oldAdminDocRef = admin
+          .firestore()
+          .doc(`users/${oldAdmin.userId}/admingroups/${groupId}`);
         batch.delete(oldAdminDocRef);
         console.log(`Deleted admin document for user: ${oldAdmin.userId}`);
 
@@ -53,9 +54,9 @@ exports.onAdminUpdated = functions.firestore
 
       // If there's a new admin, add their admin doc and create the relationship in Neo4j
       if (newAdmin && newAdmin.userId) {
-        const newAdminDocRef = admin.firestore().doc(
-          `users/${newAdmin.userId}/admingroups/${groupId}`
-        );
+        const newAdminDocRef = admin
+          .firestore()
+          .doc(`users/${newAdmin.userId}/admingroups/${groupId}`);
         batch.set(newAdminDocRef, {
           wallpaper: groupData.wallpaper,
           name: groupData.name,
@@ -64,18 +65,18 @@ exports.onAdminUpdated = functions.firestore
         console.log(`Added admin document for user: ${newAdmin.userId}`);
 
         // Also remove the new admin from their joinedgroups collection
-        const newAdminJoinedGroupRef = admin.firestore().doc(
-          `users/${newAdmin.userId}/joinedgroups/${groupId}`
-        );
+        const newAdminJoinedGroupRef = admin
+          .firestore()
+          .doc(`users/${newAdmin.userId}/joinedgroups/${groupId}`);
         batch.delete(newAdminJoinedGroupRef);
         console.log(
           `Removed joined group document for new admin: ${newAdmin.userId}`
         );
 
         // Remove the new admin from the group's members collection
-        const groupMemberDocRef = admin.firestore().doc(
-          `groups/${groupId}/members/${newAdmin.userId}`
-        );
+        const groupMemberDocRef = admin
+          .firestore()
+          .doc(`groups/${groupId}/members/${newAdmin.userId}`);
         batch.delete(groupMemberDocRef);
         console.log(
           `Removed member document from group for new admin: ${newAdmin.userId}`

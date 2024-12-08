@@ -2,8 +2,9 @@ const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const neo4jDriver = require("../util/neo4jconfig"); // Neo4j config file
 
-exports.onMemberLeft = functions.firestore
-  .document("groups/{groupId}/members/{userId}")
+exports.onMemberLeft = functions
+  .region("asia-southeast1")
+  .firestore.document("groups/{groupId}/members/{userId}")
   .onDelete(async (snap, context) => {
     const groupId = context.params.groupId;
     const userId = context.params.userId;

@@ -2,15 +2,18 @@ const functions = require("firebase-functions");
 const neo4jDriver = require("../util/neo4jconfig"); // Ensure this points to your Neo4j driver setup
 const { log } = require("firebase-functions/logger");
 
-exports.recommendPostsByAffinity = functions.https.onCall(
-  async (data, context) => {
+exports.recommendPostsByAffinity = functions
+  .region("asia-southeast1")
+  .https.onCall(async (data, context) => {
     const session = neo4jDriver.session();
     const userId = context.auth.uid; // Get the current user's ID from the Firebase context
 
     try {
       // Get the current timestamp and the timestamp for two days ago
       const currentTimestamp = new Date().toISOString(); // Current time in ISO format
-      const twoDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(); // 30 days ago in ISO format
+      const twoDaysAgo = new Date(
+        Date.now() - 30 * 24 * 60 * 60 * 1000
+      ).toISOString(); // 30 days ago in ISO format
 
       // Step 1: Match user with nodes (users or groups) they have an affinity with and filter posts by createdAt
       const result = await session.run(
@@ -44,5 +47,4 @@ exports.recommendPostsByAffinity = functions.https.onCall(
     } finally {
       await session.close();
     }
-  }
-);
+  });

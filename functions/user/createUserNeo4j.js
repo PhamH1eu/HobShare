@@ -1,8 +1,9 @@
 const functions = require("firebase-functions");
 const neo4jDriver = require("../util/neo4jconfig");
 
-exports.createUserNode = functions.firestore
-  .document("users/{userId}")
+exports.createUserNode = functions
+  .region("asia-southeast1")
+  .firestore.document("users/{userId}")
   .onCreate(async (snap, context) => {
     const userData = snap.data();
     const userId = context.params.userId; // Firestore user document ID

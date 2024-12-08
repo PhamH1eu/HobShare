@@ -2,8 +2,9 @@ const admin = require("firebase-admin");
 const functions = require("firebase-functions");
 const neo4jDriver = require("../util/neo4jconfig"); // Ensure this points to your Neo4j driver setup
 
-exports.onPostLiked = functions.firestore
-  .document("posts/{postId}/like/{userId}")
+exports.onPostLiked = functions
+  .region("asia-southeast1")
+  .firestore.document("posts/{postId}/like/{userId}")
   .onCreate(async (snap, context) => {
     const db = admin.firestore();
     const postId = context.params.postId;

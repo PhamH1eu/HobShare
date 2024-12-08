@@ -32,30 +32,20 @@ exports.recommendGroups = functions
 
       let recommendedGroups = [];
 
-      // Step 2: If the user has friends, recommend groups based on friends' memberships
-      if (friendCount > 0) {
-        const groupRecommendationQuery = `
-        MATCH (u1:User {id: $userId})-[:FRIEND]->(u2:User)
-        WITH u1, u2,
-          apoc.coll.toSet(u1.favoriteCaptions) AS u1Captions,
-          apoc.coll.toSet(u2.favoriteCaptions) AS u2Captions
-        WITH u1, u2,
-            apoc.coll.intersection(u1Captions, u2Captions) AS intersection,
-            apoc.coll.union(u1Captions, u2Captions) AS union
-        WITH u1, u2,
-            size(intersection) * 1.0 / size(union) AS jaccardIndex
-        WHERE jaccardIndex > 0
-        WITH u1, collect(u2) AS topUsers
-        UNWIND topUsers AS similarUser
-        MATCH (similarUser)-[:MEMBER_OF]->(g:Group)
-        WHERE NOT (u1)-[:MEMBER_OF]->(g)
-        WITH g
-        MATCH (g)<-[:MEMBER_OF]-(allMembers:User) 
+    // Step 2: If the user has friends, recommend groups based on friends' memberships
+    if (friendCount > 0) {
+      const groupRecommendationQuery = `
+        MATCH (u:User {id: $userId})-[:FRIEND]->(friend:User)
+        MATCH (friend)-[:MEMBER_OF]->(g:Group)
+        WHERE NOT (u)-[:MEMBER_OF]->(g)
+        WITH g, count(friend) AS friendCount
+        MATCH (g)<-[:MEMBER_OF]-(allMembers:User)
         RETURN g.id AS groupId, 
               g.name AS groupName, 
               g.wallpaper AS wallpaper, 
-              count(allMembers) AS memberCount    
-        ORDER BY memberCount DESC, g.name
+              friendCount,
+              count(allMembers) AS memberCount
+        ORDER BY friendCount DESC, g.name
         LIMIT 10;
       `;
 

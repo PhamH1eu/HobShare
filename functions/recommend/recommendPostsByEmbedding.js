@@ -63,10 +63,11 @@ exports.recommendPostsByEmbedding = functions
       UNION
       MATCH (currentUser:User {id: $userId})
 
-      // Get posts belonging to groups without AFFINITY, excluding posts written by currentUser
+      // Get posts belonging to groups without AFFINITY (but user still joined), excluding posts written by currentUser
       MATCH (post:Post)<-[:HAVE]-(group:Group)
       WHERE NOT (currentUser)-[:AFFINITY]->(group)
       AND NOT (currentUser)-[:WRITE]->(post)
+      AND (currentUser)-[:MEMBER_OF]->(group)
       WITH currentUser, post, group
 
       // Get the embedding vectors

@@ -45,7 +45,7 @@ exports.onCommentAdded = functions
       );
 
       if (result.records.length > 0) {
-        // If relationship exists, increase the affinity by 0.1
+        // If relationship exists, increase the affinity by 0.2
         await session.run(
           `
           MATCH (u:User {id: $userId})-[r:AFFINITY]->(t:${targetType} {id: $targetNodeId})
@@ -55,7 +55,7 @@ exports.onCommentAdded = functions
           { userId, targetNodeId }
         );
       } else {
-        // If no relationship exists, create a new one with an affinity of 1.1
+        // If no relationship exists, create a new one with an affinity of 1.2
         await session.run(
           `
           MATCH (u:User {id: $userId}), (t:${targetType} {id: $targetNodeId})

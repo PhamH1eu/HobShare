@@ -28,11 +28,11 @@ exports.onCommentDeleted = functions
       const targetId = groupId ? groupId : authorId;
       const targetLabel = groupId ? "Group" : "User";
 
-      // Decrease affinity by 0.1
+      // Decrease affinity by 0.2
       await session.run(
         `
         MATCH (u:User {id: $userId})-[r:AFFINITY]->(t:${targetLabel} {id: $targetId})
-        SET r.affinity = r.affinity - 0.1
+        SET r.affinity = r.affinity - 0.2
         WHERE r.affinity > 0
         RETURN r
         `,

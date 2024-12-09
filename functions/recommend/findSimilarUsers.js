@@ -109,6 +109,7 @@ exports.findSimilarUsers = functions
     const center = [latitude, longitude];
     const radiusInM = radius * 1000;
 
+    // @ts-ignore
     const bounds = geohashQueryBounds(center, radiusInM);
     const promises = [];
     for (const b of bounds) {
@@ -130,6 +131,7 @@ exports.findSimilarUsers = functions
       snap.forEach((doc) => {
         const lat = doc.get("location.latitude");
         const lng = doc.get("location.longitude");
+        // @ts-ignore
         const distanceInKm = distanceBetween([lat, lng], center);
         const distanceInM = distanceInKm * 1000;
         if (distanceInM <= radiusInM) {
